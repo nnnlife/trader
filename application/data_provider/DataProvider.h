@@ -78,7 +78,7 @@ public:
     QStringList getFavoriteList();
     QStringList getViList();
     QStringList getTtopAmountList(TodayTopSelection s);
-    QStringList getTnineThirtyList();
+    QStringList getStrategyList();
 
     TopList* getYtopAmountList();
     void clearRecentList();

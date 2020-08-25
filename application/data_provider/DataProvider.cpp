@@ -402,11 +402,11 @@ QStringList DataProvider::getTtopAmountList(TodayTopSelection s) {
 }
 
 
-QStringList DataProvider::getTnineThirtyList() {
+QStringList DataProvider::getStrategyList() {
     ClientContext context;
     CodeList * codeList = new CodeList;
     Empty empty;
-    stub_->GetTodayNineThirtyList(&context, empty, codeList);
+    stub_->GetOpenQuoteList(&context, empty, codeList);
     QStringList list;
     for (int i = 0; i < codeList->codelist_size(); i++)
         list.append(QString::fromStdString(codeList->codelist(i)));

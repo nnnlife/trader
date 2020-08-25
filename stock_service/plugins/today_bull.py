@@ -12,7 +12,7 @@ import sys
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), *(['..' + os.sep] * 2))))
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), *(['..' + os.sep] * 1))))
 
-from datetime import timedelta
+from datetime import timedelta, datetime, time
 from google.protobuf.empty_pb2 import Empty
 
 from stock_service import preload
@@ -29,9 +29,11 @@ stub = None
 REFRESH_SEC = 120
 LIST_COUNT = 20
 
+_listen_quote_ratio = True
 _amount_ratio_list = {}
 _amount_momentum_list = {}
 _amount_top_list = {}
+_open_quote_ratio_list = {}
 _last_push_time = None
 
 
@@ -40,7 +42,9 @@ def clear_all():
     _last_push_time = None
     _amount_top_list.clear()
     _amount_momentum_list.clear()
+    _listen_quote_ratio = False
     _amount_ratio_list.clear()
+    _open_quote_ratio_list.clear()
 
 
 def send_list():
@@ -56,8 +60,13 @@ def send_list():
     _amount_momentum_list.clear()
 
 
+def send_open_quote_ratio():
+    by_quote_ratio = sorted(_open_quote_ratio_list.items(), key=lambda x: x[1], reverse=True)
+    stub.SetOpenQuoteRatioList(stock_provider_pb2.CodeList(codelist=[oq[0] for oq in by_quote_ratio[:10]]))
+
+
 def tick_subscriber():
-    global _last_push_time
+    global _last_push_time, _listen_quote_ratio
 
     response = stub.ListenCybosTickData(Empty())
     for msg in response:
@@ -75,8 +84,16 @@ def tick_subscriber():
 
         yesterday_amount = preload.get_yesterday_amount(code)
         yesterday_close = preload.get_yesterday_close(code)
+        tick_date = msg.tick_date.ToDatetime()
 
-        if yesterday_amount >= 3000000000 or yesterday_close * 1.15 > msg.current_price and yesterday_amount > 0:
+        if _listen_quote_ratio and code not in _open_quote_ratio_list and msg.time <= 900 and msg.market_type == 50:
+            _open_quote_ratio_list[code] = amount / yesterday_amount
+
+        if _listen_quote_ratio and tick_date > datetime.combine(tick_date.date(), time(9, 0, 15)):
+            _listen_quote_ratio = False
+            send_open_quote_ratio();
+
+        if yesterday_amount >= 3000000000 and yesterday_close * 1.15 > msg.current_price > yesterday_close:
             _amount_ratio_list[code] = [amount / yesterday_amount, msg.current_price, msg.current_price - msg.yesterday_diff]
 
         if msg.current_price > yesterday_close:
@@ -89,10 +106,10 @@ def tick_subscriber():
             _amount_top_list[code] = [amount]
 
         if _last_push_time is None:
-            _last_push_time = msg.tick_date.ToDatetime()
+            _last_push_time = tick_date
         else:
             if msg.tick_date.ToDatetime() - _last_push_time > timedelta(seconds=REFRESH_SEC):
-                _last_push_time = msg.tick_date.ToDatetime()
+                _last_push_time = tick_date
                 _LOGGER.info('PREPARE LIST %s', _last_push_time)
                 gevent.spawn(send_list)
 

@@ -275,6 +275,19 @@ def get_tick_data(code, tick_date):
     return converted_data
 
 
+def get_tick_data_by_datetime(code, from_datetime, until_datetime):
+    data = list(get_collection()[code].find({'date': {'$gte': from_datetime, '$lte': until_datetime}}))
+    converted_data = []
+    for td in data:
+        if code.endswith(message.BIDASK_SUFFIX):
+            converted = dt.cybos_stock_ba_tick_convert(td)
+        else:
+            converted = dt.cybos_stock_tick_convert(td)
+        converted_data.append(converted)
+    return converted_data
+
+
+
 def setup():
     global _message_reader
     while True:

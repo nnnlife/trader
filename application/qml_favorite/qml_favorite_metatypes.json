@@ -555,7 +555,7 @@
                         "value": "auto"
                     }
                 ],
-                "className": "TnineThirtyListModel",
+                "className": "StrategyListModel",
                 "methods": [
                     {
                         "access": "public",
@@ -570,7 +570,7 @@
                     }
                 ],
                 "object": true,
-                "qualifiedClassName": "TnineThirtyListModel",
+                "qualifiedClassName": "StrategyListModel",
                 "superClasses": [
                     {
                         "access": "public",
@@ -579,7 +579,7 @@
                 ]
             }
         ],
-        "inputFile": "TnineThirtyListModel.h",
+        "inputFile": "StrategyListModel.h",
         "outputRevision": 67
     }
 ]

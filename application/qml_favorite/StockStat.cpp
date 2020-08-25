@@ -35,8 +35,8 @@ QStringList StockStat::getViList() {
 }
 
 
-QStringList StockStat::getTnineThirtyList() {
-    return DataProvider::getInstance()->getTnineThirtyList();
+QStringList StockStat::getStrategyList() {
+    return DataProvider::getInstance()->getStrategyList();
 }
 
 

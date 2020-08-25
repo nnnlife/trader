@@ -19,13 +19,13 @@ Item {
             id: codeListView
             Layout.fillHeight: true
             Layout.preferredWidth: 200
-            model: TnineThirtyListModel{}
+            model: StrategyListModel{}
         }
 
         Connections {
             target: codeListView.model
             function onClearCurrentIndex() {
-                console.log('TnineThirtyList:Receive clear current index')
+                console.log('StrategyModel:Receive clear current index')
                 codeListView.currentIndex = -1
             }
         }

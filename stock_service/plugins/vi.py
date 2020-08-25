@@ -83,7 +83,6 @@ def tick_subscriber():
         code = msg.code
 
         if code not in _code_info:
-            yesterday_close = msg.current_price - msg.yesterday_diff
             _code_info[code] = [False, 0]
             
         open_price = msg.start_price

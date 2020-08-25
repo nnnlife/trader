@@ -333,9 +333,9 @@ Module {
         }
     }
     Component {
-        name: "TnineThirtyListModel"
+        name: "StrategyListModel"
         prototype: "AbstractListModel"
-        exports: ["favorite.backend/TnineThirtyListModel 1.0"]
+        exports: ["favorite.backend/StrategyListModel 1.0"]
         exportMetaObjectRevisions: [0]
         Method {
             name: "menuClicked"

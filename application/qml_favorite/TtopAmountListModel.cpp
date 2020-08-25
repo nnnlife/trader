@@ -8,7 +8,6 @@ TtopAmountListModel::TtopAmountListModel(QObject *parent)
 
 QStringList TtopAmountListModel::getServerList() {
     QStringList result = StockStat::instance()->getTtopAmountList(mSelection);
-    qWarning() << "TtopAmountListModel getServerList return " << result.count();    
     return result;
 }
 

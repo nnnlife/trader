@@ -57,7 +57,7 @@ public:
     QStringList getViList();
     TopList * getYtopAmountList();
     QStringList getTtopAmountList(TodayTopSelection s);
-    QStringList getTnineThirtyList();
+    QStringList getStrategyList();
     void addToFavorite(const QString &code);
     void removeFromFavorite(const QString &code);
 

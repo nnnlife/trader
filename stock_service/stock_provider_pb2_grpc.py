@@ -191,14 +191,14 @@ class StockStub(object):
         request_serializer=stock__provider__pb2.CodeList.SerializeToString,
         response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
         )
+    self.SetOpenQuoteRatioList = channel.unary_unary(
+        '/stock_api.Stock/SetOpenQuoteRatioList',
+        request_serializer=stock__provider__pb2.CodeList.SerializeToString,
+        response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+        )
     self.GetTodayTopAmountList = channel.unary_unary(
         '/stock_api.Stock/GetTodayTopAmountList',
         request_serializer=stock__provider__pb2.TodayTopOption.SerializeToString,
-        response_deserializer=stock__provider__pb2.CodeList.FromString,
-        )
-    self.GetTodayNineThirtyList = channel.unary_unary(
-        '/stock_api.Stock/GetTodayNineThirtyList',
-        request_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
         response_deserializer=stock__provider__pb2.CodeList.FromString,
         )
     self.GetRecentSearch = channel.unary_unary(
@@ -208,6 +208,11 @@ class StockStub(object):
         )
     self.GetViList = channel.unary_unary(
         '/stock_api.Stock/GetViList',
+        request_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+        response_deserializer=stock__provider__pb2.CodeList.FromString,
+        )
+    self.GetOpenQuoteList = channel.unary_unary(
+        '/stock_api.Stock/GetOpenQuoteList',
         request_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
         response_deserializer=stock__provider__pb2.CodeList.FromString,
         )
@@ -532,14 +537,14 @@ class StockServicer(object):
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
 
-  def GetTodayTopAmountList(self, request, context):
+  def SetOpenQuoteRatioList(self, request, context):
     # missing associated documentation comment in .proto file
     pass
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
 
-  def GetTodayNineThirtyList(self, request, context):
+  def GetTodayTopAmountList(self, request, context):
     # missing associated documentation comment in .proto file
     pass
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -554,6 +559,13 @@ class StockServicer(object):
     raise NotImplementedError('Method not implemented!')
 
   def GetViList(self, request, context):
+    # missing associated documentation comment in .proto file
+    pass
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
+  def GetOpenQuoteList(self, request, context):
     # missing associated documentation comment in .proto file
     pass
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -836,14 +848,14 @@ def add_StockServicer_to_server(servicer, server):
           request_deserializer=stock__provider__pb2.CodeList.FromString,
           response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
       ),
+      'SetOpenQuoteRatioList': grpc.unary_unary_rpc_method_handler(
+          servicer.SetOpenQuoteRatioList,
+          request_deserializer=stock__provider__pb2.CodeList.FromString,
+          response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+      ),
       'GetTodayTopAmountList': grpc.unary_unary_rpc_method_handler(
           servicer.GetTodayTopAmountList,
           request_deserializer=stock__provider__pb2.TodayTopOption.FromString,
-          response_serializer=stock__provider__pb2.CodeList.SerializeToString,
-      ),
-      'GetTodayNineThirtyList': grpc.unary_unary_rpc_method_handler(
-          servicer.GetTodayNineThirtyList,
-          request_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
           response_serializer=stock__provider__pb2.CodeList.SerializeToString,
       ),
       'GetRecentSearch': grpc.unary_unary_rpc_method_handler(
@@ -853,6 +865,11 @@ def add_StockServicer_to_server(servicer, server):
       ),
       'GetViList': grpc.unary_unary_rpc_method_handler(
           servicer.GetViList,
+          request_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+          response_serializer=stock__provider__pb2.CodeList.SerializeToString,
+      ),
+      'GetOpenQuoteList': grpc.unary_unary_rpc_method_handler(
+          servicer.GetOpenQuoteList,
           request_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
           response_serializer=stock__provider__pb2.CodeList.SerializeToString,
       ),

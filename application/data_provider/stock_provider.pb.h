@@ -50,7 +50,7 @@ struct TableStruct_stock_5fprovider_2eproto {
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::AuxillaryParseTableField aux[]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
-  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[27]
+  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[28]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::FieldMetadata field_metadata[];
   static const ::PROTOBUF_NAMESPACE_ID::internal::SerializationTable serialization_table[];
@@ -136,6 +136,9 @@ extern TopListDefaultTypeInternal _TopList_default_instance_;
 class TradeMsg;
 class TradeMsgDefaultTypeInternal;
 extern TradeMsgDefaultTypeInternal _TradeMsg_default_instance_;
+class ViPriceInfo;
+class ViPriceInfoDefaultTypeInternal;
+extern ViPriceInfoDefaultTypeInternal _ViPriceInfo_default_instance_;
 class YearHighInfo;
 class YearHighInfoDefaultTypeInternal;
 extern YearHighInfoDefaultTypeInternal _YearHighInfo_default_instance_;
@@ -167,6 +170,7 @@ template<> ::stock_api::StockQuery* Arena::CreateMaybeMessage<::stock_api::Stock
 template<> ::stock_api::TodayTopOption* Arena::CreateMaybeMessage<::stock_api::TodayTopOption>(Arena*);
 template<> ::stock_api::TopList* Arena::CreateMaybeMessage<::stock_api::TopList>(Arena*);
 template<> ::stock_api::TradeMsg* Arena::CreateMaybeMessage<::stock_api::TradeMsg>(Arena*);
+template<> ::stock_api::ViPriceInfo* Arena::CreateMaybeMessage<::stock_api::ViPriceInfo>(Arena*);
 template<> ::stock_api::YearHighInfo* Arena::CreateMaybeMessage<::stock_api::YearHighInfo>(Arena*);
 PROTOBUF_NAMESPACE_CLOSE
 namespace stock_api {
@@ -614,6 +618,166 @@ class CodeList :
 };
 // -------------------------------------------------------------------
 
+class ViPriceInfo :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:stock_api.ViPriceInfo) */ {
+ public:
+  ViPriceInfo();
+  virtual ~ViPriceInfo();
+
+  ViPriceInfo(const ViPriceInfo& from);
+  ViPriceInfo(ViPriceInfo&& from) noexcept
+    : ViPriceInfo() {
+    *this = ::std::move(from);
+  }
+
+  inline ViPriceInfo& operator=(const ViPriceInfo& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline ViPriceInfo& operator=(ViPriceInfo&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return GetMetadataStatic().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return GetMetadataStatic().reflection;
+  }
+  static const ViPriceInfo& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const ViPriceInfo* internal_default_instance() {
+    return reinterpret_cast<const ViPriceInfo*>(
+               &_ViPriceInfo_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    2;
+
+  friend void swap(ViPriceInfo& a, ViPriceInfo& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(ViPriceInfo* other) {
+    if (other == this) return;
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline ViPriceInfo* New() const final {
+    return CreateMaybeMessage<ViPriceInfo>(nullptr);
+  }
+
+  ViPriceInfo* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<ViPriceInfo>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const ViPriceInfo& from);
+  void MergeFrom(const ViPriceInfo& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  inline void SharedCtor();
+  inline void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(ViPriceInfo* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "stock_api.ViPriceInfo";
+  }
+  private:
+  inline ::PROTOBUF_NAMESPACE_ID::Arena* GetArenaNoVirtual() const {
+    return nullptr;
+  }
+  inline void* MaybeArenaPtr() const {
+    return nullptr;
+  }
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+  private:
+  static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
+    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_stock_5fprovider_2eproto);
+    return ::descriptor_table_stock_5fprovider_2eproto.file_level_metadata[kIndexInFileMessages];
+  }
+
+  public:
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kPriceFieldNumber = 2,
+    kCodeFieldNumber = 1,
+  };
+  // repeated int32 price = 2;
+  int price_size() const;
+  private:
+  int _internal_price_size() const;
+  public:
+  void clear_price();
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_price(int index) const;
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedField< ::PROTOBUF_NAMESPACE_ID::int32 >&
+      _internal_price() const;
+  void _internal_add_price(::PROTOBUF_NAMESPACE_ID::int32 value);
+  ::PROTOBUF_NAMESPACE_ID::RepeatedField< ::PROTOBUF_NAMESPACE_ID::int32 >*
+      _internal_mutable_price();
+  public:
+  ::PROTOBUF_NAMESPACE_ID::int32 price(int index) const;
+  void set_price(int index, ::PROTOBUF_NAMESPACE_ID::int32 value);
+  void add_price(::PROTOBUF_NAMESPACE_ID::int32 value);
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedField< ::PROTOBUF_NAMESPACE_ID::int32 >&
+      price() const;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedField< ::PROTOBUF_NAMESPACE_ID::int32 >*
+      mutable_price();
+
+  // string code = 1;
+  void clear_code();
+  const std::string& code() const;
+  void set_code(const std::string& value);
+  void set_code(std::string&& value);
+  void set_code(const char* value);
+  void set_code(const char* value, size_t size);
+  std::string* mutable_code();
+  std::string* release_code();
+  void set_allocated_code(std::string* code);
+  private:
+  const std::string& _internal_code() const;
+  void _internal_set_code(const std::string& value);
+  std::string* _internal_mutable_code();
+  public:
+
+  // @@protoc_insertion_point(class_scope:stock_api.ViPriceInfo)
+ private:
+  class _Internal;
+
+  ::PROTOBUF_NAMESPACE_ID::internal::InternalMetadataWithArena _internal_metadata_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedField< ::PROTOBUF_NAMESPACE_ID::int32 > price_;
+  mutable std::atomic<int> _price_cached_byte_size_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr code_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_stock_5fprovider_2eproto;
+};
+// -------------------------------------------------------------------
+
 class Prices :
     public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:stock_api.Prices) */ {
  public:
@@ -656,7 +820,7 @@ class Prices :
                &_Prices_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    2;
+    3;
 
   friend void swap(Prices& a, Prices& b) {
     a.Swap(&b);
@@ -798,7 +962,7 @@ class Bool :
                &_Bool_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    3;
+    4;
 
   friend void swap(Bool& a, Bool& b) {
     a.Swap(&b);
@@ -926,7 +1090,7 @@ class YearHighInfo :
                &_YearHighInfo_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    4;
+    5;
 
   friend void swap(YearHighInfo& a, YearHighInfo& b) {
     a.Swap(&b);
@@ -1082,7 +1246,7 @@ class SimulationMsg :
                &_SimulationMsg_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    5;
+    6;
 
   friend void swap(SimulationMsg& a, SimulationMsg& b) {
     a.Swap(&b);
@@ -1278,7 +1442,7 @@ class TodayTopOption :
                &_TodayTopOption_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    6;
+    7;
 
   friend void swap(TodayTopOption& a, TodayTopOption& b) {
     a.Swap(&b);
@@ -1406,7 +1570,7 @@ class Balance :
                &_Balance_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    7;
+    8;
 
   friend void swap(Balance& a, Balance& b) {
     a.Swap(&b);
@@ -1534,7 +1698,7 @@ class StockQuery :
                &_StockQuery_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    8;
+    9;
 
   friend void swap(StockQuery& a, StockQuery& b) {
     a.Swap(&b);
@@ -1703,7 +1867,7 @@ class TopList :
                &_TopList_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    9;
+    10;
 
   friend void swap(TopList& a, TopList& b) {
     a.Swap(&b);
@@ -1868,7 +2032,7 @@ class SimulationOperation :
                &_SimulationOperation_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    10;
+    11;
 
   friend void swap(SimulationOperation& a, SimulationOperation& b) {
     a.Swap(&b);
@@ -2024,7 +2188,7 @@ class SimulationStatus :
                &_SimulationStatus_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    11;
+    12;
 
   friend void swap(SimulationStatus& a, SimulationStatus& b) {
     a.Swap(&b);
@@ -2163,7 +2327,7 @@ class OrderMsg :
                &_OrderMsg_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    12;
+    13;
 
   friend void swap(OrderMsg& a, OrderMsg& b) {
     a.Swap(&b);
@@ -2382,7 +2546,7 @@ class TradeMsg :
                &_TradeMsg_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    13;
+    14;
 
   friend void swap(TradeMsg& a, TradeMsg& b) {
     a.Swap(&b);
@@ -2527,7 +2691,7 @@ class CybosOrderReturn :
                &_CybosOrderReturn_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    14;
+    15;
 
   friend void swap(CybosOrderReturn& a, CybosOrderReturn& b) {
     a.Swap(&b);
@@ -2684,7 +2848,7 @@ class Report :
                &_Report_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    15;
+    16;
 
   friend void swap(Report& a, Report& b) {
     a.Swap(&b);
@@ -2978,7 +3142,7 @@ class OrderResult :
                &_OrderResult_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    16;
+    17;
 
   friend void swap(OrderResult& a, OrderResult& b) {
     a.Swap(&b);
@@ -3126,7 +3290,7 @@ class CybosOrderResult :
                &_CybosOrderResult_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    17;
+    18;
 
   friend void swap(CybosOrderResult& a, CybosOrderResult& b) {
     a.Swap(&b);
@@ -3334,7 +3498,7 @@ class ListType :
                &_ListType_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    18;
+    19;
 
   friend void swap(ListType& a, ListType& b) {
     a.Swap(&b);
@@ -3469,7 +3633,7 @@ class CompanyName :
                &_CompanyName_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    19;
+    20;
 
   friend void swap(CompanyName& a, CompanyName& b) {
     a.Swap(&b);
@@ -3604,7 +3768,7 @@ class PastMinuteQuery :
                &_PastMinuteQuery_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    20;
+    21;
 
   friend void swap(PastMinuteQuery& a, PastMinuteQuery& b) {
     a.Swap(&b);
@@ -3767,7 +3931,7 @@ class CybosDayData :
                &_CybosDayData_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    21;
+    22;
 
   friend void swap(CybosDayData& a, CybosDayData& b) {
     a.Swap(&b);
@@ -4049,7 +4213,7 @@ class CybosDayDatas :
                &_CybosDayDatas_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    22;
+    23;
 
   friend void swap(CybosDayDatas& a, CybosDayDatas& b) {
     a.Swap(&b);
@@ -4186,7 +4350,7 @@ class CybosSubjectTickData :
                &_CybosSubjectTickData_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    23;
+    24;
 
   friend void swap(CybosSubjectTickData& a, CybosSubjectTickData& b) {
     a.Swap(&b);
@@ -4429,7 +4593,7 @@ class CybosTickData :
                &_CybosTickData_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    24;
+    25;
 
   friend void swap(CybosTickData& a, CybosTickData& b) {
     a.Swap(&b);
@@ -4830,7 +4994,7 @@ class CybosBidAskTickData :
                &_CybosBidAskTickData_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    25;
+    26;
 
   friend void swap(CybosBidAskTickData& a, CybosBidAskTickData& b) {
     a.Swap(&b);
@@ -5148,7 +5312,7 @@ class CybosStockAlarm :
                &_CybosStockAlarm_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    26;
+    27;
 
   friend void swap(CybosStockAlarm& a, CybosStockAlarm& b) {
     a.Swap(&b);
@@ -5483,6 +5647,117 @@ inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>*
 CodeList::mutable_codelist() {
   // @@protoc_insertion_point(field_mutable_list:stock_api.CodeList.codelist)
   return &codelist_;
+}
+
+// -------------------------------------------------------------------
+
+// ViPriceInfo
+
+// string code = 1;
+inline void ViPriceInfo::clear_code() {
+  code_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+inline const std::string& ViPriceInfo::code() const {
+  // @@protoc_insertion_point(field_get:stock_api.ViPriceInfo.code)
+  return _internal_code();
+}
+inline void ViPriceInfo::set_code(const std::string& value) {
+  _internal_set_code(value);
+  // @@protoc_insertion_point(field_set:stock_api.ViPriceInfo.code)
+}
+inline std::string* ViPriceInfo::mutable_code() {
+  // @@protoc_insertion_point(field_mutable:stock_api.ViPriceInfo.code)
+  return _internal_mutable_code();
+}
+inline const std::string& ViPriceInfo::_internal_code() const {
+  return code_.GetNoArena();
+}
+inline void ViPriceInfo::_internal_set_code(const std::string& value) {
+  
+  code_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value);
+}
+inline void ViPriceInfo::set_code(std::string&& value) {
+  
+  code_.SetNoArena(
+    &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:stock_api.ViPriceInfo.code)
+}
+inline void ViPriceInfo::set_code(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  
+  code_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:stock_api.ViPriceInfo.code)
+}
+inline void ViPriceInfo::set_code(const char* value, size_t size) {
+  
+  code_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:stock_api.ViPriceInfo.code)
+}
+inline std::string* ViPriceInfo::_internal_mutable_code() {
+  
+  return code_.MutableNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+inline std::string* ViPriceInfo::release_code() {
+  // @@protoc_insertion_point(field_release:stock_api.ViPriceInfo.code)
+  
+  return code_.ReleaseNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+inline void ViPriceInfo::set_allocated_code(std::string* code) {
+  if (code != nullptr) {
+    
+  } else {
+    
+  }
+  code_.SetAllocatedNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), code);
+  // @@protoc_insertion_point(field_set_allocated:stock_api.ViPriceInfo.code)
+}
+
+// repeated int32 price = 2;
+inline int ViPriceInfo::_internal_price_size() const {
+  return price_.size();
+}
+inline int ViPriceInfo::price_size() const {
+  return _internal_price_size();
+}
+inline void ViPriceInfo::clear_price() {
+  price_.Clear();
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 ViPriceInfo::_internal_price(int index) const {
+  return price_.Get(index);
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 ViPriceInfo::price(int index) const {
+  // @@protoc_insertion_point(field_get:stock_api.ViPriceInfo.price)
+  return _internal_price(index);
+}
+inline void ViPriceInfo::set_price(int index, ::PROTOBUF_NAMESPACE_ID::int32 value) {
+  price_.Set(index, value);
+  // @@protoc_insertion_point(field_set:stock_api.ViPriceInfo.price)
+}
+inline void ViPriceInfo::_internal_add_price(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  price_.Add(value);
+}
+inline void ViPriceInfo::add_price(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_add_price(value);
+  // @@protoc_insertion_point(field_add:stock_api.ViPriceInfo.price)
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedField< ::PROTOBUF_NAMESPACE_ID::int32 >&
+ViPriceInfo::_internal_price() const {
+  return price_;
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedField< ::PROTOBUF_NAMESPACE_ID::int32 >&
+ViPriceInfo::price() const {
+  // @@protoc_insertion_point(field_list:stock_api.ViPriceInfo.price)
+  return _internal_price();
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedField< ::PROTOBUF_NAMESPACE_ID::int32 >*
+ViPriceInfo::_internal_mutable_price() {
+  return &price_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedField< ::PROTOBUF_NAMESPACE_ID::int32 >*
+ViPriceInfo::mutable_price() {
+  // @@protoc_insertion_point(field_mutable_list:stock_api.ViPriceInfo.price)
+  return _internal_mutable_price();
 }
 
 // -------------------------------------------------------------------
@@ -9885,6 +10160,8 @@ inline void CybosStockAlarm::set_allocated_content(std::string* content) {
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------

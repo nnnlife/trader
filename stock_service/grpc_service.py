@@ -65,6 +65,7 @@ class StockServicer(stock_provider_pb2_grpc.StockServicer):
         self.current_datetime = None
         self.simulation_on = False
         self.today_top_list = {'momentum': [], 'ratio': [], 'amount': []}
+        self.open_quote_list = []
         preload.load(datetime.now(), self.skip_ydata)
 
         _LOGGER.info('StockService init ready')
@@ -319,6 +320,8 @@ class StockServicer(stock_provider_pb2_grpc.StockServicer):
         if not self.simulation_on:
             preload.load(request.ToDatetime() + timedelta(hours=9), self.skip_ydata)
             vi_price_info.clear()
+            self.open_quote_list.clear()
+
         self.handle_time(request.ToDatetime())
         return Empty()
 
@@ -351,11 +354,6 @@ class StockServicer(stock_provider_pb2_grpc.StockServicer):
         if codelist is None:
             codelist = []
         return stock_provider_pb2.CodeList(codelist=codelist)
-
-
-    def GetTodayNineThirtyList(self, request, context):
-        _LOGGER.info('GetTodayNineThirtyList')
-        return stock_provider_pb2.CodeList(codelist=[])
 
 
     def SetSimulationStatus(self, request, context):
@@ -650,6 +648,14 @@ class StockServicer(stock_provider_pb2_grpc.StockServicer):
 
     def GetFavoriteList(self, request, context):
         return stock_provider_pb2.CodeList(codelist=favorite.get_favorite())
+
+    def GetOpenQuoteList(self, request, context):
+        return stock_provider_pb2.CodeList(codelist=self.open_quote_list)
+
+    def SetOpenQuoteRatioList(self, request, context):
+        self.open_quote_list = request.codelist
+        self.send_list_changed('openquote')
+        return Empty()
 
     def SetTodayAmountTopList(self, request, context):
         _LOGGER.info('AMOUNT LIST %d', len(request.codelist))

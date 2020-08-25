@@ -11,7 +11,7 @@ ApplicationWindow {
     RowLayout { 
         anchors.fill: parent
         spacing: 0.0
-        TnineThirtyList {
+        StrategyList {
             Layout.fillWidth: true
             Layout.fillHeight: true
         }

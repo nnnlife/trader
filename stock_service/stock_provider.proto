@@ -52,11 +52,12 @@ service Stock {
   rpc SetTodayAmountRatioList(CodeList) returns (google.protobuf.Empty) {}
   rpc SetTodayAmountMomentumList(CodeList) returns (google.protobuf.Empty) {}
   rpc SetTodayAmountTopList(CodeList) returns (google.protobuf.Empty) {}
+  rpc SetOpenQuoteRatioList(CodeList) returns (google.protobuf.Empty) {}
 
   rpc GetTodayTopAmountList(TodayTopOption) returns (CodeList) {}
-  rpc GetTodayNineThirtyList(google.protobuf.Empty) returns (CodeList) {}
   rpc GetRecentSearch(google.protobuf.Empty) returns (CodeList) {}
   rpc GetViList(google.protobuf.Empty) returns (CodeList) {}
+  rpc GetOpenQuoteList(google.protobuf.Empty) returns (CodeList) {}
 
   rpc ListenCurrentStock(google.protobuf.Empty) returns (stream StockCodeQuery) {}
   rpc ListenListChanged(google.protobuf.Empty) returns (stream ListType) {}

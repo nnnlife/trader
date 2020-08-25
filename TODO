@@ -1,13 +1,8 @@
 * TODO
-    * Performance Test 프로그램
-        - 9시부터 9시 5분 Tick 수집 및 Encoding 후 gevent queue 에 보내는 테스트 
-
-        - Test Step
-            1. Subscribe 후 Z000001 로 Load 까지 확인
-                * qml_xxx 실행
-            2. T000001로 Test 후 CPU 100% 확인
-            3. Server 에서 동일 테스트 진행 후 CPU Load 확인
-            4. 양쪽 모두 동일할 경우, cProfile 로 profile 데이터 추출
+    * VI Plugin 간소화 및 MAX Price 도 계산
+    * 초기 RANK 10 으로 동시호가 / 전날 Amount 비율, 100억 이상, 시작가 VI 안걸린 종목 #
+    * 5초 틱 그래프 만들기
+    * 호가 벌어지는 타이밍에 수익 가능? ask_price bid_price 가 수익 가능 구조일 때 bid에서 사고 ask_price 바로 아래 가격으로 매도
     * ON_MEET 및 특정 가격 주문 # 특정 가격 OK
     * 역사적 신고가에서 오늘 현재 가격이 0 ~ -5% 항목
     * 눌림, 기존 Tnine - 조회로 Refresh 하는 방식

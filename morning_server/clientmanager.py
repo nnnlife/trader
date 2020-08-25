@@ -319,6 +319,7 @@ class ClientManager:
     def handle_block_response(self, header, body):
         collector = self.find_request_by_id(header['_id'])
         if collector is None:
+            # TODO: client will be clocked, so need to return some value according to method
             logger.critical('Cannot find collector(response) %s', header)    
             return
         collector.set_pending(False)
