@@ -9913,7 +9913,14 @@ class Stock final {
    public:
     WithStreamedUnaryMethod_SayHello() {
       ::grpc::Service::MarkMethodStreamed(0,
-        new ::grpc::internal::StreamedUnaryHandler< ::google::protobuf::Empty, ::google::protobuf::Empty>(std::bind(&WithStreamedUnaryMethod_SayHello<BaseClass>::StreamedSayHello, this, std::placeholders::_1, std::placeholders::_2)));
+        new ::grpc::internal::StreamedUnaryHandler<
+          ::google::protobuf::Empty, ::google::protobuf::Empty>(
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerUnaryStreamer<
+                     ::google::protobuf::Empty, ::google::protobuf::Empty>* streamer) {
+                       return this->StreamedSayHello(context,
+                         streamer);
+                  }));
     }
     ~WithStreamedUnaryMethod_SayHello() override {
       BaseClassMustBeDerivedFromService(this);
@@ -9933,7 +9940,14 @@ class Stock final {
    public:
     WithStreamedUnaryMethod_GetDayData() {
       ::grpc::Service::MarkMethodStreamed(1,
-        new ::grpc::internal::StreamedUnaryHandler< ::stock_api::StockQuery, ::stock_api::CybosDayDatas>(std::bind(&WithStreamedUnaryMethod_GetDayData<BaseClass>::StreamedGetDayData, this, std::placeholders::_1, std::placeholders::_2)));
+        new ::grpc::internal::StreamedUnaryHandler<
+          ::stock_api::StockQuery, ::stock_api::CybosDayDatas>(
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerUnaryStreamer<
+                     ::stock_api::StockQuery, ::stock_api::CybosDayDatas>* streamer) {
+                       return this->StreamedGetDayData(context,
+                         streamer);
+                  }));
     }
     ~WithStreamedUnaryMethod_GetDayData() override {
       BaseClassMustBeDerivedFromService(this);
@@ -9953,7 +9967,14 @@ class Stock final {
    public:
     WithStreamedUnaryMethod_GetMinuteData() {
       ::grpc::Service::MarkMethodStreamed(2,
-        new ::grpc::internal::StreamedUnaryHandler< ::stock_api::StockQuery, ::stock_api::CybosDayDatas>(std::bind(&WithStreamedUnaryMethod_GetMinuteData<BaseClass>::StreamedGetMinuteData, this, std::placeholders::_1, std::placeholders::_2)));
+        new ::grpc::internal::StreamedUnaryHandler<
+          ::stock_api::StockQuery, ::stock_api::CybosDayDatas>(
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerUnaryStreamer<
+                     ::stock_api::StockQuery, ::stock_api::CybosDayDatas>* streamer) {
+                       return this->StreamedGetMinuteData(context,
+                         streamer);
+                  }));
     }
     ~WithStreamedUnaryMethod_GetMinuteData() override {
       BaseClassMustBeDerivedFromService(this);
@@ -9973,7 +9994,14 @@ class Stock final {
    public:
     WithStreamedUnaryMethod_GetTodayMinuteData() {
       ::grpc::Service::MarkMethodStreamed(3,
-        new ::grpc::internal::StreamedUnaryHandler< ::stock_api::StockCodeQuery, ::stock_api::CybosDayDatas>(std::bind(&WithStreamedUnaryMethod_GetTodayMinuteData<BaseClass>::StreamedGetTodayMinuteData, this, std::placeholders::_1, std::placeholders::_2)));
+        new ::grpc::internal::StreamedUnaryHandler<
+          ::stock_api::StockCodeQuery, ::stock_api::CybosDayDatas>(
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerUnaryStreamer<
+                     ::stock_api::StockCodeQuery, ::stock_api::CybosDayDatas>* streamer) {
+                       return this->StreamedGetTodayMinuteData(context,
+                         streamer);
+                  }));
     }
     ~WithStreamedUnaryMethod_GetTodayMinuteData() override {
       BaseClassMustBeDerivedFromService(this);
@@ -9993,7 +10021,14 @@ class Stock final {
    public:
     WithStreamedUnaryMethod_GetPastMinuteData() {
       ::grpc::Service::MarkMethodStreamed(4,
-        new ::grpc::internal::StreamedUnaryHandler< ::stock_api::PastMinuteQuery, ::stock_api::CybosDayDatas>(std::bind(&WithStreamedUnaryMethod_GetPastMinuteData<BaseClass>::StreamedGetPastMinuteData, this, std::placeholders::_1, std::placeholders::_2)));
+        new ::grpc::internal::StreamedUnaryHandler<
+          ::stock_api::PastMinuteQuery, ::stock_api::CybosDayDatas>(
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerUnaryStreamer<
+                     ::stock_api::PastMinuteQuery, ::stock_api::CybosDayDatas>* streamer) {
+                       return this->StreamedGetPastMinuteData(context,
+                         streamer);
+                  }));
     }
     ~WithStreamedUnaryMethod_GetPastMinuteData() override {
       BaseClassMustBeDerivedFromService(this);
@@ -10013,7 +10048,14 @@ class Stock final {
    public:
     WithStreamedUnaryMethod_GetSubscribeCodes() {
       ::grpc::Service::MarkMethodStreamed(5,
-        new ::grpc::internal::StreamedUnaryHandler< ::google::protobuf::Empty, ::stock_api::CodeList>(std::bind(&WithStreamedUnaryMethod_GetSubscribeCodes<BaseClass>::StreamedGetSubscribeCodes, this, std::placeholders::_1, std::placeholders::_2)));
+        new ::grpc::internal::StreamedUnaryHandler<
+          ::google::protobuf::Empty, ::stock_api::CodeList>(
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerUnaryStreamer<
+                     ::google::protobuf::Empty, ::stock_api::CodeList>* streamer) {
+                       return this->StreamedGetSubscribeCodes(context,
+                         streamer);
+                  }));
     }
     ~WithStreamedUnaryMethod_GetSubscribeCodes() override {
       BaseClassMustBeDerivedFromService(this);
@@ -10033,7 +10075,14 @@ class Stock final {
    public:
     WithStreamedUnaryMethod_GetBalance() {
       ::grpc::Service::MarkMethodStreamed(6,
-        new ::grpc::internal::StreamedUnaryHandler< ::google::protobuf::Empty, ::stock_api::Balance>(std::bind(&WithStreamedUnaryMethod_GetBalance<BaseClass>::StreamedGetBalance, this, std::placeholders::_1, std::placeholders::_2)));
+        new ::grpc::internal::StreamedUnaryHandler<
+          ::google::protobuf::Empty, ::stock_api::Balance>(
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerUnaryStreamer<
+                     ::google::protobuf::Empty, ::stock_api::Balance>* streamer) {
+                       return this->StreamedGetBalance(context,
+                         streamer);
+                  }));
     }
     ~WithStreamedUnaryMethod_GetBalance() override {
       BaseClassMustBeDerivedFromService(this);
@@ -10053,7 +10102,14 @@ class Stock final {
    public:
     WithStreamedUnaryMethod_OrderStock() {
       ::grpc::Service::MarkMethodStreamed(7,
-        new ::grpc::internal::StreamedUnaryHandler< ::stock_api::OrderMsg, ::stock_api::CybosOrderReturn>(std::bind(&WithStreamedUnaryMethod_OrderStock<BaseClass>::StreamedOrderStock, this, std::placeholders::_1, std::placeholders::_2)));
+        new ::grpc::internal::StreamedUnaryHandler<
+          ::stock_api::OrderMsg, ::stock_api::CybosOrderReturn>(
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerUnaryStreamer<
+                     ::stock_api::OrderMsg, ::stock_api::CybosOrderReturn>* streamer) {
+                       return this->StreamedOrderStock(context,
+                         streamer);
+                  }));
     }
     ~WithStreamedUnaryMethod_OrderStock() override {
       BaseClassMustBeDerivedFromService(this);
@@ -10073,7 +10129,14 @@ class Stock final {
    public:
     WithStreamedUnaryMethod_ChangeOrder() {
       ::grpc::Service::MarkMethodStreamed(8,
-        new ::grpc::internal::StreamedUnaryHandler< ::stock_api::OrderMsg, ::stock_api::CybosOrderReturn>(std::bind(&WithStreamedUnaryMethod_ChangeOrder<BaseClass>::StreamedChangeOrder, this, std::placeholders::_1, std::placeholders::_2)));
+        new ::grpc::internal::StreamedUnaryHandler<
+          ::stock_api::OrderMsg, ::stock_api::CybosOrderReturn>(
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerUnaryStreamer<
+                     ::stock_api::OrderMsg, ::stock_api::CybosOrderReturn>* streamer) {
+                       return this->StreamedChangeOrder(context,
+                         streamer);
+                  }));
     }
     ~WithStreamedUnaryMethod_ChangeOrder() override {
       BaseClassMustBeDerivedFromService(this);
@@ -10093,7 +10156,14 @@ class Stock final {
    public:
     WithStreamedUnaryMethod_CancelOrder() {
       ::grpc::Service::MarkMethodStreamed(9,
-        new ::grpc::internal::StreamedUnaryHandler< ::stock_api::OrderMsg, ::stock_api::CybosOrderReturn>(std::bind(&WithStreamedUnaryMethod_CancelOrder<BaseClass>::StreamedCancelOrder, this, std::placeholders::_1, std::placeholders::_2)));
+        new ::grpc::internal::StreamedUnaryHandler<
+          ::stock_api::OrderMsg, ::stock_api::CybosOrderReturn>(
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerUnaryStreamer<
+                     ::stock_api::OrderMsg, ::stock_api::CybosOrderReturn>* streamer) {
+                       return this->StreamedCancelOrder(context,
+                         streamer);
+                  }));
     }
     ~WithStreamedUnaryMethod_CancelOrder() override {
       BaseClassMustBeDerivedFromService(this);
@@ -10113,7 +10183,14 @@ class Stock final {
    public:
     WithStreamedUnaryMethod_GetYearHigh() {
       ::grpc::Service::MarkMethodStreamed(10,
-        new ::grpc::internal::StreamedUnaryHandler< ::stock_api::StockCodeQuery, ::stock_api::YearHighInfo>(std::bind(&WithStreamedUnaryMethod_GetYearHigh<BaseClass>::StreamedGetYearHigh, this, std::placeholders::_1, std::placeholders::_2)));
+        new ::grpc::internal::StreamedUnaryHandler<
+          ::stock_api::StockCodeQuery, ::stock_api::YearHighInfo>(
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerUnaryStreamer<
+                     ::stock_api::StockCodeQuery, ::stock_api::YearHighInfo>* streamer) {
+                       return this->StreamedGetYearHigh(context,
+                         streamer);
+                  }));
     }
     ~WithStreamedUnaryMethod_GetYearHigh() override {
       BaseClassMustBeDerivedFromService(this);
@@ -10133,7 +10210,14 @@ class Stock final {
    public:
     WithStreamedUnaryMethod_RequestCybosTickData() {
       ::grpc::Service::MarkMethodStreamed(11,
-        new ::grpc::internal::StreamedUnaryHandler< ::stock_api::StockCodeQuery, ::google::protobuf::Empty>(std::bind(&WithStreamedUnaryMethod_RequestCybosTickData<BaseClass>::StreamedRequestCybosTickData, this, std::placeholders::_1, std::placeholders::_2)));
+        new ::grpc::internal::StreamedUnaryHandler<
+          ::stock_api::StockCodeQuery, ::google::protobuf::Empty>(
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerUnaryStreamer<
+                     ::stock_api::StockCodeQuery, ::google::protobuf::Empty>* streamer) {
+                       return this->StreamedRequestCybosTickData(context,
+                         streamer);
+                  }));
     }
     ~WithStreamedUnaryMethod_RequestCybosTickData() override {
       BaseClassMustBeDerivedFromService(this);
@@ -10153,7 +10237,14 @@ class Stock final {
    public:
     WithStreamedUnaryMethod_RequestCybosBidAsk() {
       ::grpc::Service::MarkMethodStreamed(12,
-        new ::grpc::internal::StreamedUnaryHandler< ::stock_api::StockCodeQuery, ::google::protobuf::Empty>(std::bind(&WithStreamedUnaryMethod_RequestCybosBidAsk<BaseClass>::StreamedRequestCybosBidAsk, this, std::placeholders::_1, std::placeholders::_2)));
+        new ::grpc::internal::StreamedUnaryHandler<
+          ::stock_api::StockCodeQuery, ::google::protobuf::Empty>(
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerUnaryStreamer<
+                     ::stock_api::StockCodeQuery, ::google::protobuf::Empty>* streamer) {
+                       return this->StreamedRequestCybosBidAsk(context,
+                         streamer);
+                  }));
     }
     ~WithStreamedUnaryMethod_RequestCybosBidAsk() override {
       BaseClassMustBeDerivedFromService(this);
@@ -10173,7 +10264,14 @@ class Stock final {
    public:
     WithStreamedUnaryMethod_RequestCybosSubject() {
       ::grpc::Service::MarkMethodStreamed(13,
-        new ::grpc::internal::StreamedUnaryHandler< ::stock_api::StockCodeQuery, ::google::protobuf::Empty>(std::bind(&WithStreamedUnaryMethod_RequestCybosSubject<BaseClass>::StreamedRequestCybosSubject, this, std::placeholders::_1, std::placeholders::_2)));
+        new ::grpc::internal::StreamedUnaryHandler<
+          ::stock_api::StockCodeQuery, ::google::protobuf::Empty>(
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerUnaryStreamer<
+                     ::stock_api::StockCodeQuery, ::google::protobuf::Empty>* streamer) {
+                       return this->StreamedRequestCybosSubject(context,
+                         streamer);
+                  }));
     }
     ~WithStreamedUnaryMethod_RequestCybosSubject() override {
       BaseClassMustBeDerivedFromService(this);
@@ -10193,7 +10291,14 @@ class Stock final {
    public:
     WithStreamedUnaryMethod_RequestCybosAlarm() {
       ::grpc::Service::MarkMethodStreamed(14,
-        new ::grpc::internal::StreamedUnaryHandler< ::google::protobuf::Empty, ::google::protobuf::Empty>(std::bind(&WithStreamedUnaryMethod_RequestCybosAlarm<BaseClass>::StreamedRequestCybosAlarm, this, std::placeholders::_1, std::placeholders::_2)));
+        new ::grpc::internal::StreamedUnaryHandler<
+          ::google::protobuf::Empty, ::google::protobuf::Empty>(
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerUnaryStreamer<
+                     ::google::protobuf::Empty, ::google::protobuf::Empty>* streamer) {
+                       return this->StreamedRequestCybosAlarm(context,
+                         streamer);
+                  }));
     }
     ~WithStreamedUnaryMethod_RequestCybosAlarm() override {
       BaseClassMustBeDerivedFromService(this);
@@ -10213,7 +10318,14 @@ class Stock final {
    public:
     WithStreamedUnaryMethod_RequestToTrader() {
       ::grpc::Service::MarkMethodStreamed(15,
-        new ::grpc::internal::StreamedUnaryHandler< ::stock_api::TradeMsg, ::google::protobuf::Empty>(std::bind(&WithStreamedUnaryMethod_RequestToTrader<BaseClass>::StreamedRequestToTrader, this, std::placeholders::_1, std::placeholders::_2)));
+        new ::grpc::internal::StreamedUnaryHandler<
+          ::stock_api::TradeMsg, ::google::protobuf::Empty>(
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerUnaryStreamer<
+                     ::stock_api::TradeMsg, ::google::protobuf::Empty>* streamer) {
+                       return this->StreamedRequestToTrader(context,
+                         streamer);
+                  }));
     }
     ~WithStreamedUnaryMethod_RequestToTrader() override {
       BaseClassMustBeDerivedFromService(this);
@@ -10233,7 +10345,14 @@ class Stock final {
    public:
     WithStreamedUnaryMethod_RequestCybosTradeResult() {
       ::grpc::Service::MarkMethodStreamed(16,
-        new ::grpc::internal::StreamedUnaryHandler< ::google::protobuf::Empty, ::google::protobuf::Empty>(std::bind(&WithStreamedUnaryMethod_RequestCybosTradeResult<BaseClass>::StreamedRequestCybosTradeResult, this, std::placeholders::_1, std::placeholders::_2)));
+        new ::grpc::internal::StreamedUnaryHandler<
+          ::google::protobuf::Empty, ::google::protobuf::Empty>(
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerUnaryStreamer<
+                     ::google::protobuf::Empty, ::google::protobuf::Empty>* streamer) {
+                       return this->StreamedRequestCybosTradeResult(context,
+                         streamer);
+                  }));
     }
     ~WithStreamedUnaryMethod_RequestCybosTradeResult() override {
       BaseClassMustBeDerivedFromService(this);
@@ -10253,7 +10372,14 @@ class Stock final {
    public:
     WithStreamedUnaryMethod_ReportOrderResult() {
       ::grpc::Service::MarkMethodStreamed(17,
-        new ::grpc::internal::StreamedUnaryHandler< ::stock_api::OrderResult, ::google::protobuf::Empty>(std::bind(&WithStreamedUnaryMethod_ReportOrderResult<BaseClass>::StreamedReportOrderResult, this, std::placeholders::_1, std::placeholders::_2)));
+        new ::grpc::internal::StreamedUnaryHandler<
+          ::stock_api::OrderResult, ::google::protobuf::Empty>(
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerUnaryStreamer<
+                     ::stock_api::OrderResult, ::google::protobuf::Empty>* streamer) {
+                       return this->StreamedReportOrderResult(context,
+                         streamer);
+                  }));
     }
     ~WithStreamedUnaryMethod_ReportOrderResult() override {
       BaseClassMustBeDerivedFromService(this);
@@ -10273,7 +10399,14 @@ class Stock final {
    public:
     WithStreamedUnaryMethod_IsKospi() {
       ::grpc::Service::MarkMethodStreamed(18,
-        new ::grpc::internal::StreamedUnaryHandler< ::stock_api::StockCodeQuery, ::stock_api::Bool>(std::bind(&WithStreamedUnaryMethod_IsKospi<BaseClass>::StreamedIsKospi, this, std::placeholders::_1, std::placeholders::_2)));
+        new ::grpc::internal::StreamedUnaryHandler<
+          ::stock_api::StockCodeQuery, ::stock_api::Bool>(
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerUnaryStreamer<
+                     ::stock_api::StockCodeQuery, ::stock_api::Bool>* streamer) {
+                       return this->StreamedIsKospi(context,
+                         streamer);
+                  }));
     }
     ~WithStreamedUnaryMethod_IsKospi() override {
       BaseClassMustBeDerivedFromService(this);
@@ -10293,7 +10426,14 @@ class Stock final {
    public:
     WithStreamedUnaryMethod_SetViPriceInfo() {
       ::grpc::Service::MarkMethodStreamed(19,
-        new ::grpc::internal::StreamedUnaryHandler< ::stock_api::ViPriceInfo, ::google::protobuf::Empty>(std::bind(&WithStreamedUnaryMethod_SetViPriceInfo<BaseClass>::StreamedSetViPriceInfo, this, std::placeholders::_1, std::placeholders::_2)));
+        new ::grpc::internal::StreamedUnaryHandler<
+          ::stock_api::ViPriceInfo, ::google::protobuf::Empty>(
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerUnaryStreamer<
+                     ::stock_api::ViPriceInfo, ::google::protobuf::Empty>* streamer) {
+                       return this->StreamedSetViPriceInfo(context,
+                         streamer);
+                  }));
     }
     ~WithStreamedUnaryMethod_SetViPriceInfo() override {
       BaseClassMustBeDerivedFromService(this);
@@ -10313,7 +10453,14 @@ class Stock final {
    public:
     WithStreamedUnaryMethod_GetViPrice() {
       ::grpc::Service::MarkMethodStreamed(20,
-        new ::grpc::internal::StreamedUnaryHandler< ::stock_api::StockCodeQuery, ::stock_api::Prices>(std::bind(&WithStreamedUnaryMethod_GetViPrice<BaseClass>::StreamedGetViPrice, this, std::placeholders::_1, std::placeholders::_2)));
+        new ::grpc::internal::StreamedUnaryHandler<
+          ::stock_api::StockCodeQuery, ::stock_api::Prices>(
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerUnaryStreamer<
+                     ::stock_api::StockCodeQuery, ::stock_api::Prices>* streamer) {
+                       return this->StreamedGetViPrice(context,
+                         streamer);
+                  }));
     }
     ~WithStreamedUnaryMethod_GetViPrice() override {
       BaseClassMustBeDerivedFromService(this);
@@ -10333,7 +10480,14 @@ class Stock final {
    public:
     WithStreamedUnaryMethod_SetCurrentStock() {
       ::grpc::Service::MarkMethodStreamed(24,
-        new ::grpc::internal::StreamedUnaryHandler< ::stock_api::StockCodeQuery, ::google::protobuf::Empty>(std::bind(&WithStreamedUnaryMethod_SetCurrentStock<BaseClass>::StreamedSetCurrentStock, this, std::placeholders::_1, std::placeholders::_2)));
+        new ::grpc::internal::StreamedUnaryHandler<
+          ::stock_api::StockCodeQuery, ::google::protobuf::Empty>(
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerUnaryStreamer<
+                     ::stock_api::StockCodeQuery, ::google::protobuf::Empty>* streamer) {
+                       return this->StreamedSetCurrentStock(context,
+                         streamer);
+                  }));
     }
     ~WithStreamedUnaryMethod_SetCurrentStock() override {
       BaseClassMustBeDerivedFromService(this);
@@ -10353,7 +10507,14 @@ class Stock final {
    public:
     WithStreamedUnaryMethod_SetCurrentDateTime() {
       ::grpc::Service::MarkMethodStreamed(25,
-        new ::grpc::internal::StreamedUnaryHandler< ::google::protobuf::Timestamp, ::google::protobuf::Empty>(std::bind(&WithStreamedUnaryMethod_SetCurrentDateTime<BaseClass>::StreamedSetCurrentDateTime, this, std::placeholders::_1, std::placeholders::_2)));
+        new ::grpc::internal::StreamedUnaryHandler<
+          ::google::protobuf::Timestamp, ::google::protobuf::Empty>(
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerUnaryStreamer<
+                     ::google::protobuf::Timestamp, ::google::protobuf::Empty>* streamer) {
+                       return this->StreamedSetCurrentDateTime(context,
+                         streamer);
+                  }));
     }
     ~WithStreamedUnaryMethod_SetCurrentDateTime() override {
       BaseClassMustBeDerivedFromService(this);
@@ -10373,7 +10534,14 @@ class Stock final {
    public:
     WithStreamedUnaryMethod_GetCompanyName() {
       ::grpc::Service::MarkMethodStreamed(26,
-        new ::grpc::internal::StreamedUnaryHandler< ::stock_api::StockCodeQuery, ::stock_api::CompanyName>(std::bind(&WithStreamedUnaryMethod_GetCompanyName<BaseClass>::StreamedGetCompanyName, this, std::placeholders::_1, std::placeholders::_2)));
+        new ::grpc::internal::StreamedUnaryHandler<
+          ::stock_api::StockCodeQuery, ::stock_api::CompanyName>(
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerUnaryStreamer<
+                     ::stock_api::StockCodeQuery, ::stock_api::CompanyName>* streamer) {
+                       return this->StreamedGetCompanyName(context,
+                         streamer);
+                  }));
     }
     ~WithStreamedUnaryMethod_GetCompanyName() override {
       BaseClassMustBeDerivedFromService(this);
@@ -10393,7 +10561,14 @@ class Stock final {
    public:
     WithStreamedUnaryMethod_GetFavoriteList() {
       ::grpc::Service::MarkMethodStreamed(27,
-        new ::grpc::internal::StreamedUnaryHandler< ::google::protobuf::Empty, ::stock_api::CodeList>(std::bind(&WithStreamedUnaryMethod_GetFavoriteList<BaseClass>::StreamedGetFavoriteList, this, std::placeholders::_1, std::placeholders::_2)));
+        new ::grpc::internal::StreamedUnaryHandler<
+          ::google::protobuf::Empty, ::stock_api::CodeList>(
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerUnaryStreamer<
+                     ::google::protobuf::Empty, ::stock_api::CodeList>* streamer) {
+                       return this->StreamedGetFavoriteList(context,
+                         streamer);
+                  }));
     }
     ~WithStreamedUnaryMethod_GetFavoriteList() override {
       BaseClassMustBeDerivedFromService(this);
@@ -10413,7 +10588,14 @@ class Stock final {
    public:
     WithStreamedUnaryMethod_AddFavorite() {
       ::grpc::Service::MarkMethodStreamed(28,
-        new ::grpc::internal::StreamedUnaryHandler< ::stock_api::StockCodeQuery, ::google::protobuf::Empty>(std::bind(&WithStreamedUnaryMethod_AddFavorite<BaseClass>::StreamedAddFavorite, this, std::placeholders::_1, std::placeholders::_2)));
+        new ::grpc::internal::StreamedUnaryHandler<
+          ::stock_api::StockCodeQuery, ::google::protobuf::Empty>(
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerUnaryStreamer<
+                     ::stock_api::StockCodeQuery, ::google::protobuf::Empty>* streamer) {
+                       return this->StreamedAddFavorite(context,
+                         streamer);
+                  }));
     }
     ~WithStreamedUnaryMethod_AddFavorite() override {
       BaseClassMustBeDerivedFromService(this);
@@ -10433,7 +10615,14 @@ class Stock final {
    public:
     WithStreamedUnaryMethod_RemoveFavorite() {
       ::grpc::Service::MarkMethodStreamed(29,
-        new ::grpc::internal::StreamedUnaryHandler< ::stock_api::StockCodeQuery, ::google::protobuf::Empty>(std::bind(&WithStreamedUnaryMethod_RemoveFavorite<BaseClass>::StreamedRemoveFavorite, this, std::placeholders::_1, std::placeholders::_2)));
+        new ::grpc::internal::StreamedUnaryHandler<
+          ::stock_api::StockCodeQuery, ::google::protobuf::Empty>(
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerUnaryStreamer<
+                     ::stock_api::StockCodeQuery, ::google::protobuf::Empty>* streamer) {
+                       return this->StreamedRemoveFavorite(context,
+                         streamer);
+                  }));
     }
     ~WithStreamedUnaryMethod_RemoveFavorite() override {
       BaseClassMustBeDerivedFromService(this);
@@ -10453,7 +10642,14 @@ class Stock final {
    public:
     WithStreamedUnaryMethod_ClearRecentList() {
       ::grpc::Service::MarkMethodStreamed(30,
-        new ::grpc::internal::StreamedUnaryHandler< ::google::protobuf::Empty, ::google::protobuf::Empty>(std::bind(&WithStreamedUnaryMethod_ClearRecentList<BaseClass>::StreamedClearRecentList, this, std::placeholders::_1, std::placeholders::_2)));
+        new ::grpc::internal::StreamedUnaryHandler<
+          ::google::protobuf::Empty, ::google::protobuf::Empty>(
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerUnaryStreamer<
+                     ::google::protobuf::Empty, ::google::protobuf::Empty>* streamer) {
+                       return this->StreamedClearRecentList(context,
+                         streamer);
+                  }));
     }
     ~WithStreamedUnaryMethod_ClearRecentList() override {
       BaseClassMustBeDerivedFromService(this);
@@ -10473,7 +10669,14 @@ class Stock final {
    public:
     WithStreamedUnaryMethod_GetYesterdayTopAmountList() {
       ::grpc::Service::MarkMethodStreamed(31,
-        new ::grpc::internal::StreamedUnaryHandler< ::google::protobuf::Timestamp, ::stock_api::TopList>(std::bind(&WithStreamedUnaryMethod_GetYesterdayTopAmountList<BaseClass>::StreamedGetYesterdayTopAmountList, this, std::placeholders::_1, std::placeholders::_2)));
+        new ::grpc::internal::StreamedUnaryHandler<
+          ::google::protobuf::Timestamp, ::stock_api::TopList>(
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerUnaryStreamer<
+                     ::google::protobuf::Timestamp, ::stock_api::TopList>* streamer) {
+                       return this->StreamedGetYesterdayTopAmountList(context,
+                         streamer);
+                  }));
     }
     ~WithStreamedUnaryMethod_GetYesterdayTopAmountList() override {
       BaseClassMustBeDerivedFromService(this);
@@ -10493,7 +10696,14 @@ class Stock final {
    public:
     WithStreamedUnaryMethod_SetTodayAmountRatioList() {
       ::grpc::Service::MarkMethodStreamed(32,
-        new ::grpc::internal::StreamedUnaryHandler< ::stock_api::CodeList, ::google::protobuf::Empty>(std::bind(&WithStreamedUnaryMethod_SetTodayAmountRatioList<BaseClass>::StreamedSetTodayAmountRatioList, this, std::placeholders::_1, std::placeholders::_2)));
+        new ::grpc::internal::StreamedUnaryHandler<
+          ::stock_api::CodeList, ::google::protobuf::Empty>(
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerUnaryStreamer<
+                     ::stock_api::CodeList, ::google::protobuf::Empty>* streamer) {
+                       return this->StreamedSetTodayAmountRatioList(context,
+                         streamer);
+                  }));
     }
     ~WithStreamedUnaryMethod_SetTodayAmountRatioList() override {
       BaseClassMustBeDerivedFromService(this);
@@ -10513,7 +10723,14 @@ class Stock final {
    public:
     WithStreamedUnaryMethod_SetTodayAmountMomentumList() {
       ::grpc::Service::MarkMethodStreamed(33,
-        new ::grpc::internal::StreamedUnaryHandler< ::stock_api::CodeList, ::google::protobuf::Empty>(std::bind(&WithStreamedUnaryMethod_SetTodayAmountMomentumList<BaseClass>::StreamedSetTodayAmountMomentumList, this, std::placeholders::_1, std::placeholders::_2)));
+        new ::grpc::internal::StreamedUnaryHandler<
+          ::stock_api::CodeList, ::google::protobuf::Empty>(
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerUnaryStreamer<
+                     ::stock_api::CodeList, ::google::protobuf::Empty>* streamer) {
+                       return this->StreamedSetTodayAmountMomentumList(context,
+                         streamer);
+                  }));
     }
     ~WithStreamedUnaryMethod_SetTodayAmountMomentumList() override {
       BaseClassMustBeDerivedFromService(this);
@@ -10533,7 +10750,14 @@ class Stock final {
    public:
     WithStreamedUnaryMethod_SetTodayAmountTopList() {
       ::grpc::Service::MarkMethodStreamed(34,
-        new ::grpc::internal::StreamedUnaryHandler< ::stock_api::CodeList, ::google::protobuf::Empty>(std::bind(&WithStreamedUnaryMethod_SetTodayAmountTopList<BaseClass>::StreamedSetTodayAmountTopList, this, std::placeholders::_1, std::placeholders::_2)));
+        new ::grpc::internal::StreamedUnaryHandler<
+          ::stock_api::CodeList, ::google::protobuf::Empty>(
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerUnaryStreamer<
+                     ::stock_api::CodeList, ::google::protobuf::Empty>* streamer) {
+                       return this->StreamedSetTodayAmountTopList(context,
+                         streamer);
+                  }));
     }
     ~WithStreamedUnaryMethod_SetTodayAmountTopList() override {
       BaseClassMustBeDerivedFromService(this);
@@ -10553,7 +10777,14 @@ class Stock final {
    public:
     WithStreamedUnaryMethod_SetOpenQuoteRatioList() {
       ::grpc::Service::MarkMethodStreamed(35,
-        new ::grpc::internal::StreamedUnaryHandler< ::stock_api::CodeList, ::google::protobuf::Empty>(std::bind(&WithStreamedUnaryMethod_SetOpenQuoteRatioList<BaseClass>::StreamedSetOpenQuoteRatioList, this, std::placeholders::_1, std::placeholders::_2)));
+        new ::grpc::internal::StreamedUnaryHandler<
+          ::stock_api::CodeList, ::google::protobuf::Empty>(
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerUnaryStreamer<
+                     ::stock_api::CodeList, ::google::protobuf::Empty>* streamer) {
+                       return this->StreamedSetOpenQuoteRatioList(context,
+                         streamer);
+                  }));
     }
     ~WithStreamedUnaryMethod_SetOpenQuoteRatioList() override {
       BaseClassMustBeDerivedFromService(this);
@@ -10573,7 +10804,14 @@ class Stock final {
    public:
     WithStreamedUnaryMethod_GetTodayTopAmountList() {
       ::grpc::Service::MarkMethodStreamed(36,
-        new ::grpc::internal::StreamedUnaryHandler< ::stock_api::TodayTopOption, ::stock_api::CodeList>(std::bind(&WithStreamedUnaryMethod_GetTodayTopAmountList<BaseClass>::StreamedGetTodayTopAmountList, this, std::placeholders::_1, std::placeholders::_2)));
+        new ::grpc::internal::StreamedUnaryHandler<
+          ::stock_api::TodayTopOption, ::stock_api::CodeList>(
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerUnaryStreamer<
+                     ::stock_api::TodayTopOption, ::stock_api::CodeList>* streamer) {
+                       return this->StreamedGetTodayTopAmountList(context,
+                         streamer);
+                  }));
     }
     ~WithStreamedUnaryMethod_GetTodayTopAmountList() override {
       BaseClassMustBeDerivedFromService(this);
@@ -10593,7 +10831,14 @@ class Stock final {
    public:
     WithStreamedUnaryMethod_GetRecentSearch() {
       ::grpc::Service::MarkMethodStreamed(37,
-        new ::grpc::internal::StreamedUnaryHandler< ::google::protobuf::Empty, ::stock_api::CodeList>(std::bind(&WithStreamedUnaryMethod_GetRecentSearch<BaseClass>::StreamedGetRecentSearch, this, std::placeholders::_1, std::placeholders::_2)));
+        new ::grpc::internal::StreamedUnaryHandler<
+          ::google::protobuf::Empty, ::stock_api::CodeList>(
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerUnaryStreamer<
+                     ::google::protobuf::Empty, ::stock_api::CodeList>* streamer) {
+                       return this->StreamedGetRecentSearch(context,
+                         streamer);
+                  }));
     }
     ~WithStreamedUnaryMethod_GetRecentSearch() override {
       BaseClassMustBeDerivedFromService(this);
@@ -10613,7 +10858,14 @@ class Stock final {
    public:
     WithStreamedUnaryMethod_GetViList() {
       ::grpc::Service::MarkMethodStreamed(38,
-        new ::grpc::internal::StreamedUnaryHandler< ::google::protobuf::Empty, ::stock_api::CodeList>(std::bind(&WithStreamedUnaryMethod_GetViList<BaseClass>::StreamedGetViList, this, std::placeholders::_1, std::placeholders::_2)));
+        new ::grpc::internal::StreamedUnaryHandler<
+          ::google::protobuf::Empty, ::stock_api::CodeList>(
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerUnaryStreamer<
+                     ::google::protobuf::Empty, ::stock_api::CodeList>* streamer) {
+                       return this->StreamedGetViList(context,
+                         streamer);
+                  }));
     }
     ~WithStreamedUnaryMethod_GetViList() override {
       BaseClassMustBeDerivedFromService(this);
@@ -10633,7 +10885,14 @@ class Stock final {
    public:
     WithStreamedUnaryMethod_GetOpenQuoteList() {
       ::grpc::Service::MarkMethodStreamed(39,
-        new ::grpc::internal::StreamedUnaryHandler< ::google::protobuf::Empty, ::stock_api::CodeList>(std::bind(&WithStreamedUnaryMethod_GetOpenQuoteList<BaseClass>::StreamedGetOpenQuoteList, this, std::placeholders::_1, std::placeholders::_2)));
+        new ::grpc::internal::StreamedUnaryHandler<
+          ::google::protobuf::Empty, ::stock_api::CodeList>(
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerUnaryStreamer<
+                     ::google::protobuf::Empty, ::stock_api::CodeList>* streamer) {
+                       return this->StreamedGetOpenQuoteList(context,
+                         streamer);
+                  }));
     }
     ~WithStreamedUnaryMethod_GetOpenQuoteList() override {
       BaseClassMustBeDerivedFromService(this);
@@ -10653,7 +10912,14 @@ class Stock final {
    public:
     WithStreamedUnaryMethod_StartSimulation() {
       ::grpc::Service::MarkMethodStreamed(50,
-        new ::grpc::internal::StreamedUnaryHandler< ::stock_api::SimulationOperation, ::stock_api::Bool>(std::bind(&WithStreamedUnaryMethod_StartSimulation<BaseClass>::StreamedStartSimulation, this, std::placeholders::_1, std::placeholders::_2)));
+        new ::grpc::internal::StreamedUnaryHandler<
+          ::stock_api::SimulationOperation, ::stock_api::Bool>(
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerUnaryStreamer<
+                     ::stock_api::SimulationOperation, ::stock_api::Bool>* streamer) {
+                       return this->StreamedStartSimulation(context,
+                         streamer);
+                  }));
     }
     ~WithStreamedUnaryMethod_StartSimulation() override {
       BaseClassMustBeDerivedFromService(this);
@@ -10673,7 +10939,14 @@ class Stock final {
    public:
     WithStreamedUnaryMethod_StopSimulation() {
       ::grpc::Service::MarkMethodStreamed(51,
-        new ::grpc::internal::StreamedUnaryHandler< ::google::protobuf::Empty, ::google::protobuf::Empty>(std::bind(&WithStreamedUnaryMethod_StopSimulation<BaseClass>::StreamedStopSimulation, this, std::placeholders::_1, std::placeholders::_2)));
+        new ::grpc::internal::StreamedUnaryHandler<
+          ::google::protobuf::Empty, ::google::protobuf::Empty>(
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerUnaryStreamer<
+                     ::google::protobuf::Empty, ::google::protobuf::Empty>* streamer) {
+                       return this->StreamedStopSimulation(context,
+                         streamer);
+                  }));
     }
     ~WithStreamedUnaryMethod_StopSimulation() override {
       BaseClassMustBeDerivedFromService(this);
@@ -10693,7 +10966,14 @@ class Stock final {
    public:
     WithStreamedUnaryMethod_SetSimulationStatus() {
       ::grpc::Service::MarkMethodStreamed(52,
-        new ::grpc::internal::StreamedUnaryHandler< ::stock_api::SimulationStatus, ::google::protobuf::Empty>(std::bind(&WithStreamedUnaryMethod_SetSimulationStatus<BaseClass>::StreamedSetSimulationStatus, this, std::placeholders::_1, std::placeholders::_2)));
+        new ::grpc::internal::StreamedUnaryHandler<
+          ::stock_api::SimulationStatus, ::google::protobuf::Empty>(
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerUnaryStreamer<
+                     ::stock_api::SimulationStatus, ::google::protobuf::Empty>* streamer) {
+                       return this->StreamedSetSimulationStatus(context,
+                         streamer);
+                  }));
     }
     ~WithStreamedUnaryMethod_SetSimulationStatus() override {
       BaseClassMustBeDerivedFromService(this);
@@ -10713,7 +10993,14 @@ class Stock final {
    public:
     WithStreamedUnaryMethod_GetSimulationStatus() {
       ::grpc::Service::MarkMethodStreamed(53,
-        new ::grpc::internal::StreamedUnaryHandler< ::google::protobuf::Empty, ::stock_api::SimulationStatus>(std::bind(&WithStreamedUnaryMethod_GetSimulationStatus<BaseClass>::StreamedGetSimulationStatus, this, std::placeholders::_1, std::placeholders::_2)));
+        new ::grpc::internal::StreamedUnaryHandler<
+          ::google::protobuf::Empty, ::stock_api::SimulationStatus>(
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerUnaryStreamer<
+                     ::google::protobuf::Empty, ::stock_api::SimulationStatus>* streamer) {
+                       return this->StreamedGetSimulationStatus(context,
+                         streamer);
+                  }));
     }
     ~WithStreamedUnaryMethod_GetSimulationStatus() override {
       BaseClassMustBeDerivedFromService(this);
@@ -10734,7 +11021,14 @@ class Stock final {
    public:
     WithSplitStreamingMethod_ListenTraderMsg() {
       ::grpc::Service::MarkMethodStreamed(21,
-        new ::grpc::internal::SplitServerStreamingHandler< ::google::protobuf::Empty, ::stock_api::TradeMsg>(std::bind(&WithSplitStreamingMethod_ListenTraderMsg<BaseClass>::StreamedListenTraderMsg, this, std::placeholders::_1, std::placeholders::_2)));
+        new ::grpc::internal::SplitServerStreamingHandler<
+          ::google::protobuf::Empty, ::stock_api::TradeMsg>(
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerSplitStreamer<
+                     ::google::protobuf::Empty, ::stock_api::TradeMsg>* streamer) {
+                       return this->StreamedListenTraderMsg(context,
+                         streamer);
+                  }));
     }
     ~WithSplitStreamingMethod_ListenTraderMsg() override {
       BaseClassMustBeDerivedFromService(this);
@@ -10754,7 +11048,14 @@ class Stock final {
    public:
     WithSplitStreamingMethod_ListenCybosOrderResult() {
       ::grpc::Service::MarkMethodStreamed(22,
-        new ::grpc::internal::SplitServerStreamingHandler< ::google::protobuf::Empty, ::stock_api::CybosOrderResult>(std::bind(&WithSplitStreamingMethod_ListenCybosOrderResult<BaseClass>::StreamedListenCybosOrderResult, this, std::placeholders::_1, std::placeholders::_2)));
+        new ::grpc::internal::SplitServerStreamingHandler<
+          ::google::protobuf::Empty, ::stock_api::CybosOrderResult>(
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerSplitStreamer<
+                     ::google::protobuf::Empty, ::stock_api::CybosOrderResult>* streamer) {
+                       return this->StreamedListenCybosOrderResult(context,
+                         streamer);
+                  }));
     }
     ~WithSplitStreamingMethod_ListenCybosOrderResult() override {
       BaseClassMustBeDerivedFromService(this);
@@ -10774,7 +11075,14 @@ class Stock final {
    public:
     WithSplitStreamingMethod_ListenOrderResult() {
       ::grpc::Service::MarkMethodStreamed(23,
-        new ::grpc::internal::SplitServerStreamingHandler< ::google::protobuf::Empty, ::stock_api::OrderResult>(std::bind(&WithSplitStreamingMethod_ListenOrderResult<BaseClass>::StreamedListenOrderResult, this, std::placeholders::_1, std::placeholders::_2)));
+        new ::grpc::internal::SplitServerStreamingHandler<
+          ::google::protobuf::Empty, ::stock_api::OrderResult>(
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerSplitStreamer<
+                     ::google::protobuf::Empty, ::stock_api::OrderResult>* streamer) {
+                       return this->StreamedListenOrderResult(context,
+                         streamer);
+                  }));
     }
     ~WithSplitStreamingMethod_ListenOrderResult() override {
       BaseClassMustBeDerivedFromService(this);
@@ -10794,7 +11102,14 @@ class Stock final {
    public:
     WithSplitStreamingMethod_ListenCurrentStock() {
       ::grpc::Service::MarkMethodStreamed(40,
-        new ::grpc::internal::SplitServerStreamingHandler< ::google::protobuf::Empty, ::stock_api::StockCodeQuery>(std::bind(&WithSplitStreamingMethod_ListenCurrentStock<BaseClass>::StreamedListenCurrentStock, this, std::placeholders::_1, std::placeholders::_2)));
+        new ::grpc::internal::SplitServerStreamingHandler<
+          ::google::protobuf::Empty, ::stock_api::StockCodeQuery>(
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerSplitStreamer<
+                     ::google::protobuf::Empty, ::stock_api::StockCodeQuery>* streamer) {
+                       return this->StreamedListenCurrentStock(context,
+                         streamer);
+                  }));
     }
     ~WithSplitStreamingMethod_ListenCurrentStock() override {
       BaseClassMustBeDerivedFromService(this);
@@ -10814,7 +11129,14 @@ class Stock final {
    public:
     WithSplitStreamingMethod_ListenListChanged() {
       ::grpc::Service::MarkMethodStreamed(41,
-        new ::grpc::internal::SplitServerStreamingHandler< ::google::protobuf::Empty, ::stock_api::ListType>(std::bind(&WithSplitStreamingMethod_ListenListChanged<BaseClass>::StreamedListenListChanged, this, std::placeholders::_1, std::placeholders::_2)));
+        new ::grpc::internal::SplitServerStreamingHandler<
+          ::google::protobuf::Empty, ::stock_api::ListType>(
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerSplitStreamer<
+                     ::google::protobuf::Empty, ::stock_api::ListType>* streamer) {
+                       return this->StreamedListenListChanged(context,
+                         streamer);
+                  }));
     }
     ~WithSplitStreamingMethod_ListenListChanged() override {
       BaseClassMustBeDerivedFromService(this);
@@ -10834,7 +11156,14 @@ class Stock final {
    public:
     WithSplitStreamingMethod_ListenCybosTickData() {
       ::grpc::Service::MarkMethodStreamed(42,
-        new ::grpc::internal::SplitServerStreamingHandler< ::google::protobuf::Empty, ::stock_api::CybosTickData>(std::bind(&WithSplitStreamingMethod_ListenCybosTickData<BaseClass>::StreamedListenCybosTickData, this, std::placeholders::_1, std::placeholders::_2)));
+        new ::grpc::internal::SplitServerStreamingHandler<
+          ::google::protobuf::Empty, ::stock_api::CybosTickData>(
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerSplitStreamer<
+                     ::google::protobuf::Empty, ::stock_api::CybosTickData>* streamer) {
+                       return this->StreamedListenCybosTickData(context,
+                         streamer);
+                  }));
     }
     ~WithSplitStreamingMethod_ListenCybosTickData() override {
       BaseClassMustBeDerivedFromService(this);
@@ -10854,7 +11183,14 @@ class Stock final {
    public:
     WithSplitStreamingMethod_ListenCybosBidAsk() {
       ::grpc::Service::MarkMethodStreamed(43,
-        new ::grpc::internal::SplitServerStreamingHandler< ::google::protobuf::Empty, ::stock_api::CybosBidAskTickData>(std::bind(&WithSplitStreamingMethod_ListenCybosBidAsk<BaseClass>::StreamedListenCybosBidAsk, this, std::placeholders::_1, std::placeholders::_2)));
+        new ::grpc::internal::SplitServerStreamingHandler<
+          ::google::protobuf::Empty, ::stock_api::CybosBidAskTickData>(
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerSplitStreamer<
+                     ::google::protobuf::Empty, ::stock_api::CybosBidAskTickData>* streamer) {
+                       return this->StreamedListenCybosBidAsk(context,
+                         streamer);
+                  }));
     }
     ~WithSplitStreamingMethod_ListenCybosBidAsk() override {
       BaseClassMustBeDerivedFromService(this);
@@ -10874,7 +11210,14 @@ class Stock final {
    public:
     WithSplitStreamingMethod_ListenCurrentTime() {
       ::grpc::Service::MarkMethodStreamed(44,
-        new ::grpc::internal::SplitServerStreamingHandler< ::google::protobuf::Empty, ::google::protobuf::Timestamp>(std::bind(&WithSplitStreamingMethod_ListenCurrentTime<BaseClass>::StreamedListenCurrentTime, this, std::placeholders::_1, std::placeholders::_2)));
+        new ::grpc::internal::SplitServerStreamingHandler<
+          ::google::protobuf::Empty, ::google::protobuf::Timestamp>(
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerSplitStreamer<
+                     ::google::protobuf::Empty, ::google::protobuf::Timestamp>* streamer) {
+                       return this->StreamedListenCurrentTime(context,
+                         streamer);
+                  }));
     }
     ~WithSplitStreamingMethod_ListenCurrentTime() override {
       BaseClassMustBeDerivedFromService(this);
@@ -10894,7 +11237,14 @@ class Stock final {
    public:
     WithSplitStreamingMethod_ListenCybosSubject() {
       ::grpc::Service::MarkMethodStreamed(45,
-        new ::grpc::internal::SplitServerStreamingHandler< ::google::protobuf::Empty, ::stock_api::CybosSubjectTickData>(std::bind(&WithSplitStreamingMethod_ListenCybosSubject<BaseClass>::StreamedListenCybosSubject, this, std::placeholders::_1, std::placeholders::_2)));
+        new ::grpc::internal::SplitServerStreamingHandler<
+          ::google::protobuf::Empty, ::stock_api::CybosSubjectTickData>(
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerSplitStreamer<
+                     ::google::protobuf::Empty, ::stock_api::CybosSubjectTickData>* streamer) {
+                       return this->StreamedListenCybosSubject(context,
+                         streamer);
+                  }));
     }
     ~WithSplitStreamingMethod_ListenCybosSubject() override {
       BaseClassMustBeDerivedFromService(this);
@@ -10914,7 +11264,14 @@ class Stock final {
    public:
     WithSplitStreamingMethod_ListenCybosAlarm() {
       ::grpc::Service::MarkMethodStreamed(46,
-        new ::grpc::internal::SplitServerStreamingHandler< ::google::protobuf::Empty, ::stock_api::CybosStockAlarm>(std::bind(&WithSplitStreamingMethod_ListenCybosAlarm<BaseClass>::StreamedListenCybosAlarm, this, std::placeholders::_1, std::placeholders::_2)));
+        new ::grpc::internal::SplitServerStreamingHandler<
+          ::google::protobuf::Empty, ::stock_api::CybosStockAlarm>(
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerSplitStreamer<
+                     ::google::protobuf::Empty, ::stock_api::CybosStockAlarm>* streamer) {
+                       return this->StreamedListenCybosAlarm(context,
+                         streamer);
+                  }));
     }
     ~WithSplitStreamingMethod_ListenCybosAlarm() override {
       BaseClassMustBeDerivedFromService(this);
@@ -10934,7 +11291,14 @@ class Stock final {
    public:
     WithSplitStreamingMethod_ListenSimulationStatusChanged() {
       ::grpc::Service::MarkMethodStreamed(47,
-        new ::grpc::internal::SplitServerStreamingHandler< ::google::protobuf::Empty, ::stock_api::SimulationStatus>(std::bind(&WithSplitStreamingMethod_ListenSimulationStatusChanged<BaseClass>::StreamedListenSimulationStatusChanged, this, std::placeholders::_1, std::placeholders::_2)));
+        new ::grpc::internal::SplitServerStreamingHandler<
+          ::google::protobuf::Empty, ::stock_api::SimulationStatus>(
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerSplitStreamer<
+                     ::google::protobuf::Empty, ::stock_api::SimulationStatus>* streamer) {
+                       return this->StreamedListenSimulationStatusChanged(context,
+                         streamer);
+                  }));
     }
     ~WithSplitStreamingMethod_ListenSimulationStatusChanged() override {
       BaseClassMustBeDerivedFromService(this);
@@ -10954,7 +11318,14 @@ class Stock final {
    public:
     WithSplitStreamingMethod_ListenSimulationOperation() {
       ::grpc::Service::MarkMethodStreamed(49,
-        new ::grpc::internal::SplitServerStreamingHandler< ::google::protobuf::Empty, ::stock_api::SimulationOperation>(std::bind(&WithSplitStreamingMethod_ListenSimulationOperation<BaseClass>::StreamedListenSimulationOperation, this, std::placeholders::_1, std::placeholders::_2)));
+        new ::grpc::internal::SplitServerStreamingHandler<
+          ::google::protobuf::Empty, ::stock_api::SimulationOperation>(
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerSplitStreamer<
+                     ::google::protobuf::Empty, ::stock_api::SimulationOperation>* streamer) {
+                       return this->StreamedListenSimulationOperation(context,
+                         streamer);
+                  }));
     }
     ~WithSplitStreamingMethod_ListenSimulationOperation() override {
       BaseClassMustBeDerivedFromService(this);

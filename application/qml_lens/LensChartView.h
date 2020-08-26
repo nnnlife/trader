@@ -9,6 +9,12 @@
 #include "DataProvider.h"
 #include "Candle.h"
 
+#include <google/protobuf/timestamp.pb.h>
+using google::protobuf::Timestamp;
+
+#define INTERVAL_MSEC   5000 // 5 sec
+#define DISPLAY_MSEC    600000 // 10 min
+
 
 class LensChartView : public QQuickPaintedItem {
     Q_OBJECT
@@ -17,44 +23,38 @@ public:
     enum {
         ROW_COUNT = 13,
         PRICE_ROW_COUNT = 10,
-        COLUMN_COUNT = 10,
+        COLUMN_COUNT = 11,
         VOLUME_ROW_COUNT = 2,
+        PRICE_COLUMN_COUNT = 1,
         TIME_LABEL_ROW_COUNT = 1,
     };
-    MorningTickChartView(QQuickItem *parent = 0);
+    LensChartView(QQuickItem *parent = 0);
     void paint(QPainter *painter);
 
-    qreal mapPriceToPos(int price, qreal startY, qreal endY);
+    qreal mapPriceToPos(int price, qreal endY, qreal startY);
+    qreal getVolumeHeight(qint64 volume, qreal volumeHeight);
 
 private:
     QString mCurrentStockCode;
-    QList<int> mPriceSteps;
+    QList<qreal> mPriceSteps;
     QList<Candle> mCandles;
     Candle mCurrentCandle;
-
-    uint currentVolumeMax;
-    uint currentVolumeMin;
-    QDateTime currentDateTime;
+    QDateTime mCurrentDateTime;
+    QDateTime mTickBeginDateTime;
+    qint64 mTickInterval = INTERVAL_MSEC;
+    qint64 mMaxVolume = 0;
 
     void resetData();
-    void calculateMinMaxRange();
-    void setPriceSteps(int h, int l);
-    void updatePriceSteps(int h, int l);
-    void setVolumeMinMax(uint h, uint l);
-    void updateVolumeMax(uint h);
 
+    QDateTime timestampToQDateTime(const Timestamp &t);
     qreal getCandleLineWidth(qreal w);
-    //qreal getTimeToXPos(uint time, qreal tickWidth, uint dataStartHour);
-    qreal getTimeToXPos(uint t, qreal tickWidth, uint startTime);
-    qreal getVolumeHeight(uint v, qreal ch);
+    void checkVolumeMax();
 
+    void checkPriceRange(int price);
     void drawGridLine(QPainter *painter, qreal cw, qreal ch);
-    void drawCandle(QPainter *painter, const CybosDayData &data, qreal startX, qreal horizontalGridStep, qreal priceChartEndY);
-    void drawVolume(QPainter *painter, const CybosDayData &data, qreal startX, qreal tickWidth, qreal ch, qreal volumeEndY);
-    void drawTimeLabels(QPainter *painter, qreal tickWidth, qreal cw, qreal ch, qreal startX, int cellCount, uint startTime);
-    void drawPriceLabels(QPainter *painter, qreal startX, qreal ch);
-    void drawCurrentLineRange(QPainter *painter, MinuteTick * mt, qreal startX, const CybosDayData &data, qreal cw, qreal priceChartEndY);
-
+    void drawCurrentPriceLine(QPainter *painter, int price, qreal fromX, qreal untilX, qreal startY, qreal endY);
+    void drawCandle(QPainter *painter, const Candle &candle, qreal x, qreal candleWidth, qreal startY, qreal endY);
+    void drawVolume(QPainter *painter, const Candle &candle, qreal x, qreal volumeWidth, qreal startY, qreal endY);
 
 private slots:
     void setCurrentStock(QString);

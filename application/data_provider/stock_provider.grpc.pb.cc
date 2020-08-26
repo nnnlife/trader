@@ -1502,272 +1502,542 @@ Stock::Service::Service() {
       Stock_method_names[0],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< Stock::Service, ::google::protobuf::Empty, ::google::protobuf::Empty>(
-          std::mem_fn(&Stock::Service::SayHello), this)));
+          [](Stock::Service* service,
+             ::grpc_impl::ServerContext* ctx,
+             const ::google::protobuf::Empty* req,
+             ::google::protobuf::Empty* resp) {
+               return service->SayHello(ctx, req, resp);
+             }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       Stock_method_names[1],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< Stock::Service, ::stock_api::StockQuery, ::stock_api::CybosDayDatas>(
-          std::mem_fn(&Stock::Service::GetDayData), this)));
+          [](Stock::Service* service,
+             ::grpc_impl::ServerContext* ctx,
+             const ::stock_api::StockQuery* req,
+             ::stock_api::CybosDayDatas* resp) {
+               return service->GetDayData(ctx, req, resp);
+             }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       Stock_method_names[2],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< Stock::Service, ::stock_api::StockQuery, ::stock_api::CybosDayDatas>(
-          std::mem_fn(&Stock::Service::GetMinuteData), this)));
+          [](Stock::Service* service,
+             ::grpc_impl::ServerContext* ctx,
+             const ::stock_api::StockQuery* req,
+             ::stock_api::CybosDayDatas* resp) {
+               return service->GetMinuteData(ctx, req, resp);
+             }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       Stock_method_names[3],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< Stock::Service, ::stock_api::StockCodeQuery, ::stock_api::CybosDayDatas>(
-          std::mem_fn(&Stock::Service::GetTodayMinuteData), this)));
+          [](Stock::Service* service,
+             ::grpc_impl::ServerContext* ctx,
+             const ::stock_api::StockCodeQuery* req,
+             ::stock_api::CybosDayDatas* resp) {
+               return service->GetTodayMinuteData(ctx, req, resp);
+             }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       Stock_method_names[4],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< Stock::Service, ::stock_api::PastMinuteQuery, ::stock_api::CybosDayDatas>(
-          std::mem_fn(&Stock::Service::GetPastMinuteData), this)));
+          [](Stock::Service* service,
+             ::grpc_impl::ServerContext* ctx,
+             const ::stock_api::PastMinuteQuery* req,
+             ::stock_api::CybosDayDatas* resp) {
+               return service->GetPastMinuteData(ctx, req, resp);
+             }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       Stock_method_names[5],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< Stock::Service, ::google::protobuf::Empty, ::stock_api::CodeList>(
-          std::mem_fn(&Stock::Service::GetSubscribeCodes), this)));
+          [](Stock::Service* service,
+             ::grpc_impl::ServerContext* ctx,
+             const ::google::protobuf::Empty* req,
+             ::stock_api::CodeList* resp) {
+               return service->GetSubscribeCodes(ctx, req, resp);
+             }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       Stock_method_names[6],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< Stock::Service, ::google::protobuf::Empty, ::stock_api::Balance>(
-          std::mem_fn(&Stock::Service::GetBalance), this)));
+          [](Stock::Service* service,
+             ::grpc_impl::ServerContext* ctx,
+             const ::google::protobuf::Empty* req,
+             ::stock_api::Balance* resp) {
+               return service->GetBalance(ctx, req, resp);
+             }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       Stock_method_names[7],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< Stock::Service, ::stock_api::OrderMsg, ::stock_api::CybosOrderReturn>(
-          std::mem_fn(&Stock::Service::OrderStock), this)));
+          [](Stock::Service* service,
+             ::grpc_impl::ServerContext* ctx,
+             const ::stock_api::OrderMsg* req,
+             ::stock_api::CybosOrderReturn* resp) {
+               return service->OrderStock(ctx, req, resp);
+             }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       Stock_method_names[8],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< Stock::Service, ::stock_api::OrderMsg, ::stock_api::CybosOrderReturn>(
-          std::mem_fn(&Stock::Service::ChangeOrder), this)));
+          [](Stock::Service* service,
+             ::grpc_impl::ServerContext* ctx,
+             const ::stock_api::OrderMsg* req,
+             ::stock_api::CybosOrderReturn* resp) {
+               return service->ChangeOrder(ctx, req, resp);
+             }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       Stock_method_names[9],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< Stock::Service, ::stock_api::OrderMsg, ::stock_api::CybosOrderReturn>(
-          std::mem_fn(&Stock::Service::CancelOrder), this)));
+          [](Stock::Service* service,
+             ::grpc_impl::ServerContext* ctx,
+             const ::stock_api::OrderMsg* req,
+             ::stock_api::CybosOrderReturn* resp) {
+               return service->CancelOrder(ctx, req, resp);
+             }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       Stock_method_names[10],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< Stock::Service, ::stock_api::StockCodeQuery, ::stock_api::YearHighInfo>(
-          std::mem_fn(&Stock::Service::GetYearHigh), this)));
+          [](Stock::Service* service,
+             ::grpc_impl::ServerContext* ctx,
+             const ::stock_api::StockCodeQuery* req,
+             ::stock_api::YearHighInfo* resp) {
+               return service->GetYearHigh(ctx, req, resp);
+             }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       Stock_method_names[11],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< Stock::Service, ::stock_api::StockCodeQuery, ::google::protobuf::Empty>(
-          std::mem_fn(&Stock::Service::RequestCybosTickData), this)));
+          [](Stock::Service* service,
+             ::grpc_impl::ServerContext* ctx,
+             const ::stock_api::StockCodeQuery* req,
+             ::google::protobuf::Empty* resp) {
+               return service->RequestCybosTickData(ctx, req, resp);
+             }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       Stock_method_names[12],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< Stock::Service, ::stock_api::StockCodeQuery, ::google::protobuf::Empty>(
-          std::mem_fn(&Stock::Service::RequestCybosBidAsk), this)));
+          [](Stock::Service* service,
+             ::grpc_impl::ServerContext* ctx,
+             const ::stock_api::StockCodeQuery* req,
+             ::google::protobuf::Empty* resp) {
+               return service->RequestCybosBidAsk(ctx, req, resp);
+             }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       Stock_method_names[13],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< Stock::Service, ::stock_api::StockCodeQuery, ::google::protobuf::Empty>(
-          std::mem_fn(&Stock::Service::RequestCybosSubject), this)));
+          [](Stock::Service* service,
+             ::grpc_impl::ServerContext* ctx,
+             const ::stock_api::StockCodeQuery* req,
+             ::google::protobuf::Empty* resp) {
+               return service->RequestCybosSubject(ctx, req, resp);
+             }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       Stock_method_names[14],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< Stock::Service, ::google::protobuf::Empty, ::google::protobuf::Empty>(
-          std::mem_fn(&Stock::Service::RequestCybosAlarm), this)));
+          [](Stock::Service* service,
+             ::grpc_impl::ServerContext* ctx,
+             const ::google::protobuf::Empty* req,
+             ::google::protobuf::Empty* resp) {
+               return service->RequestCybosAlarm(ctx, req, resp);
+             }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       Stock_method_names[15],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< Stock::Service, ::stock_api::TradeMsg, ::google::protobuf::Empty>(
-          std::mem_fn(&Stock::Service::RequestToTrader), this)));
+          [](Stock::Service* service,
+             ::grpc_impl::ServerContext* ctx,
+             const ::stock_api::TradeMsg* req,
+             ::google::protobuf::Empty* resp) {
+               return service->RequestToTrader(ctx, req, resp);
+             }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       Stock_method_names[16],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< Stock::Service, ::google::protobuf::Empty, ::google::protobuf::Empty>(
-          std::mem_fn(&Stock::Service::RequestCybosTradeResult), this)));
+          [](Stock::Service* service,
+             ::grpc_impl::ServerContext* ctx,
+             const ::google::protobuf::Empty* req,
+             ::google::protobuf::Empty* resp) {
+               return service->RequestCybosTradeResult(ctx, req, resp);
+             }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       Stock_method_names[17],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< Stock::Service, ::stock_api::OrderResult, ::google::protobuf::Empty>(
-          std::mem_fn(&Stock::Service::ReportOrderResult), this)));
+          [](Stock::Service* service,
+             ::grpc_impl::ServerContext* ctx,
+             const ::stock_api::OrderResult* req,
+             ::google::protobuf::Empty* resp) {
+               return service->ReportOrderResult(ctx, req, resp);
+             }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       Stock_method_names[18],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< Stock::Service, ::stock_api::StockCodeQuery, ::stock_api::Bool>(
-          std::mem_fn(&Stock::Service::IsKospi), this)));
+          [](Stock::Service* service,
+             ::grpc_impl::ServerContext* ctx,
+             const ::stock_api::StockCodeQuery* req,
+             ::stock_api::Bool* resp) {
+               return service->IsKospi(ctx, req, resp);
+             }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       Stock_method_names[19],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< Stock::Service, ::stock_api::ViPriceInfo, ::google::protobuf::Empty>(
-          std::mem_fn(&Stock::Service::SetViPriceInfo), this)));
+          [](Stock::Service* service,
+             ::grpc_impl::ServerContext* ctx,
+             const ::stock_api::ViPriceInfo* req,
+             ::google::protobuf::Empty* resp) {
+               return service->SetViPriceInfo(ctx, req, resp);
+             }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       Stock_method_names[20],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< Stock::Service, ::stock_api::StockCodeQuery, ::stock_api::Prices>(
-          std::mem_fn(&Stock::Service::GetViPrice), this)));
+          [](Stock::Service* service,
+             ::grpc_impl::ServerContext* ctx,
+             const ::stock_api::StockCodeQuery* req,
+             ::stock_api::Prices* resp) {
+               return service->GetViPrice(ctx, req, resp);
+             }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       Stock_method_names[21],
       ::grpc::internal::RpcMethod::SERVER_STREAMING,
       new ::grpc::internal::ServerStreamingHandler< Stock::Service, ::google::protobuf::Empty, ::stock_api::TradeMsg>(
-          std::mem_fn(&Stock::Service::ListenTraderMsg), this)));
+          [](Stock::Service* service,
+             ::grpc_impl::ServerContext* ctx,
+             const ::google::protobuf::Empty* req,
+             ::grpc_impl::ServerWriter<::stock_api::TradeMsg>* writer) {
+               return service->ListenTraderMsg(ctx, req, writer);
+             }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       Stock_method_names[22],
       ::grpc::internal::RpcMethod::SERVER_STREAMING,
       new ::grpc::internal::ServerStreamingHandler< Stock::Service, ::google::protobuf::Empty, ::stock_api::CybosOrderResult>(
-          std::mem_fn(&Stock::Service::ListenCybosOrderResult), this)));
+          [](Stock::Service* service,
+             ::grpc_impl::ServerContext* ctx,
+             const ::google::protobuf::Empty* req,
+             ::grpc_impl::ServerWriter<::stock_api::CybosOrderResult>* writer) {
+               return service->ListenCybosOrderResult(ctx, req, writer);
+             }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       Stock_method_names[23],
       ::grpc::internal::RpcMethod::SERVER_STREAMING,
       new ::grpc::internal::ServerStreamingHandler< Stock::Service, ::google::protobuf::Empty, ::stock_api::OrderResult>(
-          std::mem_fn(&Stock::Service::ListenOrderResult), this)));
+          [](Stock::Service* service,
+             ::grpc_impl::ServerContext* ctx,
+             const ::google::protobuf::Empty* req,
+             ::grpc_impl::ServerWriter<::stock_api::OrderResult>* writer) {
+               return service->ListenOrderResult(ctx, req, writer);
+             }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       Stock_method_names[24],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< Stock::Service, ::stock_api::StockCodeQuery, ::google::protobuf::Empty>(
-          std::mem_fn(&Stock::Service::SetCurrentStock), this)));
+          [](Stock::Service* service,
+             ::grpc_impl::ServerContext* ctx,
+             const ::stock_api::StockCodeQuery* req,
+             ::google::protobuf::Empty* resp) {
+               return service->SetCurrentStock(ctx, req, resp);
+             }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       Stock_method_names[25],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< Stock::Service, ::google::protobuf::Timestamp, ::google::protobuf::Empty>(
-          std::mem_fn(&Stock::Service::SetCurrentDateTime), this)));
+          [](Stock::Service* service,
+             ::grpc_impl::ServerContext* ctx,
+             const ::google::protobuf::Timestamp* req,
+             ::google::protobuf::Empty* resp) {
+               return service->SetCurrentDateTime(ctx, req, resp);
+             }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       Stock_method_names[26],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< Stock::Service, ::stock_api::StockCodeQuery, ::stock_api::CompanyName>(
-          std::mem_fn(&Stock::Service::GetCompanyName), this)));
+          [](Stock::Service* service,
+             ::grpc_impl::ServerContext* ctx,
+             const ::stock_api::StockCodeQuery* req,
+             ::stock_api::CompanyName* resp) {
+               return service->GetCompanyName(ctx, req, resp);
+             }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       Stock_method_names[27],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< Stock::Service, ::google::protobuf::Empty, ::stock_api::CodeList>(
-          std::mem_fn(&Stock::Service::GetFavoriteList), this)));
+          [](Stock::Service* service,
+             ::grpc_impl::ServerContext* ctx,
+             const ::google::protobuf::Empty* req,
+             ::stock_api::CodeList* resp) {
+               return service->GetFavoriteList(ctx, req, resp);
+             }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       Stock_method_names[28],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< Stock::Service, ::stock_api::StockCodeQuery, ::google::protobuf::Empty>(
-          std::mem_fn(&Stock::Service::AddFavorite), this)));
+          [](Stock::Service* service,
+             ::grpc_impl::ServerContext* ctx,
+             const ::stock_api::StockCodeQuery* req,
+             ::google::protobuf::Empty* resp) {
+               return service->AddFavorite(ctx, req, resp);
+             }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       Stock_method_names[29],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< Stock::Service, ::stock_api::StockCodeQuery, ::google::protobuf::Empty>(
-          std::mem_fn(&Stock::Service::RemoveFavorite), this)));
+          [](Stock::Service* service,
+             ::grpc_impl::ServerContext* ctx,
+             const ::stock_api::StockCodeQuery* req,
+             ::google::protobuf::Empty* resp) {
+               return service->RemoveFavorite(ctx, req, resp);
+             }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       Stock_method_names[30],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< Stock::Service, ::google::protobuf::Empty, ::google::protobuf::Empty>(
-          std::mem_fn(&Stock::Service::ClearRecentList), this)));
+          [](Stock::Service* service,
+             ::grpc_impl::ServerContext* ctx,
+             const ::google::protobuf::Empty* req,
+             ::google::protobuf::Empty* resp) {
+               return service->ClearRecentList(ctx, req, resp);
+             }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       Stock_method_names[31],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< Stock::Service, ::google::protobuf::Timestamp, ::stock_api::TopList>(
-          std::mem_fn(&Stock::Service::GetYesterdayTopAmountList), this)));
+          [](Stock::Service* service,
+             ::grpc_impl::ServerContext* ctx,
+             const ::google::protobuf::Timestamp* req,
+             ::stock_api::TopList* resp) {
+               return service->GetYesterdayTopAmountList(ctx, req, resp);
+             }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       Stock_method_names[32],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< Stock::Service, ::stock_api::CodeList, ::google::protobuf::Empty>(
-          std::mem_fn(&Stock::Service::SetTodayAmountRatioList), this)));
+          [](Stock::Service* service,
+             ::grpc_impl::ServerContext* ctx,
+             const ::stock_api::CodeList* req,
+             ::google::protobuf::Empty* resp) {
+               return service->SetTodayAmountRatioList(ctx, req, resp);
+             }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       Stock_method_names[33],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< Stock::Service, ::stock_api::CodeList, ::google::protobuf::Empty>(
-          std::mem_fn(&Stock::Service::SetTodayAmountMomentumList), this)));
+          [](Stock::Service* service,
+             ::grpc_impl::ServerContext* ctx,
+             const ::stock_api::CodeList* req,
+             ::google::protobuf::Empty* resp) {
+               return service->SetTodayAmountMomentumList(ctx, req, resp);
+             }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       Stock_method_names[34],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< Stock::Service, ::stock_api::CodeList, ::google::protobuf::Empty>(
-          std::mem_fn(&Stock::Service::SetTodayAmountTopList), this)));
+          [](Stock::Service* service,
+             ::grpc_impl::ServerContext* ctx,
+             const ::stock_api::CodeList* req,
+             ::google::protobuf::Empty* resp) {
+               return service->SetTodayAmountTopList(ctx, req, resp);
+             }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       Stock_method_names[35],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< Stock::Service, ::stock_api::CodeList, ::google::protobuf::Empty>(
-          std::mem_fn(&Stock::Service::SetOpenQuoteRatioList), this)));
+          [](Stock::Service* service,
+             ::grpc_impl::ServerContext* ctx,
+             const ::stock_api::CodeList* req,
+             ::google::protobuf::Empty* resp) {
+               return service->SetOpenQuoteRatioList(ctx, req, resp);
+             }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       Stock_method_names[36],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< Stock::Service, ::stock_api::TodayTopOption, ::stock_api::CodeList>(
-          std::mem_fn(&Stock::Service::GetTodayTopAmountList), this)));
+          [](Stock::Service* service,
+             ::grpc_impl::ServerContext* ctx,
+             const ::stock_api::TodayTopOption* req,
+             ::stock_api::CodeList* resp) {
+               return service->GetTodayTopAmountList(ctx, req, resp);
+             }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       Stock_method_names[37],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< Stock::Service, ::google::protobuf::Empty, ::stock_api::CodeList>(
-          std::mem_fn(&Stock::Service::GetRecentSearch), this)));
+          [](Stock::Service* service,
+             ::grpc_impl::ServerContext* ctx,
+             const ::google::protobuf::Empty* req,
+             ::stock_api::CodeList* resp) {
+               return service->GetRecentSearch(ctx, req, resp);
+             }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       Stock_method_names[38],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< Stock::Service, ::google::protobuf::Empty, ::stock_api::CodeList>(
-          std::mem_fn(&Stock::Service::GetViList), this)));
+          [](Stock::Service* service,
+             ::grpc_impl::ServerContext* ctx,
+             const ::google::protobuf::Empty* req,
+             ::stock_api::CodeList* resp) {
+               return service->GetViList(ctx, req, resp);
+             }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       Stock_method_names[39],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< Stock::Service, ::google::protobuf::Empty, ::stock_api::CodeList>(
-          std::mem_fn(&Stock::Service::GetOpenQuoteList), this)));
+          [](Stock::Service* service,
+             ::grpc_impl::ServerContext* ctx,
+             const ::google::protobuf::Empty* req,
+             ::stock_api::CodeList* resp) {
+               return service->GetOpenQuoteList(ctx, req, resp);
+             }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       Stock_method_names[40],
       ::grpc::internal::RpcMethod::SERVER_STREAMING,
       new ::grpc::internal::ServerStreamingHandler< Stock::Service, ::google::protobuf::Empty, ::stock_api::StockCodeQuery>(
-          std::mem_fn(&Stock::Service::ListenCurrentStock), this)));
+          [](Stock::Service* service,
+             ::grpc_impl::ServerContext* ctx,
+             const ::google::protobuf::Empty* req,
+             ::grpc_impl::ServerWriter<::stock_api::StockCodeQuery>* writer) {
+               return service->ListenCurrentStock(ctx, req, writer);
+             }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       Stock_method_names[41],
       ::grpc::internal::RpcMethod::SERVER_STREAMING,
       new ::grpc::internal::ServerStreamingHandler< Stock::Service, ::google::protobuf::Empty, ::stock_api::ListType>(
-          std::mem_fn(&Stock::Service::ListenListChanged), this)));
+          [](Stock::Service* service,
+             ::grpc_impl::ServerContext* ctx,
+             const ::google::protobuf::Empty* req,
+             ::grpc_impl::ServerWriter<::stock_api::ListType>* writer) {
+               return service->ListenListChanged(ctx, req, writer);
+             }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       Stock_method_names[42],
       ::grpc::internal::RpcMethod::SERVER_STREAMING,
       new ::grpc::internal::ServerStreamingHandler< Stock::Service, ::google::protobuf::Empty, ::stock_api::CybosTickData>(
-          std::mem_fn(&Stock::Service::ListenCybosTickData), this)));
+          [](Stock::Service* service,
+             ::grpc_impl::ServerContext* ctx,
+             const ::google::protobuf::Empty* req,
+             ::grpc_impl::ServerWriter<::stock_api::CybosTickData>* writer) {
+               return service->ListenCybosTickData(ctx, req, writer);
+             }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       Stock_method_names[43],
       ::grpc::internal::RpcMethod::SERVER_STREAMING,
       new ::grpc::internal::ServerStreamingHandler< Stock::Service, ::google::protobuf::Empty, ::stock_api::CybosBidAskTickData>(
-          std::mem_fn(&Stock::Service::ListenCybosBidAsk), this)));
+          [](Stock::Service* service,
+             ::grpc_impl::ServerContext* ctx,
+             const ::google::protobuf::Empty* req,
+             ::grpc_impl::ServerWriter<::stock_api::CybosBidAskTickData>* writer) {
+               return service->ListenCybosBidAsk(ctx, req, writer);
+             }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       Stock_method_names[44],
       ::grpc::internal::RpcMethod::SERVER_STREAMING,
       new ::grpc::internal::ServerStreamingHandler< Stock::Service, ::google::protobuf::Empty, ::google::protobuf::Timestamp>(
-          std::mem_fn(&Stock::Service::ListenCurrentTime), this)));
+          [](Stock::Service* service,
+             ::grpc_impl::ServerContext* ctx,
+             const ::google::protobuf::Empty* req,
+             ::grpc_impl::ServerWriter<::google::protobuf::Timestamp>* writer) {
+               return service->ListenCurrentTime(ctx, req, writer);
+             }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       Stock_method_names[45],
       ::grpc::internal::RpcMethod::SERVER_STREAMING,
       new ::grpc::internal::ServerStreamingHandler< Stock::Service, ::google::protobuf::Empty, ::stock_api::CybosSubjectTickData>(
-          std::mem_fn(&Stock::Service::ListenCybosSubject), this)));
+          [](Stock::Service* service,
+             ::grpc_impl::ServerContext* ctx,
+             const ::google::protobuf::Empty* req,
+             ::grpc_impl::ServerWriter<::stock_api::CybosSubjectTickData>* writer) {
+               return service->ListenCybosSubject(ctx, req, writer);
+             }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       Stock_method_names[46],
       ::grpc::internal::RpcMethod::SERVER_STREAMING,
       new ::grpc::internal::ServerStreamingHandler< Stock::Service, ::google::protobuf::Empty, ::stock_api::CybosStockAlarm>(
-          std::mem_fn(&Stock::Service::ListenCybosAlarm), this)));
+          [](Stock::Service* service,
+             ::grpc_impl::ServerContext* ctx,
+             const ::google::protobuf::Empty* req,
+             ::grpc_impl::ServerWriter<::stock_api::CybosStockAlarm>* writer) {
+               return service->ListenCybosAlarm(ctx, req, writer);
+             }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       Stock_method_names[47],
       ::grpc::internal::RpcMethod::SERVER_STREAMING,
       new ::grpc::internal::ServerStreamingHandler< Stock::Service, ::google::protobuf::Empty, ::stock_api::SimulationStatus>(
-          std::mem_fn(&Stock::Service::ListenSimulationStatusChanged), this)));
+          [](Stock::Service* service,
+             ::grpc_impl::ServerContext* ctx,
+             const ::google::protobuf::Empty* req,
+             ::grpc_impl::ServerWriter<::stock_api::SimulationStatus>* writer) {
+               return service->ListenSimulationStatusChanged(ctx, req, writer);
+             }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       Stock_method_names[48],
       ::grpc::internal::RpcMethod::BIDI_STREAMING,
       new ::grpc::internal::BidiStreamingHandler< Stock::Service, ::stock_api::SimulationMsg, ::google::protobuf::Empty>(
-          std::mem_fn(&Stock::Service::SimulationData), this)));
+          [](Stock::Service* service,
+             ::grpc_impl::ServerContext* ctx,
+             ::grpc_impl::ServerReaderWriter<::google::protobuf::Empty,
+             ::stock_api::SimulationMsg>* stream) {
+               return service->SimulationData(ctx, stream);
+             }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       Stock_method_names[49],
       ::grpc::internal::RpcMethod::SERVER_STREAMING,
       new ::grpc::internal::ServerStreamingHandler< Stock::Service, ::google::protobuf::Empty, ::stock_api::SimulationOperation>(
-          std::mem_fn(&Stock::Service::ListenSimulationOperation), this)));
+          [](Stock::Service* service,
+             ::grpc_impl::ServerContext* ctx,
+             const ::google::protobuf::Empty* req,
+             ::grpc_impl::ServerWriter<::stock_api::SimulationOperation>* writer) {
+               return service->ListenSimulationOperation(ctx, req, writer);
+             }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       Stock_method_names[50],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< Stock::Service, ::stock_api::SimulationOperation, ::stock_api::Bool>(
-          std::mem_fn(&Stock::Service::StartSimulation), this)));
+          [](Stock::Service* service,
+             ::grpc_impl::ServerContext* ctx,
+             const ::stock_api::SimulationOperation* req,
+             ::stock_api::Bool* resp) {
+               return service->StartSimulation(ctx, req, resp);
+             }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       Stock_method_names[51],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< Stock::Service, ::google::protobuf::Empty, ::google::protobuf::Empty>(
-          std::mem_fn(&Stock::Service::StopSimulation), this)));
+          [](Stock::Service* service,
+             ::grpc_impl::ServerContext* ctx,
+             const ::google::protobuf::Empty* req,
+             ::google::protobuf::Empty* resp) {
+               return service->StopSimulation(ctx, req, resp);
+             }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       Stock_method_names[52],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< Stock::Service, ::stock_api::SimulationStatus, ::google::protobuf::Empty>(
-          std::mem_fn(&Stock::Service::SetSimulationStatus), this)));
+          [](Stock::Service* service,
+             ::grpc_impl::ServerContext* ctx,
+             const ::stock_api::SimulationStatus* req,
+             ::google::protobuf::Empty* resp) {
+               return service->SetSimulationStatus(ctx, req, resp);
+             }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       Stock_method_names[53],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< Stock::Service, ::google::protobuf::Empty, ::stock_api::SimulationStatus>(
-          std::mem_fn(&Stock::Service::GetSimulationStatus), this)));
+          [](Stock::Service* service,
+             ::grpc_impl::ServerContext* ctx,
+             const ::google::protobuf::Empty* req,
+             ::stock_api::SimulationStatus* resp) {
+               return service->GetSimulationStatus(ctx, req, resp);
+             }, this)));
 }
 
 Stock::Service::~Service() {
