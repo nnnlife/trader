@@ -70,8 +70,13 @@ def consumer():
     server_address = (message.SERVER_IP, message.CLIENT_SOCKET_PORT)
     sock.connect(server_address)
 
+    subscribe_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    subscribe_sock.connect(server_address)
+
     message_reader = stream_readwriter.MessageReader(sock)
     message_reader.start()
+    subscribe_reader = stream_readwriter.MessageReader(subscribe_sock)
+    subscribe_reader.start()
 
     #stock_api.subscribe_trade(message_reader, display_trade_result)
     while True:
@@ -96,9 +101,9 @@ def consumer():
             for i, ci in enumerate(cinfo):
                 print(i, '\t', 'name', ci['name'], 'vendor', ci['vendor'], 'subscribe count', ci['subscribe_count'])
         elif command.startswith('trade_subscribe'):
-            stock_api.subscribe_trade(message_reader, display_trade_result)
+            stock_api.subscribe_trade(subscribe_reader, display_trade_result)
         elif command.startswith('trade_stop_subscribe'):
-            stock_api.stop_subscribe_trade(message_reader)
+            stock_api.stop_subscribe_trade(subscribe_reader)
         elif command.startswith('min_data'):
             min_detail = command.split(',')
             if len(min_detail) != 2:
@@ -179,42 +184,42 @@ def consumer():
                 print('subject,code')
             else:
                 code = subject_detail[1]
-                stock_api.subscribe_stock_subject(message_reader, code, display_subject_data)
+                stock_api.subscribe_stock_subject(subscribe_reader, code, display_subject_data)
         elif command.startswith('stop_subject'):
             subject_detail = command.split(',')
             if len(subject_detail) != 2:
                 print('stop_subject,code')
             else:
                 code = subject_detail[1]
-                stock_api.stop_subscribe_stock_subject(message_reader, code)
+                stock_api.stop_subscribe_stock_subject(subscribe_reader, code)
         elif command.startswith('stop_bidask'):
             bidask_detail = command.split(',')
             if len(bidask_detail) != 2:
                 print('stop_bidask,code')
             else:
                 code = bidask_detail[1]
-                stock_api.stop_subscribe_stock_bidask(message_reader, code)
+                stock_api.stop_subscribe_stock_bidask(subscribe_reader, code)
         elif command.startswith('bidask'):
             bidask_detail = command.split(',')
             if len(bidask_detail) != 2:
                 print('bidask,code')
             else:
                 code = bidask_detail[1]
-                stock_api.subscribe_stock_bidask(message_reader, code, display_bidask_data)
+                stock_api.subscribe_stock_bidask(subscribe_reader, code, display_bidask_data)
         elif command.startswith('stock'):
             stock_detail = command.split(',')
             if len(stock_detail) != 2:
                 print('stock,code')
             else:
                 code = stock_detail[1]
-                stock_api.subscribe_stock(message_reader, code, display_stock_data)
+                stock_api.subscribe_stock(subscribe_reader, code, display_stock_data)
         elif command.startswith('stop_stock'):
             stock_detail = command.split(',')
             if len(stock_detail) != 2:
                 print('stop_stock,code')
             else:
                 code = stock_detail[1]
-                stock_api.stop_subscribe_stock(message_reader, code)
+                stock_api.stop_subscribe_stock(subscribe_reader, code)
         elif command.startswith('req'):
             req_detail = command.split(',')
             if len(req_detail) != 2:
@@ -228,14 +233,14 @@ def consumer():
                 print('index,code')
             else:
                 code = index_detail[1]
-                stock_api.subscribe_index(message_reader, code, display_index_data)
+                stock_api.subscribe_index(subscribe_reader, code, display_index_data)
         elif command.startswith('stop_index'):
             index_detail = command.split(',')
             if len(index_detail) != 2:
                 print('index,code')
             else:
                 code = index_detail[1]
-                stock_api.stop_subscribe_index(message_reader, code)
+                stock_api.stop_subscribe_index(subscribe_reader, code)
         elif command.startswith('abroad'):
             abroad_detail = command.split(',')
             if len(abroad_detail) != 2:
@@ -252,14 +257,14 @@ def consumer():
                 print('world,code')
             else:
                 code = world_detail[1]
-                stock_api.subscribe_world(message_reader, code, display_world_data)
+                stock_api.subscribe_world(subscribe_reader, code, display_world_data)
         elif command.startswith('stop_world'):
             world_detail = command.split(',')
             if len(world_detail) != 2:
                 print('stop_world,code')
             else:
                 code = world_detail[1]
-                stock_api.stop_subscribe_world(message_reader, code)
+                stock_api.stop_subscribe_world(subscribe_reader, code)
 
         elif command.startswith('investor'):
             inv_detail = command.split(',')
@@ -276,9 +281,9 @@ def consumer():
                 code = invc_detail[1]
                 print(stock_api.request_investor_accumulate_data(message_reader, code, date(2020,2,7), date(2020,2,7)))
         elif command.startswith('alarm'):
-            stock_api.subscribe_alarm(message_reader, display_alarm_data)
+            stock_api.subscribe_alarm(subscribe_reader, display_alarm_data)
         elif command.startswith('stop_alarm'):
-            stock_api.stop_subscribe_alarm(message_reader)
+            stock_api.stop_subscribe_alarm(subscribe_reader)
         elif command.startswith('code_to_name'):
             code_detail = command.split(',')
             if len(code_detail) != 2:

@@ -24,6 +24,7 @@ import os.path
 
 
 _message_reader = None
+_broadcast_receiver = None
 _mongo_collection = None
 MAVG=20
 _kosdaq_code = None
@@ -44,11 +45,19 @@ def get_all_market_code():
     market_code = list(dict.fromkeys(market_code))
     return list(filter(lambda x: len(x) > 0 and x[1:].isdigit(), market_code))
 
+
 def get_reader():
     if _message_reader is None:
         setup()
 
     return _message_reader
+
+
+def get_broadcast_receiver():
+    if _broadcast_receiver is None:
+        broadcast_receiver_setup()
+
+    return _broadcast_receiver
 
 
 def get_collection():
@@ -289,7 +298,7 @@ def get_tick_data_by_datetime(code, from_datetime, until_datetime):
 
 
 def setup():
-    global _message_reader
+    global _message_reader, _broadcast_receiver
     while True:
         try:
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -302,6 +311,22 @@ def setup():
 
     _message_reader = stream_readwriter.MessageReader(sock)
     _message_reader.start()
+
+
+def broadcast_receiver_setup():
+    global _broadcast_receiver
+    while True:
+        try:
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            server_address = (message.SERVER_IP, message.CLIENT_SOCKET_PORT)
+            sock.connect(server_address)
+            break
+        except socket.error:
+            print('Retrying connect to apiserver')
+            gevent.sleep(1)
+
+    _broadcast_receiver = stream_readwriter.MessageReader(sock)
+    _broadcast_receiver.start()
 
 
 def db_setup():

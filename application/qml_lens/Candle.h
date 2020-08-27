@@ -10,7 +10,7 @@ public:
     Candle() {
     }
 
-    void addTickData(int currentPrice, long long volume, const QDateTime &dt) {
+    void addTickData(int currentPrice, long long volume, bool isBuy, const QDateTime &dt) {
         if (!mStartDateTime.isValid()) {
             mOpen = currentPrice;
             mStartDateTime = dt;
@@ -24,17 +24,17 @@ public:
         if (currentPrice > mHigh)
             mHigh = currentPrice;
 
-        mVolume += volume;
+        if (isBuy)
+            mBuyVolume += volume;
+        else
+            mSellVolume += volume;
     }
 
     bool isValid() const { return mStartDateTime.isValid(); }
 
     void clear() {
-        mHigh = 0;
-        mLow = 0;
-        mOpen = 0;
-        mVolume = 0;
-        mClose = 0;
+        mHigh = mLow = mOpen = mClose = 0;
+        mBuyVolume = mSellVolume = 0;
         mStartDateTime = QDateTime();
     }
 
@@ -42,14 +42,16 @@ public:
     int open() const { return mOpen; }
     int close() const { return mClose; }
     int low() const { return mLow; }
-    long long volume() const { return mVolume; }
+    bool buy_upper_hand() const { return mBuyVolume > mSellVolume; }
+    long long volume() const { return mBuyVolume + mSellVolume; }
 
 private:
     int mClose = 0;
     int mHigh = 0;
     int mLow = 0;
     int mOpen = 0;
-    long long mVolume = 0;
+    long long mBuyVolume = 0;
+    long long mSellVolume = 0;
     QDateTime mStartDateTime;
 };
 

@@ -42,7 +42,7 @@ def clear_all():
     _last_push_time = None
     _amount_top_list.clear()
     _amount_momentum_list.clear()
-    _listen_quote_ratio = False
+    _listen_quote_ratio = True
     _amount_ratio_list.clear()
     _open_quote_ratio_list.clear()
 
@@ -70,6 +70,8 @@ def tick_subscriber():
 
     response = stub.ListenCybosTickData(Empty())
     for msg in response:
+        gevent.sleep(0.000001)
+
         if preload.loading:
             continue
 
@@ -84,14 +86,15 @@ def tick_subscriber():
 
         yesterday_amount = preload.get_yesterday_amount(code)
         yesterday_close = preload.get_yesterday_close(code)
-        tick_date = msg.tick_date.ToDatetime()
+        tick_date = msg.tick_date.ToDatetime() + timedelta(hours=9)
 
         if _listen_quote_ratio and code not in _open_quote_ratio_list and msg.time <= 900 and msg.market_type == 50:
             _open_quote_ratio_list[code] = amount / yesterday_amount
 
         if _listen_quote_ratio and tick_date > datetime.combine(tick_date.date(), time(9, 0, 15)):
+            print('SEND QUOTE RATIO', tick_date, datetime.combine(tick_date.date(), time(9, 0, 15)))
             _listen_quote_ratio = False
-            send_open_quote_ratio();
+            gevent.spawn(send_open_quote_ratio)
 
         if yesterday_amount >= 3000000000 and yesterday_close * 1.15 > msg.current_price > yesterday_close:
             _amount_ratio_list[code] = [amount / yesterday_amount, msg.current_price, msg.current_price - msg.yesterday_diff]
@@ -108,12 +111,11 @@ def tick_subscriber():
         if _last_push_time is None:
             _last_push_time = tick_date
         else:
-            if msg.tick_date.ToDatetime() - _last_push_time > timedelta(seconds=REFRESH_SEC):
+            if tick_date - _last_push_time > timedelta(seconds=REFRESH_SEC):
                 _last_push_time = tick_date
                 _LOGGER.info('PREPARE LIST %s', _last_push_time)
                 gevent.spawn(send_list)
 
-        gevent.sleep(0.000001)
 
 
 def time_changed(t):

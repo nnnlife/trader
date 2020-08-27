@@ -28,3 +28,7 @@
     - disconnect SUBSCRIBE 하나 된 건데, 원인 찾을 수 있을까?
 * 2020/08/13 - HEAD READ ERROR 발생, 원인 확인필요, 11시 재부팅 시작, 10시부터 문제
 * 2020/08/17~18 - 하락장 테스트 용도로 괜찮음
+* 2020/08/27 - nnnlife-COL0 에러
+    - 원인 추측: client 에서 block request 전달 후 waiting, brocast event가 계속 전달되는 상태에서, response 와 broadcast event의 하나의 client write 로 인해 에러 발생
+    - 해결 방안: server 에서 write 에 대해 lock 을 거는 방안은, block request 에 의해 지연발생되었을 때 broaddcast 까지 지연 발생,
+                 임시방안으로 client 에서 socket 2개로 연결, broadcast 용 socket 별도 연결

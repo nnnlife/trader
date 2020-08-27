@@ -55,7 +55,7 @@ void LensChartView::tickArrived(CybosTickData *data) {
 
     if (QString::fromStdString(data->code()) == mCurrentStockCode) {
         mCurrentCandle.addTickData(data->current_price(),
-                                   data->volume(), dt);
+                                   data->volume(), data->buy_or_sell(), dt);
         isUpdate = true;
         checkPriceRange(data->current_price());
         checkVolumeMax();
@@ -83,6 +83,13 @@ void LensChartView::checkVolumeMax() {
 
 void LensChartView::checkPriceRange(int price) {
     qreal p = (qreal)price;
+
+    if (price > mCurrentHighPrice)
+        mCurrentHighPrice = price;
+
+    if (mCurrentLowPrice == 0 || mCurrentLowPrice > price)
+        mCurrentLowPrice = price;
+
     if (mPriceSteps.count() == 0 || (p < mPriceSteps.at(1) || p > mPriceSteps.at(2))) {
         mPriceSteps.clear();
         int minPrice = 0;
@@ -106,17 +113,21 @@ void LensChartView::checkPriceRange(int price) {
                 minPrice = mCurrentCandle.low();
         }
 
+
         if (minPrice != 0 && maxPrice != 0) {
             mPriceSteps.append(minPrice * 0.97);
             mPriceSteps.append(minPrice * 0.98);
             mPriceSteps.append(maxPrice * 1.02);
             mPriceSteps.append(maxPrice * 1.03);
+
+            qWarning() << "minPrice : " << minPrice * 0.97 << "\tmaxPrice : " << maxPrice * 1.03;
         }
     }
 }
 
 void LensChartView::setCurrentStock(QString code) {
     if (mCurrentStockCode != code) {
+        qWarning() << "setCurrentStock : " << code;
         mCurrentStockCode = code;
         resetData();
     }
@@ -124,19 +135,23 @@ void LensChartView::setCurrentStock(QString code) {
 
 
 void LensChartView::resetData() {
+    qWarning() << "resetData";
     mPriceSteps.clear();
     mTickBeginDateTime = QDateTime();
-    mTickInterval = 300000;
+    mTickInterval = INTERVAL_MSEC;
     mCurrentCandle.clear();
     mMaxVolume = 0;
+    mCurrentHighPrice = mCurrentLowPrice = 0;
     mCandles.clear();
     mPriceSteps.clear();
 }
 
 
 void LensChartView::timeInfoArrived(QDateTime dt) {
-    if (!mCurrentDateTime.isValid() || (!DataProvider::getInstance()->isSimulation() && mCurrentDateTime != dt)) 
+    if (!mCurrentDateTime.isValid() || (!DataProvider::getInstance()->isSimulation() && mCurrentDateTime != dt)) {
+        mCurrentDateTime = dt;
         resetData();
+    }
 }
 
 
@@ -172,7 +187,7 @@ qreal LensChartView::getCandleLineWidth(qreal w) {
 }
 
 
-void LensChartView::drawCurrentPriceLine(QPainter *painter, int price, qreal fromX, qreal untilX, qreal startY, qreal endY) {
+void LensChartView::drawCurrentPriceLine(QPainter *painter, int price, qreal fromX, qreal untilX, qreal startY, qreal endY, qreal cellWidth) {
     painter->save();
     QPen pen = painter->pen();
     pen.setColor("#ff0000");
@@ -181,6 +196,15 @@ void LensChartView::drawCurrentPriceLine(QPainter *painter, int price, qreal fro
     painter->setPen(pen);
     qreal current_y = mapPriceToPos(price, endY, startY);
     painter->drawLine(QLineF(fromX, current_y, untilX, current_y));
+
+    pen.setColor(Qt::black);
+    painter->setPen(pen);
+    QFont f = painter->font();
+    f.setPixelSize(13);
+    painter->setFont(f);
+    QLocale locale;
+    painter->drawText(QRectF(0, current_y - 8, cellWidth, 16),
+                    Qt::AlignCenter, locale.toCurrencyString(price, " "));
     painter->restore();
 }
 
@@ -209,18 +233,7 @@ void LensChartView::drawCandle(QPainter *painter, const Candle &candle, qreal x,
     painter->drawLine(QLineF(line_x, candle_y_high, line_x, candle_y_low));
     painter->setPen(Qt::NoPen);
     painter->drawRect(QRectF(x, candle_y_open, candleWidth, candle_y_close - candle_y_open));
-
-    painter->setPen(QPen(Qt::black));
-
-    QFont f = painter->font();
-    f.setPixelSize(7);
-    painter->setFont(f);
-
-    painter->drawText(QRectF(x - penWidth, candle_y_low + 10, x + candleWidth + penWidth, 10),
-                        Qt::AlignCenter, QString::number(candle.low()));
-
-    painter->drawText(QRectF(x - penWidth, candle_y_high - 20, x + candleWidth + penWidth, 10),
-                        Qt::AlignCenter, QString::number(candle.high()));
+    
     painter->restore();
 }
 
@@ -239,8 +252,35 @@ void LensChartView::drawVolume(QPainter *painter, const Candle &candle, qreal x,
     painter->setPen(Qt::NoPen);
     
     qreal h = getVolumeHeight(candle.volume(), endY - startY);
-    painter->fillRect(QRectF(x, endY - h, volumeWidth, endY), QBrush(Qt::green));
+    if (candle.buy_upper_hand())
+        painter->fillRect(QRectF(x, endY - h, volumeWidth, endY), QBrush(Qt::red));
+    else
+        painter->fillRect(QRectF(x, endY - h, volumeWidth, endY), QBrush(Qt::blue));
 
+    painter->restore();
+}
+
+
+void LensChartView::displayLowHighText(QPainter *painter, qreal x, qreal cellWidth, qreal startY, qreal endY) {
+    painter->save();
+    QFont f = painter->font();
+    f.setPixelSize(13);
+    painter->setFont(f);
+
+    QLocale locale;
+    qreal low_y = mapPriceToPos(mCurrentLowPrice, endY, startY);
+    qreal high_y = mapPriceToPos(mCurrentHighPrice, endY, startY);
+    qreal gap = (qreal(mCurrentHighPrice) - mCurrentLowPrice) / mCurrentLowPrice * 100.0;
+
+    painter->setPen(QPen(Qt::black));
+    painter->drawText(QRectF(x, low_y + 20, cellWidth, 15),
+                    Qt::AlignCenter, locale.toCurrencyString(mCurrentLowPrice, " "));
+
+    painter->drawText(QRectF(x, high_y - 35, cellWidth, 15),
+                    Qt::AlignCenter, locale.toCurrencyString(mCurrentHighPrice, " "));
+    
+    painter->drawText(QRectF(x, (low_y + high_y) / 2, cellWidth, 15),
+                    Qt::AlignCenter, QString::number(gap, 'f', 1));
     painter->restore();
 }
 
@@ -251,14 +291,14 @@ void LensChartView::paint(QPainter *painter) {
     qreal cellWidth = canvasSize.width() / COLUMN_COUNT;
 
     drawGridLine(painter, cellWidth, cellHeight);
-    if (mPriceSteps.count() == 0)
+    if (mPriceSteps.count() == 0) 
         return;
 
     qreal candleCount = DISPLAY_MSEC / INTERVAL_MSEC;
     qreal spaceCount = candleCount * 2 - 1;
     qreal candleWidth = cellWidth * PRICE_COLUMN_COUNT / (candleCount + spaceCount * TICK_SPACE_RATIO);
     qreal spaceWidth = candleWidth * TICK_SPACE_RATIO; 
-    qreal currentStartX = 0.0;
+    qreal currentStartX = cellWidth;
 
     for (int i = 0; i < mCandles.count(); i++) {
         drawCandle(painter, mCandles.at(i), currentStartX, candleWidth, 0.0, cellHeight * PRICE_ROW_COUNT);
@@ -269,7 +309,9 @@ void LensChartView::paint(QPainter *painter) {
     if (mCurrentCandle.isValid()) {
         drawCandle(painter, mCurrentCandle, currentStartX, candleWidth, 0.0, cellHeight * PRICE_ROW_COUNT);
         drawVolume(painter, mCurrentCandle, currentStartX, candleWidth, cellHeight * PRICE_ROW_COUNT, cellHeight * (PRICE_ROW_COUNT + VOLUME_ROW_COUNT));
-
-        drawCurrentPriceLine(painter, mCurrentCandle.close(), 0, cellWidth * PRICE_COLUMN_COUNT, 0.0, cellHeight * PRICE_COLUMN_COUNT);
+        drawCurrentPriceLine(painter, mCurrentCandle.close(), cellWidth, cellWidth * COLUMN_COUNT, 0.0, cellHeight * PRICE_ROW_COUNT, cellWidth);
     }
+
+    if (mCurrentLowPrice != 0 && mCurrentHighPrice != 0)
+        displayLowHighText(painter, 0, cellWidth, 0.0, cellHeight * PRICE_ROW_COUNT);
 }

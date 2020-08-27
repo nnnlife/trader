@@ -1,4 +1,10 @@
 * TODO
+    * Subject 10등분 plugin, 10등분이 안될 경우 호가단위로 가능한 범위로
+        * 보내는 데이터는 {'code': repeated {'price_from': xxx, 'price_until': xxxx, 'amount': xxx, 'foreign_amount': xxxx, 'percentage': xxx, repeated {'name': xxx, 'amount': xxx, 'percentage': xxx}}
+        * 10초 단위로 끊어서 새로운 데이터가 들어온 뒤, 10초안의 데이터는 같은 데이터로 간주하고, 10초 동안 데이터가 없으면 마지막 데이터 기준으로 가격 범위 결정
+        * +, - 3가지 회사만 전달하고, 국내와 외국계 구분, 둘다 같은 방향인  경우는 외곽선 색깔을 달리하여, 구분 후 내부에서 다른 색상으로 회사 표기
+        * 가격 구분은 가장 낮은 호가 *10 충족되면, 10개, 1개까지 구분
+
     * VI Plugin 간소화 및 MAX Price 도 계산
     * 초기 RANK 10 으로 동시호가 / 전날 Amount 비율, 100억 이상, 시작가 VI 안걸린 종목 #
     * 5초 틱 그래프 만들기

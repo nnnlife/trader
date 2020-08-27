@@ -138,6 +138,7 @@ void SearchBackend::sendCurrentStock(const QString &code) {
 
 void SearchBackend::sendCurrentDateTime(const QDateTime &dt) {
     mIsManualTime = true;
+    qWarning() << "sendCurrentDateTime : " << dt;
     DataProvider::getInstance()->setCurrentDateTime(dt);
 }
 

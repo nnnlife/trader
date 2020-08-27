@@ -25,7 +25,7 @@ public:
         PRICE_ROW_COUNT = 10,
         COLUMN_COUNT = 11,
         VOLUME_ROW_COUNT = 2,
-        PRICE_COLUMN_COUNT = 1,
+        PRICE_COLUMN_COUNT = 10,
         TIME_LABEL_ROW_COUNT = 1,
     };
     LensChartView(QQuickItem *parent = 0);
@@ -43,6 +43,8 @@ private:
     QDateTime mTickBeginDateTime;
     qint64 mTickInterval = INTERVAL_MSEC;
     qint64 mMaxVolume = 0;
+    int mCurrentHighPrice = 0;
+    int mCurrentLowPrice = 0;
 
     void resetData();
 
@@ -52,9 +54,10 @@ private:
 
     void checkPriceRange(int price);
     void drawGridLine(QPainter *painter, qreal cw, qreal ch);
-    void drawCurrentPriceLine(QPainter *painter, int price, qreal fromX, qreal untilX, qreal startY, qreal endY);
+    void drawCurrentPriceLine(QPainter *painter, int price, qreal fromX, qreal untilX, qreal startY, qreal endY, qreal cellWidth);
     void drawCandle(QPainter *painter, const Candle &candle, qreal x, qreal candleWidth, qreal startY, qreal endY);
     void drawVolume(QPainter *painter, const Candle &candle, qreal x, qreal volumeWidth, qreal startY, qreal endY);
+    void displayLowHighText(QPainter *painter, qreal x, qreal cellWidth, qreal startY, qreal endY);
 
 private slots:
     void setCurrentStock(QString);

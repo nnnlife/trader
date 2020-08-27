@@ -42,32 +42,63 @@ def clear_all():
     _code_info.clear()
 
 
+def _get_max_price(close_price, is_kospi):
+    max_p = int(close_price * 1.3)
+    unit = morning_client.get_ask_bid_price_unit((message.KOSPI if is_kospi else message.KOSDAQ), max_p)
+    if max_p % unit > 0:
+        max_p = max_p - max_p % unit + unit
+    return max_p
+
+
+def _get_min_price(close_price, is_kospi):
+    min_p = int(close_price * 0.7) 
+    unit = morning_client.get_ask_bid_price_unit((message.KOSPI if is_kospi else message.KOSDAQ), min_p)
+    if min_p % unit > 0:
+        min_p = min_p - min_p % unit - unit
+
+    return min_p
+
+
+def _get_next_price(open_price, is_kospi):
+    next_p = int(open_price * 1.1)
+    unit =  morning_client.get_ask_bid_price_unit((message.KOSPI if is_kospi else message.KOSDAQ), next_p)
+    if next_p % unit > 0:
+        next_p = next_p - next_p % unit + unit
+
+    return next_p
+
+
+def _get_prev_price(open_price, is_kospi):
+    prev_p = int(open_price * 0.9) 
+    unit =  morning_client.get_ask_bid_price_unit((message.KOSPI if is_kospi else message.KOSDAQ), prev_p)
+    if prev_p % unit > 0:
+        prev_p = prev_p - prev_p % unit - unit
+
+    return prev_p
+
+
 def calculate_vi_prices():
     while True:
         code = vi_queue.get(True)
 
         vi_prices = []
         if code in _code_info:
-            start_price = _code_info[code][1]
-            price = start_price
-            start_target = 10.0
-            while price <= start_price * 1.3:
-                unit = morning_client.get_ask_bid_price_unit((message.KOSPI if preload.is_kospi(code) else message.KOSDAQ), price)
-                price += unit
-                if (price - start_price) / start_price * 100.0 >= start_target:
-                    start_target += 10.0
-                    vi_prices.append(price) 
-                    break
+            max_price = _get_max_price(_code_info[code][1], is_kospi)
+            min_price = _get_min_price(_code_info[code][1], is_kospi)
+            next_target = _get_next_price(_code_info[code][2], is_kospi)
+            prev_target = _get_prev_price(_code_info[code][2], is_kospi)
 
-            price = start_price
-            start_target = -10.0
-            while price >= start_price * 0.7:
-                unit = morning_client.get_ask_bid_price_unit((message.KOSPI if preload.is_kospi(code) else message.KOSDAQ), price - 1)
-                price -= unit
-                if (price - start_price) / start_price * 100.0 <= start_target:
-                    start_target -= 10.0
-                    vi_prices.append(price)
-                    break
+            if next_target > max_price:
+                vi_prices.append(max_price)
+            else:
+                vi_prices.append(next_target)
+
+            if prev_target < min_price:
+                vi_prices.append(min_price)
+            else:
+                vi_prices.append(prev_target)
+
+
         if len(vi_prices) > 0:
             #_LOGGER.info('Send ViPriceInfo %s %s', code, vi_prices)
             stub.SetViPriceInfo(stock_provider_pb2.ViPriceInfo(code=code, price=vi_prices))
@@ -83,12 +114,13 @@ def tick_subscriber():
         code = msg.code
 
         if code not in _code_info:
-            _code_info[code] = [False, 0]
+            _code_info[code] = [False, 0, 0] # is vi, yesterday_close, after_vi or today_open
             
         open_price = msg.start_price
         if open_price > 0:
             if _code_info[code][1] == 0:
-                _code_info[code][1] = open_price
+                _code_info[code][1] = msg.current_price - msg.yesterday_diff
+                _code_info[code][2] = open_price
                 vi_queue.put_nowait(code)
 
             if msg.market_type == 49:
@@ -96,7 +128,7 @@ def tick_subscriber():
             elif msg.market_type == 50:
                 if _code_info[code][0]:
                     _code_info[code][0] = False
-                    _code_info[code][1] = msg.current_price
+                    _code_info[code][2] = msg.current_price
                     vi_queue.put_nowait(code)
         else: # already set close
             pass

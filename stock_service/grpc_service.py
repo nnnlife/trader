@@ -46,6 +46,8 @@ vi_price_info = {}
 class StockServicer(stock_provider_pb2_grpc.StockServicer):
     def __init__(self, is_skip_ydata):
         _LOGGER.info('StockService init start')
+        morning_client.get_reader()
+        morning_client.get_broadcast_receiver()
         self.skip_ydata = is_skip_ydata
 
         self.stock_subscribe_clients = []
@@ -215,7 +217,7 @@ class StockServicer(stock_provider_pb2_grpc.StockServicer):
     def RequestCybosTickData(self, request, context):
         global is_subscribe_tick
         if request.code not in is_subscribe_tick:
-            stock_api.subscribe_stock(morning_client.get_reader(),
+            stock_api.subscribe_stock(morning_client.get_broadcast_receiver(),
                                     request.code, self.handle_stock_tick)
             _LOGGER.info('Start SubscribeStock %s', request.code)
             is_subscribe_tick[request.code] = True
@@ -226,7 +228,7 @@ class StockServicer(stock_provider_pb2_grpc.StockServicer):
     def RequestCybosBidAsk(self, request, context):
         global is_subscribe_bidask
         if request.code not in is_subscribe_bidask:
-            stock_api.subscribe_stock_bidask(morning_client.get_reader(),
+            stock_api.subscribe_stock_bidask(morning_client.get_broadcast_receiver(),
                                             request.code, self.handle_bidask_tick)
             _LOGGER.info('Start Subscribe BidAsk %s', request.code)
             is_subscribe_bidask[request.code] = True
@@ -237,7 +239,7 @@ class StockServicer(stock_provider_pb2_grpc.StockServicer):
     def RequestCybosSubject(self, request, context):
         global is_subscribe_subject
         if request.code not in is_subscribe_subject:
-            stock_api.subscribe_stock_subject(morning_client.get_reader(),
+            stock_api.subscribe_stock_subject(morning_client.get_broadcast_receiver(),
                                             request.code, self.handle_subject_tick) 
             _LOGGER.info('Start Subscribe Subject %s', request.code)
             is_subscribe_subject[request.code] = True
@@ -249,7 +251,7 @@ class StockServicer(stock_provider_pb2_grpc.StockServicer):
         global is_subscribe_alarm
 
         if not is_subscribe_alarm:
-            stock_api.subscribe_alarm(morning_client.get_reader(),
+            stock_api.subscribe_alarm(morning_client.get_broadcast_receiver(),
                                         self.handle_alarm_tick)
             _LOGGER.info('Start Subscribe alarm')
             is_subscribe_alarm = True
@@ -262,7 +264,7 @@ class StockServicer(stock_provider_pb2_grpc.StockServicer):
 
         if not is_subscribe_trade:
             _LOGGER.info('Start Trade Result')
-            stock_api.subscribe_trade(morning_client.get_reader(),
+            stock_api.subscribe_trade(morning_client.get_broadcast_receiver(),
                                         self.handle_trade_result)
             is_subscribe_trade = True
         else:
@@ -294,7 +296,8 @@ class StockServicer(stock_provider_pb2_grpc.StockServicer):
 
     def GetViPrice(self, request, context):
         if request.code in vi_price_info:
-            return stock_provider_pb2.Prices(price=vi_price_info[code])
+            print('GetViPrice', request.code, vi_price_info[request.code])
+            return stock_provider_pb2.Prices(price=vi_price_info[request.code])
         return stock_provider_pb2.Prices(price=[])
 
     def SetCurrentStock(self, request, context):
@@ -315,12 +318,15 @@ class StockServicer(stock_provider_pb2_grpc.StockServicer):
         return Empty()
 
     def SetCurrentDateTime(self, request ,context):
-        #_LOGGER.debug('SetCurrentDateTime %s', request.ToDatetime())
-
         if not self.simulation_on:
             preload.load(request.ToDatetime() + timedelta(hours=9), self.skip_ydata)
             vi_price_info.clear()
-            self.open_quote_list.clear()
+            self.open_quote_list = []
+            self.today_top_list['momentum'] = []
+            self.today_top_list['ratio'] = []
+            self.today_top_list['amount'] = []
+            self.send_list_changed('ttopamount')
+            self.send_list_changed('openquote')
 
         self.handle_time(request.ToDatetime())
         return Empty()
@@ -402,31 +408,36 @@ class StockServicer(stock_provider_pb2_grpc.StockServicer):
         data = data_arr[0]
         tick_date = Timestamp()
         tick_date.FromDatetime(data['date'] - timedelta(hours=9))
+        try:
+            tick_data = stock_provider_pb2.CybosTickData(tick_date=tick_date,
+                                                    code=code,
+                                                    company_name=data['1'],
+                                                    yesterday_diff=data['2'],
+                                                    time=data['3'],
+                                                    start_price=int(data['4']),
+                                                    highest_price=int(data['5']),
+                                                    lowest_price=int(data['6']),
+                                                    ask_price=int(data['7']),
+                                                    bid_price=int(data['8']),
+                                                    cum_volume=data['9'],
+                                                    cum_amount=data['10'],
+                                                    current_price=int(data['13']),
+                                                    buy_or_sell=(data['14'] == ord('1')),
+                                                    cum_sell_volume_by_price=data['15'],
+                                                    cum_buy_volume_by_price=data['16'],
+                                                    volume=data['17'],
+                                                    time_with_sec=data['18'],
+                                                    market_type_exp=data['19'],
+                                                    market_type=data['20'],
+                                                    out_time_volume=data['21'],
+                                                    cum_sell_volume=data['27'],
+                                                    cum_buy_volume=data['28'],
+                                                    is_kospi=preload.is_kospi(code))
+        except ValueError as e:
+            print('Tick ValueError', e)
+            return
 
-        tick_data = stock_provider_pb2.CybosTickData(tick_date=tick_date,
-                                                code=code,
-                                                company_name=data['1'],
-                                                yesterday_diff=data['2'],
-                                                time=data['3'],
-                                                start_price=int(data['4']),
-                                                highest_price=int(data['5']),
-                                                lowest_price=int(data['6']),
-                                                ask_price=int(data['7']),
-                                                bid_price=int(data['8']),
-                                                cum_volume=data['9'],
-                                                cum_amount=data['10'],
-                                                current_price=int(data['13']),
-                                                buy_or_sell=(data['14'] == ord('1')),
-                                                cum_sell_volume_by_price=data['15'],
-                                                cum_buy_volume_by_price=data['16'],
-                                                volume=data['17'],
-                                                time_with_sec=data['18'],
-                                                market_type_exp=data['19'],
-                                                market_type=data['20'],
-                                                out_time_volume=data['21'],
-                                                cum_sell_volume=data['27'],
-                                                cum_buy_volume=data['28'],
-                                                is_kospi=preload.is_kospi(code))
+
         for q in self.stock_subscribe_clients:
             q.put_nowait(tick_data)
 
@@ -653,6 +664,7 @@ class StockServicer(stock_provider_pb2_grpc.StockServicer):
         return stock_provider_pb2.CodeList(codelist=self.open_quote_list)
 
     def SetOpenQuoteRatioList(self, request, context):
+        _LOGGER.info('OPEN QUOTE LIST %d', len(request.codelist))
         self.open_quote_list = request.codelist
         self.send_list_changed('openquote')
         return Empty()

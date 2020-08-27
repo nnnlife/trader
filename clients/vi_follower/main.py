@@ -97,6 +97,8 @@ def start_vi_follower():
 
     slack.send_slack_message('START VI FOLLOWER')
     db_collection = MongoClient(db.HOME_MONGO_ADDRESS).trade_alarm
+    morning_client.get_reader()
+    morning_client.get_broadcast_receiver()
 
     market_code = morning_client.get_all_market_code()
     for m in market_code: # for caching company name in server
@@ -121,21 +123,21 @@ def start_vi_follower():
 
     followers = []
     for code in codes:
-        sf = stock_follower.StockFollower(morning_client.get_reader(), db_collection, code)
+        sf = stock_follower.StockFollower(morning_client.get_broadcast_receiver(), db_collection, code)
         sf.subscribe_at_startup()
         followers.append(sf)
 
-    kosdaq_index = stock_follower.StockFollower(morning_client.get_reader(), db_collection, 'U201')
+    kosdaq_index = stock_follower.StockFollower(morning_client.get_broadcast_receiver(), db_collection, 'U201')
     kosdaq_index.subscribe_at_startup()
     followers.append(kosdaq_index)
 
-    kospi_index = stock_follower.StockFollower(morning_client.get_reader(), db_collection, 'U001')
+    kospi_index = stock_follower.StockFollower(morning_client.get_broadcast_receiver(), db_collection, 'U001')
     kospi_index.subscribe_at_startup()
     followers.append(kospi_index)
 
     print('Start Listening...')
     slack.send_slack_message('START LISTENING')
-    stock_api.subscribe_alarm(morning_client.get_reader(), vi_handler)
+    stock_api.subscribe_alarm(morning_client.get_broadcast_receiver(), vi_handler)
 
     time_check_thread = gevent.spawn(check_time)
     today_bull_record_thread = gevent.spawn(today_bull_record)
