@@ -176,7 +176,7 @@ def handle_subject_code(code, stick):
 
         if handle_list and len(current_list) and code in _price_range_dict:
             for s in current_list:
-                _subject_summary_dict[code].append({'fromp': _price_range_dict[code][0], 'untilp': _price_range_dict[code][1], 'name': s.name, 'volume': s.volume if s.buy_or_sell else -(s.volume), 'foreigner_total': s.foreigner_total_volume})
+                _subject_summary_dict[code].append({'tick_date': s.tick_date, 'fromp': _price_range_dict[code][0], 'untilp': _price_range_dict[code][1], 'name': s.name, 'volume': s.volume if s.buy_or_sell else -(s.volume), 'foreigner_total': s.foreigner_total_volume})
 
             send_summary(code)
 
