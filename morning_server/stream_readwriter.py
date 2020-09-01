@@ -133,11 +133,13 @@ def write(sock, header, body):
                 continue
             else:
                 print(CLIENT_NAME, 'ERROR) write socket error, reraise')
+                print(header, body)
                 print(sys.exc_info())
                 print(traceback.format_exc())
                 raise Exception('ERROR) socket write error', sock)
-        except:
-            print(CLIENT_NAME, 'ERROR) write error, reraise')
+        except Exception as e:
+            print(CLIENT_NAME, 'ERROR) write error, reraise', e)
+            print(header, body)
             print(sys.exc_info())
             print(traceback.format_exc())
             raise
