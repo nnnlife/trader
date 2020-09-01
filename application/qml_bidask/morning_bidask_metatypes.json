@@ -134,6 +134,32 @@
                         "type": "int",
                         "user": false,
                         "write": "setTodayHigh"
+                    },
+                    {
+                        "constant": false,
+                        "designable": true,
+                        "final": false,
+                        "name": "upperViPrice",
+                        "notify": "upperViPriceChanged",
+                        "read": "getUpperViPrice",
+                        "required": false,
+                        "scriptable": true,
+                        "stored": true,
+                        "type": "int",
+                        "user": false
+                    },
+                    {
+                        "constant": false,
+                        "designable": true,
+                        "final": false,
+                        "name": "lowerViPrice",
+                        "notify": "lowerViPriceChanged",
+                        "read": "getLowerViPrice",
+                        "required": false,
+                        "scriptable": true,
+                        "stored": true,
+                        "type": "int",
+                        "user": false
                     }
                 ],
                 "qualifiedClassName": "BidAskModel",
@@ -161,6 +187,16 @@
                     {
                         "access": "public",
                         "name": "todayHighChanged",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "name": "upperViPriceChanged",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "name": "lowerViPriceChanged",
                         "returnType": "void"
                     }
                 ],

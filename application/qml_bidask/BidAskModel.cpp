@@ -68,6 +68,22 @@ void BidAskModel::setTotalAskRemain(uint br) {
 }
 
 
+int BidAskModel::getUpperViPrice() {
+    if (mViPrices.count() != 2)
+        return 0;
+    
+    return mViPrices[0];
+}
+
+
+int BidAskModel::getLowerViPrice() {
+    if (mViPrices.count() != 2)
+        return 0;
+    
+    return mViPrices[1];
+}
+
+
 void BidAskModel::setCurrentStock(QString code) {
     if (currentStockCode != code) {
         resetData();
@@ -75,6 +91,8 @@ void BidAskModel::setCurrentStock(QString code) {
         currentStockCode = code;
         if (currentDateTime.isValid()) {
             mViPrices = DataProvider::getInstance()->getViPrices(code);
+            emit upperViPriceChanged();
+            emit lowerViPriceChanged();
             qWarning() << "mViPrices : " << mViPrices;
         }
         qWarning() << "currentStock: " << currentStockCode;

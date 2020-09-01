@@ -18,6 +18,9 @@ Module {
             "MorningTickChartView/MorningTickChartView 1.7"
         ]
         exportMetaObjectRevisions: [0, 1, 11, 4, 7]
+        Property { name: "subjectVisible"; type: "bool" }
+        Property { name: "foreignerVolume"; type: "int" }
+        Property { name: "corporationName"; type: "string" }
         Method {
             name: "setCurrentStock"
             Parameter { type: "string" }
@@ -39,6 +42,10 @@ Module {
             name: "minuteDataReceived"
             Parameter { name: "code"; type: "string" }
             Parameter { type: "CybosDayDatas"; isPointer: true }
+        }
+        Method {
+            name: "setBrokerSummary"
+            Parameter { name: "summary"; type: "BrokerSummary"; isPointer: true }
         }
     }
 }

@@ -25,6 +25,9 @@ import os.path
 
 _message_reader = None
 _broadcast_receiver = None
+_trade_reader = None
+_trade_broadcast_receiver = None
+
 _mongo_collection = None
 MAVG=20
 _kosdaq_code = None
@@ -47,17 +50,35 @@ def get_all_market_code():
 
 
 def get_reader():
+    global _message_reader
     if _message_reader is None:
-        setup()
+        _message_reader = _create_reader()
 
     return _message_reader
 
 
 def get_broadcast_receiver():
+    global _broadcast_receiver
     if _broadcast_receiver is None:
-        broadcast_receiver_setup()
+        _broadcast_receiver = _create_reader()
 
     return _broadcast_receiver
+
+
+def get_trade_reader():
+    global _trade_reader
+    if _trade_reader is None:
+        _trade_reader = _create_reader()
+
+    return _trade_reader
+
+
+def get_trade_broadcast_receiver():
+    global _trade_broadcast_receiver
+    if _trade_broadcast_receiver is None:
+        _trade_broadcast_receiver = _create_reader()
+
+    return _trade_broadcast_receiver
 
 
 def get_collection():
@@ -243,7 +264,7 @@ def get_today_minute_data(code):
 
 
 def get_balance(): # return amount  {'balance': 1543974}
-    result = stock_api.get_balance(get_reader())
+    result = stock_api.get_balance(get_trade_reader())
     if 'balance' in result:
         return result['balance']
     
@@ -296,9 +317,7 @@ def get_tick_data_by_datetime(code, from_datetime, until_datetime):
     return converted_data
 
 
-
-def setup():
-    global _message_reader, _broadcast_receiver
+def _create_reader():
     while True:
         try:
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -309,24 +328,9 @@ def setup():
             print('Retrying connect to apiserver')
             gevent.sleep(1)
 
-    _message_reader = stream_readwriter.MessageReader(sock)
-    _message_reader.start()
-
-
-def broadcast_receiver_setup():
-    global _broadcast_receiver
-    while True:
-        try:
-            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            server_address = (message.SERVER_IP, message.CLIENT_SOCKET_PORT)
-            sock.connect(server_address)
-            break
-        except socket.error:
-            print('Retrying connect to apiserver')
-            gevent.sleep(1)
-
-    _broadcast_receiver = stream_readwriter.MessageReader(sock)
-    _broadcast_receiver.start()
+    reader = stream_readwriter.MessageReader(sock)
+    reader.start()
+    return reader
 
 
 def db_setup():

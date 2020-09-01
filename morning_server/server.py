@@ -12,6 +12,7 @@ from gevent.server import StreamServer
 import threading
 import time
 import gevent
+from gevent.lock import Semaphore
 import virtualbox
 import traceback
 
@@ -37,6 +38,8 @@ server = None
 partial_request = server_util.PartialRequest()
 client_manager = clientmanager.ClientManager()
 morning_stat = morning_stats.MorningStats(client_manager.collectors)
+broadcast_semaphore = Semaphore()
+trade_broadcast_semaphore = Semaphore()
 
 
 def handle_collector(sock, header, body):
@@ -152,8 +155,10 @@ def handle_subscribe(sock, header, body):
 def handle_subscribe_response(sock, header, body):
     #logger.info('HANDLE SUBSCRIBE RESPONSE %s', header)
     if 'code' in header:
+        broadcast_semaphore.acquire()
         code = header['code']
         client_manager.broadcast_subscribe_data(code, header, body)
+        broadcast_semaphore.release()
         #morning_stat.increment_subscribe_count(code)
     else:
         logger.warning('ERROR) NO code in subscribe response header')
@@ -181,7 +186,9 @@ def handle_trade_subscribe(sock, header, body):
 
 def handle_trade_subscribe_response(sock, header, body):
     logger.info('HANDLE TRADE SUBSCRIBE RESPONSE %s', header)
+    trade_broadcast_semaphore.acquire()
     client_manager.broadcast_trade_data(header, body)
+    trade_broadcast_semaphore.release()
 
 
 def handle(sock, address):

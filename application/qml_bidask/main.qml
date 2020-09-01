@@ -41,7 +41,13 @@ ApplicationWindow {
                     border.width: bidaskModel.highlight == model.row ? 2:1
 
                     Text {
-                        text: qsTr("%L1").arg(display)
+                        text: {
+                            if (model.row == 0)
+                                return qsTr("%L1").arg(bidaskModel.upperViPrice)
+                            else if (model.row == 21)
+                                return qsTr("%L1").arg(bidaskModel.lowerViPrice)
+                            return qsTr("%L1").arg(display)
+                        }
                         horizontalAlignment: Text.AlignRight
                         verticalAlignment: Text.AlignVCenter
                         anchors.fill: parent

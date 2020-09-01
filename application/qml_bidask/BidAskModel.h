@@ -15,6 +15,9 @@ class BidAskModel : public QAbstractTableModel {
     Q_PROPERTY(int totalBidRemain READ getTotalBidRemain WRITE setTotalBidRemain NOTIFY totalBidRemainChanged)
     Q_PROPERTY(int totalAskRemain READ getTotalAskRemain WRITE setTotalAskRemain NOTIFY totalAskRemainChanged)
     Q_PROPERTY(int todayHigh READ getTodayHigh WRITE setTodayHigh NOTIFY todayHighChanged)
+    Q_PROPERTY(int upperViPrice READ getUpperViPrice NOTIFY upperViPriceChanged)
+    Q_PROPERTY(int lowerViPrice READ getLowerViPrice NOTIFY lowerViPriceChanged)
+    
     QML_ELEMENT
 
 public:
@@ -72,6 +75,9 @@ public:
     uint getTotalBidRemain() { return totalBidRemain; }
     uint getTotalAskRemain() { return totalAskRemain; }
 
+    int getUpperViPrice();
+    int getLowerViPrice();
+
     Q_INVOKABLE void sell_immediately(int percentage);
     Q_INVOKABLE void buy_immediately(int percentage);
     Q_INVOKABLE void buy_on_price(int row, int percentage);
@@ -111,6 +117,8 @@ signals:
     void totalAskRemainChanged();
     void totalBidRemainChanged();
     void todayHighChanged();
+    void upperViPriceChanged();
+    void lowerViPriceChanged();
 };
 
 

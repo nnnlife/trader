@@ -196,6 +196,16 @@ class StockStub(object):
         request_serializer=stock__provider__pb2.CodeList.SerializeToString,
         response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
         )
+    self.GetBrokerSummary = channel.unary_unary(
+        '/stock_api.Stock/GetBrokerSummary',
+        request_serializer=stock__provider__pb2.StockCodeQuery.SerializeToString,
+        response_deserializer=stock__provider__pb2.BrokerSummary.FromString,
+        )
+    self.SetBrokerSummary = channel.unary_unary(
+        '/stock_api.Stock/SetBrokerSummary',
+        request_serializer=stock__provider__pb2.BrokerSummary.SerializeToString,
+        response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+        )
     self.GetTodayTopAmountList = channel.unary_unary(
         '/stock_api.Stock/GetTodayTopAmountList',
         request_serializer=stock__provider__pb2.TodayTopOption.SerializeToString,
@@ -225,6 +235,11 @@ class StockStub(object):
         '/stock_api.Stock/ListenListChanged',
         request_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
         response_deserializer=stock__provider__pb2.ListType.FromString,
+        )
+    self.ListenBrokerSummary = channel.unary_stream(
+        '/stock_api.Stock/ListenBrokerSummary',
+        request_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+        response_deserializer=stock__provider__pb2.BrokerSummary.FromString,
         )
     self.ListenCybosTickData = channel.unary_stream(
         '/stock_api.Stock/ListenCybosTickData',
@@ -544,6 +559,20 @@ class StockServicer(object):
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
 
+  def GetBrokerSummary(self, request, context):
+    # missing associated documentation comment in .proto file
+    pass
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
+  def SetBrokerSummary(self, request, context):
+    # missing associated documentation comment in .proto file
+    pass
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
   def GetTodayTopAmountList(self, request, context):
     # missing associated documentation comment in .proto file
     pass
@@ -580,6 +609,13 @@ class StockServicer(object):
     raise NotImplementedError('Method not implemented!')
 
   def ListenListChanged(self, request, context):
+    # missing associated documentation comment in .proto file
+    pass
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
+  def ListenBrokerSummary(self, request, context):
     # missing associated documentation comment in .proto file
     pass
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -853,6 +889,16 @@ def add_StockServicer_to_server(servicer, server):
           request_deserializer=stock__provider__pb2.CodeList.FromString,
           response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
       ),
+      'GetBrokerSummary': grpc.unary_unary_rpc_method_handler(
+          servicer.GetBrokerSummary,
+          request_deserializer=stock__provider__pb2.StockCodeQuery.FromString,
+          response_serializer=stock__provider__pb2.BrokerSummary.SerializeToString,
+      ),
+      'SetBrokerSummary': grpc.unary_unary_rpc_method_handler(
+          servicer.SetBrokerSummary,
+          request_deserializer=stock__provider__pb2.BrokerSummary.FromString,
+          response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+      ),
       'GetTodayTopAmountList': grpc.unary_unary_rpc_method_handler(
           servicer.GetTodayTopAmountList,
           request_deserializer=stock__provider__pb2.TodayTopOption.FromString,
@@ -882,6 +928,11 @@ def add_StockServicer_to_server(servicer, server):
           servicer.ListenListChanged,
           request_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
           response_serializer=stock__provider__pb2.ListType.SerializeToString,
+      ),
+      'ListenBrokerSummary': grpc.unary_stream_rpc_method_handler(
+          servicer.ListenBrokerSummary,
+          request_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+          response_serializer=stock__provider__pb2.BrokerSummary.SerializeToString,
       ),
       'ListenCybosTickData': grpc.unary_stream_rpc_method_handler(
           servicer.ListenCybosTickData,

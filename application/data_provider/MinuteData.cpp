@@ -48,7 +48,7 @@ void MinuteTick::minuteDataReady(QString _code, CybosDayDatas * data) {
             else 
                 inTimeCount++;
         }
-        qWarning() << "receive MinuteData size(" << data->day_data_size() << "), until : " << t << "\t inTime count " << inTimeCount;
+        //qWarning() << "receive MinuteData size(" << data->day_data_size() << "), until : " << t << "\t inTime count " << inTimeCount;
 
         const int im = intervalMinute;
         // if count 6 then complete 1 candle and use last as current
@@ -71,7 +71,7 @@ void MinuteTick::minuteDataReady(QString _code, CybosDayDatas * data) {
             else
                 updateCurrentData(data->day_data(i));
         }
-        qWarning() << "send minuteTickUpdated";
+        //qWarning() << "send minuteTickUpdated";
         if (inTimeCount > 0)
             emit minuteTickUpdated(code);
     }
@@ -294,12 +294,12 @@ void MinuteData::requestPreviousData(MinuteTick *tick) {
     const QDateTime &dt = tick->getCreateDateTime();
 
     if (dt.date() == QDateTime::currentDateTime().date()) {
-        qWarning() << "request Today Minute Data";
+        //qWarning() << "request Today Minute Data";
         dayDataProvider->requestTodayMinuteData(tick->getCode());
     }
     else {
         dayDataProvider->requestMinuteData(tick->getCode(), dt, dt); // does not matter since query is done with 1 day
-        qWarning() << "request past minute data " << tick->getCode() << "\t" << dt;
+        //qWarning() << "request past minute data " << tick->getCode() << "\t" << dt;
     }
 }
 

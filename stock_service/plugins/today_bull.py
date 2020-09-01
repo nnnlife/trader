@@ -26,7 +26,7 @@ from utils import trade_logger
 _LOGGER = trade_logger.get_logger()
 
 stub = None
-REFRESH_SEC = 120
+REFRESH_SEC = 60
 LIST_COUNT = 20
 
 _listen_quote_ratio = True
@@ -38,7 +38,7 @@ _last_push_time = None
 
 
 def clear_all():
-    global _last_push_time
+    global _last_push_time, _listen_quote_ratio
     _last_push_time = None
     _amount_top_list.clear()
     _amount_momentum_list.clear()

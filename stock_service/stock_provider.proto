@@ -54,6 +54,9 @@ service Stock {
   rpc SetTodayAmountTopList(CodeList) returns (google.protobuf.Empty) {}
   rpc SetOpenQuoteRatioList(CodeList) returns (google.protobuf.Empty) {}
 
+  rpc GetBrokerSummary(StockCodeQuery) returns (BrokerSummary) {}
+  rpc SetBrokerSummary(BrokerSummary) returns (google.protobuf.Empty) {}
+
   rpc GetTodayTopAmountList(TodayTopOption) returns (CodeList) {}
   rpc GetRecentSearch(google.protobuf.Empty) returns (CodeList) {}
   rpc GetViList(google.protobuf.Empty) returns (CodeList) {}
@@ -61,6 +64,7 @@ service Stock {
 
   rpc ListenCurrentStock(google.protobuf.Empty) returns (stream StockCodeQuery) {}
   rpc ListenListChanged(google.protobuf.Empty) returns (stream ListType) {}
+  rpc ListenBrokerSummary(google.protobuf.Empty) returns (stream BrokerSummary) {}
 
   rpc ListenCybosTickData(google.protobuf.Empty) returns (stream CybosTickData) {}
   rpc ListenCybosBidAsk(google.protobuf.Empty) returns (stream CybosBidAskTickData) {}
@@ -106,6 +110,28 @@ message Prices {
 
 message Bool {
     bool ret = 1;
+}
+
+
+message BrokerLog {
+    float from_price = 1;
+    float until_price = 2;
+    int64 buy_volume = 3;
+    int64 sell_volume = 4;
+    int64 buy_volume_domestic = 5;
+    int64 buy_volume_foreign = 6;
+    int64 sell_volume_domestic = 7;
+    int64 sell_volume_foreign = 8;
+    map<string, int64> buy_broker = 9;
+    map<string, int64> sell_broker = 10;
+}
+
+
+message BrokerSummary {
+    string code = 1;
+    int64 foreigner_total = 2;
+    repeated BrokerLog broker_log = 3;
+    int64 max_volume = 4;
 }
 
 

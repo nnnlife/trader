@@ -10,7 +10,68 @@
                 ],
                 "className": "MorningTickChartView",
                 "object": true,
+                "properties": [
+                    {
+                        "constant": false,
+                        "designable": true,
+                        "final": false,
+                        "name": "subjectVisible",
+                        "notify": "subjectVisibleChanged",
+                        "read": "subjectVisible",
+                        "required": false,
+                        "scriptable": true,
+                        "stored": true,
+                        "type": "bool",
+                        "user": false,
+                        "write": "setSubjectVisible"
+                    },
+                    {
+                        "constant": false,
+                        "designable": true,
+                        "final": false,
+                        "name": "foreignerVolume",
+                        "notify": "foreignerVolumeChanged",
+                        "read": "foreignerVolume",
+                        "required": false,
+                        "scriptable": true,
+                        "stored": true,
+                        "type": "int",
+                        "user": false,
+                        "write": "setForeignerVolume"
+                    },
+                    {
+                        "constant": false,
+                        "designable": true,
+                        "final": false,
+                        "name": "corporationName",
+                        "notify": "corporationNameChanged",
+                        "read": "corporationName",
+                        "required": false,
+                        "scriptable": true,
+                        "stored": true,
+                        "type": "QString",
+                        "user": false,
+                        "write": "setCorporationName"
+                    }
+                ],
                 "qualifiedClassName": "MorningTickChartView",
+                "signals": [
+                    {
+                        "access": "public",
+                        "name": "subjectVisibleChanged",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "name": "foreignerVolumeChanged",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "name": "corporationNameChanged",
+                        "returnType": "void"
+                    }
+                ],
                 "slots": [
                     {
                         "access": "private",
@@ -69,6 +130,17 @@
                             }
                         ],
                         "name": "minuteDataReceived",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "private",
+                        "arguments": [
+                            {
+                                "name": "summary",
+                                "type": "BrokerSummary*"
+                            }
+                        ],
+                        "name": "setBrokerSummary",
                         "returnType": "void"
                     }
                 ],

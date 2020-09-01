@@ -10,11 +10,11 @@
 #include "BidAskThread.h"
 #include "AlarmThread.h"
 #include "StockListThread.h"
+#include "BrokerThread.h"
 #include "StockSelectionThread.h"
 #include "MinuteData.h"
 #include "DayDataProvider.h"
 #include "SimulationEvent.h"
-//#include "RunSimulation.h"
 #include "TraderThread.h"
 
 
@@ -39,6 +39,7 @@ using grpc::ClientContext;
 using stock_api::StockQuery;
 
 using stock_api::CybosTickData;
+using stock_api::BrokerSummary;
 using stock_api::CybosDayDatas;
 using stock_api::CybosBidAskTickData;
 using stock_api::CybosSubjectTickData;
@@ -65,6 +66,7 @@ DataProvider::DataProvider()
     qRegisterMetaType<OrderResult>("OrderResult");
     qRegisterMetaType<Timestamp>("Timestamp");
     qRegisterMetaType<CybosStockAlarm>("CybosStockAlarm");
+    qRegisterMetaType<CybosStockAlarm>("BrokerSummary");
 
     stub_ = Stock::NewStub(grpc::CreateChannel("localhost:50052", grpc::InsecureChannelCredentials()));
 
@@ -77,12 +79,14 @@ DataProvider::DataProvider()
     bidAskThread = new BidAskThread(stub_);
     stockSelectionThread = new StockSelectionThread(stub_);
     dayDataProvider = new DayDataProvider(stub_);
+    brokerThread = new BrokerThread(stub_);
     SimulationEvent *simulationEvent = new SimulationEvent(stub_);
     traderThread = new TraderThread(stub_);
     m_simulationStatus = _isSimulation() ? RUNNING: STOP;
 
     connect(tickThread, &TickThread::tickArrived, this, &DataProvider::tickArrived);
     connect(bidAskThread, &BidAskThread::tickArrived, this, &DataProvider::bidAskTickArrived);
+    connect(brokerThread, &BrokerThread::summaryArrived, this, &DataProvider::brokerSummaryArrived);
     connect(stockSelectionThread, &StockSelectionThread::stockCodeChanged, this, &DataProvider::stockCodeReceived);
     connect(dayDataProvider, &DayDataProvider::dataReady, this, &DataProvider::dayDataReady);
     connect(dayDataProvider, &DayDataProvider::minuteDataReady, this, &DataProvider::minuteDataReady);
@@ -94,7 +98,7 @@ DataProvider::DataProvider()
 
 
 void DataProvider::stockCodeReceived(QString code) {
-    qWarning() << "receive stock code received : " << code;
+    //qWarning() << "receive stock code received : " << code;
     currentStockCode = code;
 
     if (minuteData != NULL)
@@ -205,6 +209,11 @@ void DataProvider::startStockCodeListening() {
 }
 
 
+void DataProvider::startBrokerSummaryListening() {
+    brokerThread->start();
+}
+
+
 void DataProvider::startSimulation(const QDateTime &dt, qreal speed) {
     qWarning() << "startSimulation : " << m_simulationStatus;
     if (m_simulationStatus == STOP) {
@@ -274,8 +283,17 @@ YearHighInfo * DataProvider::getYearHighInfo(const QString &code) {
     StockCodeQuery scq;
     scq.set_code(code.toStdString());
     stub_->GetYearHigh(&context, scq, yearHighInfo);
-    qWarning() << "GetYearHigh called " << code;
     return yearHighInfo;
+}
+
+
+BrokerSummary * DataProvider::getBrokerSummary(const QString &code) {
+    ClientContext context;
+    BrokerSummary *summary = new BrokerSummary;
+    StockCodeQuery scq;
+    scq.set_code(code.toStdString());
+    stub_->GetBrokerSummary(&context, scq, summary);
+    return summary;
 }
 
 
@@ -420,13 +438,13 @@ TopList * DataProvider::getYtopAmountList() {
     Timestamp ts = Timestamp(TimeUtil::TimeTToTimestamp(m_currentDateTime.toTime_t()));
     TopList * topList = new TopList;
     stub_->GetYesterdayTopAmountList(&context, ts, topList);
-    qWarning() << "topList count : " << topList->codelist_size() << "\tdate" << topList->date() << "\tis_today_data" << topList->is_today_data();
+    //qWarning() << "topList count : " << topList->codelist_size() << "\tdate" << topList->date() << "\tis_today_data" << topList->is_today_data();
     return topList;
 }
 
 
 void DataProvider::addToFavorite(const QString &code) {
-    qWarning() << "DataProvider addToFavorite : " << code;
+    //qWarning() << "DataProvider addToFavorite : " << code;
     ClientContext context;
     StockCodeQuery data; 
     data.set_code(code.toStdString());

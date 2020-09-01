@@ -131,7 +131,7 @@ def subject_to_grpc(tick):
 
 def bidask_to_grpc(tick):
     tick_date = Timestamp()
-    tick_date.FromDatetime(tick['date'])
+    tick_date.FromDatetime(tick['date'] - timedelta(hours=9))
     code = tick['code']
     if 'time' in tick:
         return stock_provider_pb2.CybosBidAskTickData(tick_date=tick_date,
@@ -220,7 +220,7 @@ def tick_sender(tick_queue, speed):
             # TIME_SPEED greater, then tick deliver speed will be more slow
 
             while (d['date'] - datatime) * speed > datetime.now() - now:
-                gevent.sleep()
+                gevent.sleep(0.00001)
 
             timeadjust = (datetime.now() - now) - (d['date'] - datatime) * speed
             d_date = d['date']

@@ -45,6 +45,7 @@ Module {
         Method { name: "launchBidAsk" }
         Method { name: "launchDayChart" }
         Method { name: "launchFavorite" }
+        Method { name: "launchLens" }
         Method { name: "startSimulation" }
         Method { name: "stopSimulation" }
         Method { name: "startSubscribeCodes" }

@@ -151,6 +151,7 @@ void LensChartView::timeInfoArrived(QDateTime dt) {
     if (!mCurrentDateTime.isValid() || (!DataProvider::getInstance()->isSimulation() && mCurrentDateTime != dt)) {
         mCurrentDateTime = dt;
         resetData();
+        update();
     }
 }
 
@@ -196,7 +197,7 @@ void LensChartView::drawCurrentPriceLine(QPainter *painter, int price, qreal fro
     painter->setPen(pen);
     qreal current_y = mapPriceToPos(price, endY, startY);
     painter->drawLine(QLineF(fromX, current_y, untilX, current_y));
-
+    /*
     pen.setColor(Qt::black);
     painter->setPen(pen);
     QFont f = painter->font();
@@ -205,6 +206,7 @@ void LensChartView::drawCurrentPriceLine(QPainter *painter, int price, qreal fro
     QLocale locale;
     painter->drawText(QRectF(0, current_y - 8, cellWidth, 16),
                     Qt::AlignCenter, locale.toCurrencyString(price, " "));
+    */
     painter->restore();
 }
 
@@ -234,6 +236,10 @@ void LensChartView::drawCandle(QPainter *painter, const Candle &candle, qreal x,
     painter->setPen(Qt::NoPen);
     painter->drawRect(QRectF(x, candle_y_open, candleWidth, candle_y_close - candle_y_open));
     
+    qreal profit = (qreal(candle.high()) - candle.low()) / candle.low() * 100.0;
+    if (qAbs(profit) >= 0.5)
+        painter->drawText(QRectF(x - 5, candle_y_low + 10, candleWidth + 10, 15), Qt::AlignCenter, QString::number(profit, 'f', 1));
+
     painter->restore();
 }
 

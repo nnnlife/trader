@@ -39,6 +39,7 @@ is_subscribe_tick = {}
 is_subscribe_bidask = {}
 is_subscribe_subject = {}
 vi_price_info = {}
+subject_summary = {}
 
 
 
@@ -56,6 +57,7 @@ class StockServicer(stock_provider_pb2_grpc.StockServicer):
         self.current_time_subscribe_clients = []
         self.alarm_subscribe_clients = []
         self.list_changed_subscribe_clients = []
+        self.subject_summary_subscribe_clients = []
         self.current_stock_selection_subscribe_clients = []
         self.simulation_changed_subscribe_clients = []
         self.order_result_subscribe_clients  = []
@@ -264,7 +266,7 @@ class StockServicer(stock_provider_pb2_grpc.StockServicer):
 
         if not is_subscribe_trade:
             _LOGGER.info('Start Trade Result')
-            stock_api.subscribe_trade(morning_client.get_broadcast_receiver(),
+            stock_api.subscribe_trade(morning_client.get_trade_broadcast_receiver(),
                                         self.handle_trade_result)
             is_subscribe_trade = True
         else:
@@ -300,6 +302,20 @@ class StockServicer(stock_provider_pb2_grpc.StockServicer):
             return stock_provider_pb2.Prices(price=vi_price_info[request.code])
         return stock_provider_pb2.Prices(price=[])
 
+    def GetBrokerSummary(self, request, context):
+        if request.code in subject_summary:
+            return subject_summary[request.code]
+
+        return stock_provider_pb2.BrokerSummary()
+
+    def SetBrokerSummary(self, request, context):
+        #print('SetBrokerSummary', request.code)
+        subject_summary[request.code] = request
+
+        for c in self.subject_summary_subscribe_clients:
+            c.put_nowait(request)
+        return Empty()
+
     def SetCurrentStock(self, request, context):
         global recent_search_codes
         if len(request.code) == 0:
@@ -321,6 +337,7 @@ class StockServicer(stock_provider_pb2_grpc.StockServicer):
         if not self.simulation_on:
             preload.load(request.ToDatetime() + timedelta(hours=9), self.skip_ydata)
             vi_price_info.clear()
+            subject_summary.clear()
             self.open_quote_list = []
             self.today_top_list['momentum'] = []
             self.today_top_list['ratio'] = []
@@ -576,6 +593,13 @@ class StockServicer(stock_provider_pb2_grpc.StockServicer):
     def ListenListChanged(self, request, context):
         data = self.handle_queue_based_listener('ListenListChanged',
                                                 self.list_changed_subscribe_clients,
+                                                context)
+        for d in data:
+            yield d
+
+    def ListenBrokerSummary(self, request, context):
+        data = self.handle_queue_based_listener('ListenBrokerSummary',
+                                                self.subject_summary_subscribe_clients,
                                                 context)
         for d in data:
             yield d

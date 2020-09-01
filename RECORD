@@ -32,3 +32,6 @@
     - 원인 추측: client 에서 block request 전달 후 waiting, brocast event가 계속 전달되는 상태에서, response 와 broadcast event의 하나의 client write 로 인해 에러 발생
     - 해결 방안: server 에서 write 에 대해 lock 을 거는 방안은, block request 에 의해 지연발생되었을 때 broaddcast 까지 지연 발생,
                  임시방안으로 client 에서 socket 2개로 연결, broadcast 용 socket 별도 연결
+
+* 2020/08/31 - 1시 10분 error발생 HEADER ID ERROR 후 ewouldblock 그리고 reset, collection 에 보낸 데이터가 없는데, hhhlife col1 이 메시지 받음
+* 2020/09/01 - 9시 1분 error 발생, 9:30 분부터 복구

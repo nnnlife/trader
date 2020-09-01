@@ -177,6 +177,11 @@ void SearchBackend::launchFavorite() {
 }
 
 
+void SearchBackend::launchLens() {
+    launchApp("/application/qml_lens", "qml_lens");
+}
+
+
 void SearchBackend::startSubscribeCodes() {
     QStringList subscribeCodes = DataProvider::getInstance()->getSubscribeCodes();
     qWarning() << "Subscrbie Code count : " << subscribeCodes.size();

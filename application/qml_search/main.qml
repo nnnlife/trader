@@ -108,13 +108,23 @@ ApplicationWindow {
             spacing: 20
             Button {
                 text: "TICK"
-                Layout.leftMargin: 30 
+                Layout.leftMargin: 10 
                 Layout.preferredWidth: 50 
                 Layout.preferredHeight: 30 
                 onClicked: {
                     SearchBackend.launchTick()
                 }
             }
+
+            Button {
+                text: 'LENS'
+                Layout.preferredWidth: 50 
+                Layout.preferredHeight: 30 
+                onClicked: {
+                    SearchBackend.launchLens()
+                }
+            }
+
 
             Button {
                 text: "DAY"
@@ -136,7 +146,7 @@ ApplicationWindow {
 
             Button {
                 text: "Trader"
-                Layout.preferredWidth: 85 
+                Layout.preferredWidth: 60
                 Layout.preferredHeight: 30 
                 onClicked: {
                     SearchBackend.launchTrader()
@@ -145,7 +155,7 @@ ApplicationWindow {
 
             Button {
                 text: "Favorite"
-                Layout.preferredWidth: 85 
+                Layout.preferredWidth: 75 
                 Layout.preferredHeight: 30 
                 onClicked: {
                     SearchBackend.launchFavorite()

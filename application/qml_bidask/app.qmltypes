@@ -17,6 +17,8 @@ Module {
         Property { name: "totalBidRemain"; type: "int" }
         Property { name: "totalAskRemain"; type: "int" }
         Property { name: "todayHigh"; type: "int" }
+        Property { name: "upperViPrice"; type: "int"; isReadonly: true }
+        Property { name: "lowerViPrice"; type: "int"; isReadonly: true }
         Method {
             name: "tickArrived"
             Parameter { type: "CybosTickData"; isPointer: true }

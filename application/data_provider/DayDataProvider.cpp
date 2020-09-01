@@ -80,7 +80,7 @@ void DayDataProvider::requestDayData(const QString &code,
         if (cachedQueue[i].getCode() == code && cachedQueue[i].isCached() &&
             cachedQueue[i].getDataType() == DAY_DATA && cachedQueue[i].getFromTime().date() == fromTime.date() &&
             cachedQueue[i].getUntilTime().date() == untilTime.date()) {
-            qWarning() << "return cached day data : " << code;
+            //qWarning() << "return cached day data : " << code;
             emit dataReady(code, cachedQueue[i].getCachedData());
             return;
         }
@@ -98,7 +98,7 @@ void DayDataProvider::requestMinuteData(const QString &code,
         if (cachedQueue[i].getCode() == code && cachedQueue[i].isCached() &&
             cachedQueue[i].getDataType() == MINUTE_DATA && cachedQueue[i].getFromTime().date() == fromTime.date() &&
             cachedQueue[i].getUntilTime().date() == untilTime.date()) {
-            qWarning() << "return cached minute data : " << code;
+            //qWarning() << "return cached minute data : " << code;
             emit minuteDataReady(code, cachedQueue[i].getCachedData());
             return;
         }

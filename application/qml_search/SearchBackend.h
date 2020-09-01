@@ -41,6 +41,7 @@ public:
     Q_INVOKABLE void launchBidAsk();
     Q_INVOKABLE void launchDayChart();
     Q_INVOKABLE void launchFavorite();
+    Q_INVOKABLE void launchLens();
 
     Q_INVOKABLE void startSimulation();
     Q_INVOKABLE void stopSimulation();

@@ -2,15 +2,17 @@
 #include "Util.h"
 #include "MinuteData.h"
 #include <QDebug>
+#include <QTextOption>
+#include "stock_provider.grpc.pb.h"
 
 
-#define TICK_SPACE_RATIO    (3.0/4.0)
+#define TICK_SPACE_RATIO    (2.0/6.0)
 
 
 MorningTickChartView::MorningTickChartView(QQuickItem *parent)
 : QQuickPaintedItem(parent), yesterdayMinInfo(3) {
     //setOpaquePainting(true);
-    //setAntialiasing(true);
+    setAntialiasing(true);
     setAcceptedMouseButtons(Qt::AllButtons);
     //todayStartHour = 9;
     todayStartTime = QTime(8, 30);
@@ -20,6 +22,7 @@ MorningTickChartView::MorningTickChartView(QQuickItem *parent)
             this, &MorningTickChartView::setCurrentStock);
     connect(DataProvider::getInstance(), &DataProvider::dayDataReady, this, &MorningTickChartView::dayDataReceived);
     connect(DataProvider::getInstance(), &DataProvider::minuteDataReady, this, &MorningTickChartView::minuteDataReceived);
+    connect(DataProvider::getInstance(), &DataProvider::brokerSummaryArrived, this, &MorningTickChartView::setBrokerSummary);
 
     // sequence is important, first MinuteData clear data and then call timeInfoArrived of MorningTickChartView
     DataProvider::getInstance()->collectMinuteData(3);
@@ -27,6 +30,47 @@ MorningTickChartView::MorningTickChartView(QQuickItem *parent)
 
     DataProvider::getInstance()->startStockCodeListening();
     DataProvider::getInstance()->startStockTick();
+    DataProvider::getInstance()->startBrokerSummaryListening();
+}
+
+
+bool MorningTickChartView::subjectVisible() {
+    return mSubjectVisible;
+}
+
+
+void MorningTickChartView::setSubjectVisible(bool v) {
+    if (v ^ mSubjectVisible) {
+        mSubjectVisible = v;
+        emit subjectVisibleChanged();
+        update();
+    }
+}
+
+
+int MorningTickChartView::foreignerVolume() {
+    return mForeignerVolume;
+}
+
+
+void MorningTickChartView::setForeignerVolume(int vol) {
+    if (mForeignerVolume != vol) {
+        mForeignerVolume = vol;
+        emit foreignerVolumeChanged();
+    }
+}
+
+
+QString MorningTickChartView::corporationName() {
+    return mCorporationName;
+}
+
+
+void MorningTickChartView::setCorporationName(const QString &name) {
+    if (mCorporationName != name) {
+        mCorporationName = name;
+        emit corporationNameChanged();
+    }
 }
 
 
@@ -79,15 +123,29 @@ void MorningTickChartView::mouseMoveEvent(QMouseEvent *event) {
 }
 
 
+void MorningTickChartView::clearBroker() {
+    if (mBrokerSummary != NULL) {
+        mBuyBroker.clear();
+        mSellBroker.clear();
+        delete mBrokerSummary;
+        mBrokerSummary = NULL;
+    }
+}
+
+
 void MorningTickChartView::resetData() {
     currentVolumeMin = currentVolumeMax = 0;
     pastMinuteDataReceived = false;
     mScale = 1.0;
+    clearBroker();
     mDrawHorizontalCurrentX = 0.0;
     mDrawHorizontalStartX = 0.0;
     mTransform.reset();
     priceSteps.clear();
     yesterdayMinInfo.clear();
+    //setSubjectVisible(false);
+    setCorporationName("");
+    setForeignerVolume(0);
 }
 
 
@@ -103,6 +161,10 @@ void MorningTickChartView::timeInfoArrived(QDateTime dt) {
 void MorningTickChartView::sendRequestData() {
     if (!currentStockCode.isEmpty() && currentDateTime.isValid()) {
         resetData();
+        setCorporationName(DataProvider::getInstance()->getCompanyName(currentStockCode));
+
+        setBroker(DataProvider::getInstance()->getBrokerSummary(currentStockCode));
+
         DataProvider::getInstance()->requestDayData(currentStockCode, 20, currentDateTime.addDays(-1));
     }
 }
@@ -156,11 +218,11 @@ void MorningTickChartView::calculateMinMaxRange() {
     int highest = yesterdayMinInfo.getHighestPrice();
     int lowest = yesterdayMinInfo.getLowestPrice();
     uint highestVolume = yesterdayMinInfo.getHighestVolume();
-    qWarning() << "(yesterday) " << highest << ", " << lowest;
+    //qWarning() << "(yesterday) " << highest << ", " << lowest;
     setPriceSteps(highest, lowest);
 
     if (mt != NULL) {
-        qWarning() << "(mt) " << mt->getHighestPrice() << ", " << mt->getLowestPrice();
+        //qWarning() << "(mt) " << mt->getHighestPrice() << ", " << mt->getLowestPrice();
         if (mt->getHighestPrice() > highest)
             highest = mt->getHighestPrice();
 
@@ -185,7 +247,7 @@ void MorningTickChartView::minuteDataReceived(QString code, CybosDayDatas *data)
 
     int count = data->day_data_size();
 
-    qWarning() << "(minuteDataReceived) : " << count;
+    //qWarning() << "(minuteDataReceived) : " << count;
     if (count > 0) {
         //qWarning() << "date : " << data->day_data(0).date();
         // TODO: consider when count is 0
@@ -197,6 +259,47 @@ void MorningTickChartView::minuteDataReceived(QString code, CybosDayDatas *data)
         qWarning() << "NO MINUTE DATA";
     }
     pastMinuteDataReceived = true;
+}
+
+
+void MorningTickChartView::setBroker(BrokerSummary *summary) {
+    clearBroker();
+
+    mBrokerSummary = summary;
+    setForeignerVolume(mBrokerSummary->foreigner_total());
+
+    for (int i = 0; i < mBrokerSummary->broker_log_size(); i++) {
+        const BrokerLog &bLog = mBrokerSummary->broker_log(i);
+
+        std::map<std::string, long long> buy_map(bLog.buy_broker().begin(), bLog.buy_broker().end());
+        std::map<std::string, long long> sell_map(bLog.sell_broker().begin(), bLog.sell_broker().end());
+        
+        std::vector<pair> buy_vec;
+        std::copy(buy_map.begin(), buy_map.end(), std::back_inserter<std::vector<pair>>(buy_vec));
+        std::sort(buy_vec.begin(), buy_vec.end(), [](const pair &l, const pair &r) {
+            return l.second > r.second;
+        });
+        mBuyBroker.push_back(buy_vec);
+
+        std::vector<pair> sell_vec;
+        std::copy(sell_map.begin(), sell_map.end(), std::back_inserter<std::vector<pair>>(sell_vec));
+
+        std::sort(sell_vec.begin(), sell_vec.end(),  [](const pair &l, const pair &r) {
+            return l.second > r.second;
+        });
+        mSellBroker.push_back(sell_vec);
+    }
+}
+
+
+void MorningTickChartView::setBrokerSummary(BrokerSummary *summary) {
+    //qWarning() << "brokerSummaryArrived : " << QString::fromStdString(summary->code());
+    if (QString::fromStdString(summary->code()) != currentStockCode)
+        return;
+    
+    setBroker(summary);
+    update();
+    qWarning() << "brokerSummaryArrived";
 }
 
 
@@ -231,26 +334,26 @@ void MorningTickChartView::drawGridLine(QPainter *painter, qreal cw, qreal ch) {
     pen.setColor(QColor("#d7d7d7"));
     painter->setPen(pen);
   
-    for (int i = 0; i < ROW_COUNT / 2 - 1; i++) {
+    for (int i = 0; i < ROW_COUNT / 2; i++) {
         QLineF line(0, ch * 2 * (i+1), (cw) * PRICE_COLUMN_COUNT, ch * 2 * (i+1));
         painter->drawLine(line); 
     }
 
     pen.setColor(QColor("#ff0000"));
     painter->setPen(pen);
-    QLineF lineMiddle(cw * YESTERDAY_COLUMN_COUNT, 0, cw * YESTERDAY_COLUMN_COUNT, ch * (ROW_COUNT - 2));
+    QLineF lineMiddle(cw * YESTERDAY_COLUMN_COUNT, 0, cw * YESTERDAY_COLUMN_COUNT, ch * (ROW_COUNT - 1));
     painter->drawLine(lineMiddle);
 
     pen.setColor(QColor("#d7d7d7"));
     painter->setPen(pen);
-    QLineF lineRight(cw * PRICE_COLUMN_COUNT, 0, cw * PRICE_COLUMN_COUNT, ch * (ROW_COUNT - 2));
+    QLineF lineRight(cw * PRICE_COLUMN_COUNT, 0, cw * PRICE_COLUMN_COUNT, ch * (ROW_COUNT - 1));
     painter->drawLine(lineRight);
     painter->restore(); 
 }
 
 
 void MorningTickChartView::setPriceSteps(int h, int l) {
-    qWarning() << "setPriceSteps : " << h << " " << l;
+    //qWarning() << "setPriceSteps : " << h << " " << l;
     int high = 0, low = 0;
     if (priceSteps.count() == 0) {
         high = int(h * 1.05);
@@ -276,7 +379,7 @@ void MorningTickChartView::setPriceSteps(int h, int l) {
 
 
     int priceGap = (high - low) / PRICE_ROW_COUNT;
-    qWarning() << "priceGap : " << high << " " << low << " gap: " << priceGap;
+    //qWarning() << "priceGap : " << high << " " << low << " gap: " << priceGap;
     if (priceGap < 100)
         priceGap = 10;
     else
@@ -285,14 +388,14 @@ void MorningTickChartView::setPriceSteps(int h, int l) {
     int minimumUnit = low - (low % priceGap);
     int step = (high - minimumUnit) / PRICE_ROW_COUNT;
     step = step - (step % priceGap);
-    qWarning() << "minimumUnit : " << minimumUnit << " STEP : " << step << " HIGH : " << high << " SUM : " << step * PRICE_ROW_COUNT + minimumUnit;
+    //qWarning() << "minimumUnit : " << minimumUnit << " STEP : " << step << " HIGH : " << high << " SUM : " << step * PRICE_ROW_COUNT + minimumUnit;
     while (step * PRICE_ROW_COUNT + minimumUnit < high) 
         step += priceGap;
-    qWarning() << "STEP 2 : " << step;
+    //qWarning() << "STEP 2 : " << step;
 
     for (int i = 0; i < PRICE_ROW_COUNT + 1; i++) 
         priceSteps.append(minimumUnit + step * i);
-    qWarning() << "steps : " << priceSteps;
+    //qWarning() << "steps : " << priceSteps;
 }
 
 
@@ -394,11 +497,11 @@ qreal MorningTickChartView::getTimeToXPos(uint dataTime, qreal tickWidth, uint s
 void MorningTickChartView::drawPriceLabels(QPainter *painter, qreal startX, qreal ch) {
     painter->save();
     QPen pen = painter->pen();
-    pen.setColor(QColor("#000000"));
+    pen.setColor(QColor("#a7a7a7"));
     painter->setPen(pen);
 
     for (int i = 0; i < priceSteps.count() - 1; i++) {
-        painter->drawText((int)startX, (int)(ch * PRICE_ROW_COUNT  - ch * i),
+        painter->drawText((int)startX + 20, (int)(ch * PRICE_ROW_COUNT  - ch * i),
                             QString::number(priceSteps.at(i)));
     }
     painter->restore();
@@ -417,7 +520,7 @@ void MorningTickChartView::drawTimeLabels(QPainter *painter,
     painter->setPen(pen);
 
     QTime t = QTime(startTime / 100, startTime % 100, 0);
-    qreal yPos = ch * (PRICE_ROW_COUNT + TIME_LABEL_ROW_COUNT + SUBJECT_ROW_COUNT);
+    qreal yPos = ch * (PRICE_ROW_COUNT + VOLUME_ROW_COUNT);
     for (int i = 0; i < cellCount * 2; i++) { 
         t = t.addSecs(60 * 30); // 30 min
         QString label;
@@ -463,7 +566,7 @@ void MorningTickChartView::drawCurrentLineRange(QPainter *painter, MinuteTick *m
     qreal upper_y = mapPriceToPos(data.close_price() * 1.03, priceChartEndY, 0);;
     qreal lower_y = mapPriceToPos(data.close_price() * 0.97, priceChartEndY, 0);;
     painter->drawLine(QLineF(0, current_y, cw * PRICE_COLUMN_COUNT, current_y));
-    painter->drawText(int(cw * PRICE_COLUMN_COUNT + cw), int(current_y), QString::number(data.close_price()));
+    painter->drawText(int(cw * PRICE_COLUMN_COUNT), int(current_y), QString::number(data.close_price()));
     pen.setColor("#90000000");
     painter->setPen(pen);
     painter->drawLine(QLineF(0, upper_y, cw * PRICE_COLUMN_COUNT, upper_y));
@@ -494,9 +597,61 @@ void MorningTickChartView::drawCurrentLineRange(QPainter *painter, MinuteTick *m
 }
 
 
+void MorningTickChartView::drawBrokerSummary(QPainter *painter, qreal middleX, qreal barWidth, qreal startY, qreal height) {
+    if (mBrokerSummary == NULL)
+        return;
+
+    painter->drawLine(QLineF(middleX, startY, middleX, height));
+
+    qreal maxVol = mBrokerSummary->max_volume();
+    for (int i = 0; i < mBrokerSummary->broker_log_size(); i++) {
+        const BrokerLog &bLog = mBrokerSummary->broker_log(i);
+        qreal fromY = mapPriceToPos(bLog.from_price(), height, 0);
+        qreal untilY = mapPriceToPos(bLog.until_price(), height, 0);
+
+        qreal buyWidth = barWidth * bLog.buy_volume() / maxVol;
+        qreal sellWidth = barWidth * bLog.sell_volume() / maxVol;
+        qreal buyDomesticWidth = buyWidth * bLog.buy_volume_domestic() / bLog.buy_volume();
+        qreal buyForeignWidth = buyWidth * bLog.buy_volume_foreign() / bLog.buy_volume();
+        qreal sellDomesticWidth = sellWidth * bLog.sell_volume_domestic() / bLog.sell_volume();
+        qreal sellForeignWidth = sellWidth * bLog.sell_volume_foreign() / bLog.sell_volume();
+
+        //qWarning() << "max : " << maxVol << ", buyv : " << bLog.buy_volume() << ", sellv : " << bLog.sell_volume() << ", buyWidth : " << buyWidth << ", buyDomestic : " << bLog.buy_volume_domestic() << ", buyForeign : " << bLog.buy_volume_foreign();
+        painter->setPen(QPen(Qt::red));
+        painter->fillRect(QRectF(middleX + 1, fromY, buyDomesticWidth, untilY - fromY), QBrush(QColor(255, 0, 0, 50)));
+        painter->setPen(QPen(Qt::blue));
+        painter->fillRect(QRectF(middleX - 1, fromY, -(sellDomesticWidth), untilY - fromY), QBrush(QColor(0, 0, 255, 40)));
+        painter->setPen(QPen(Qt::green));
+        painter->drawRect(QRectF(middleX + 1 + buyDomesticWidth, fromY, buyForeignWidth, untilY - fromY));
+        painter->drawRect(QRectF(middleX - 1 - sellDomesticWidth, fromY, -(sellForeignWidth), untilY - fromY));
+        
+        painter->setPen(QPen(Qt::black));
+        QFont f = painter->font();
+        f.setPixelSize(9);
+        painter->setFont(f);
+        if ((unsigned int)i < mBuyBroker.size()) {
+            QString buyBroker;
+            for (unsigned int j = 0; j < mBuyBroker[i].size(); ++j) {
+                buyBroker += QString::fromStdString(mBuyBroker[i][j].first) + "(" + QString::number(mBuyBroker[i][j].second) + ")";
+            }
+            QRectF r(middleX + 1, fromY, barWidth, untilY - fromY);
+            painter->drawText(r, Qt::AlignLeft | Qt::AlignVCenter, buyBroker, &r);
+        }
+
+        if ((unsigned int)i < mSellBroker.size()) {
+            QString sellBroker;
+            for (unsigned int j = 0; j < mSellBroker[i].size(); ++j) {
+                sellBroker = QString("(") + QString::number(mSellBroker[i][j].second) + ")" + QString::fromStdString(mSellBroker[i][j].first) + sellBroker;
+            }
+
+            QRectF r(middleX -1 - barWidth, fromY, barWidth, untilY - fromY);
+            painter->drawText(r, Qt::AlignRight | Qt::AlignVCenter, sellBroker, &r);
+        }
+    }
+}
+
+
 void MorningTickChartView::paint(QPainter *painter) {
-    //qWarning() << "MorningTickChartView paint";
-    //painter->setRenderHint(QPainter::Antialiasing);
     painter->setTransform(mTransform);
     QSizeF canvasSize = size();
     qreal cellHeight = canvasSize.height() / ROW_COUNT;
@@ -507,7 +662,7 @@ void MorningTickChartView::paint(QPainter *painter) {
     if (priceSteps.count() == 0)
         return;
 
-    drawPriceLabels(painter, canvasSize.width() - cellWidth * 2 + 10, cellHeight);
+    drawPriceLabels(painter, cellWidth * PRICE_COLUMN_COUNT + 10, cellHeight);
     qreal startX = 0;
     // normally 8:30 ~ 15:30 : 420 min / 3 : 140 ticks (0 ~ 10: count = 11)
     qreal todayTickCount = 141;
@@ -521,15 +676,20 @@ void MorningTickChartView::paint(QPainter *painter) {
     qreal todayTickWidth = cellWidth * TODAY_COLUMN_COUNT / (todayTickCount + todaySpaceCount * TICK_SPACE_RATIO);
     qreal yesterdayTickWidth = cellWidth * YESTERDAY_COLUMN_COUNT / (yesterdayTickCount + yesterdaySpaceCount * TICK_SPACE_RATIO);
 
-    if (!yesterdayMinInfo.isEmpty()) {
-        uint st = yesterdayMinInfo.get(0).time();
-        drawTimeLabels(painter, yesterdayTickWidth, cellWidth, cellHeight, startX, YESTERDAY_COLUMN_COUNT, st);
-        for (int i = 0; i < yesterdayMinInfo.count(); i++) {
-            const CybosDayData &d = yesterdayMinInfo.get(i);
-            qreal xPos = getTimeToXPos(d.time(), yesterdayTickWidth, st);
-            aInfo.addPriceWithXAxis(startX + xPos, d.close_price(), d.highest_price());
-            drawCandle(painter, d, startX + xPos, yesterdayTickWidth, cellHeight * PRICE_ROW_COUNT);
-            drawVolume(painter, d, startX + xPos, yesterdayTickWidth, cellHeight, cellHeight * (PRICE_ROW_COUNT + VOLUME_ROW_COUNT));
+    if (subjectVisible()) {
+        drawBrokerSummary(painter, YESTERDAY_COLUMN_COUNT * cellWidth / 2, cellWidth * 3, 0, cellHeight * PRICE_ROW_COUNT);
+    }
+    else {
+        if (!yesterdayMinInfo.isEmpty()) {
+            uint st = yesterdayMinInfo.get(0).time();
+            drawTimeLabels(painter, yesterdayTickWidth, cellWidth, cellHeight, startX, YESTERDAY_COLUMN_COUNT, st);
+            for (int i = 0; i < yesterdayMinInfo.count(); i++) {
+                const CybosDayData &d = yesterdayMinInfo.get(i);
+                qreal xPos = getTimeToXPos(d.time(), yesterdayTickWidth, st);
+                aInfo.addPriceWithXAxis(startX + xPos, d.close_price(), d.highest_price());
+                drawCandle(painter, d, startX + xPos, yesterdayTickWidth, cellHeight * PRICE_ROW_COUNT);
+                drawVolume(painter, d, startX + xPos, yesterdayTickWidth, cellHeight, cellHeight * (PRICE_ROW_COUNT + VOLUME_ROW_COUNT));
+            }
         }
     }
 

@@ -18,6 +18,7 @@ class SimulationEvent;
 class StockListThread;
 class AlarmThread;
 class TraderThread;
+class BrokerThread;
 
 using stock_api::CybosBidAskTickData;
 using stock_api::CybosTickData;
@@ -31,6 +32,7 @@ using stock_api::OrderMethod;
 using stock_api::OrderResult;
 using stock_api::TodayTopSelection;
 using stock_api::YearHighInfo;
+using stock_api::BrokerSummary;
 using google::protobuf::Timestamp;
 
 
@@ -58,6 +60,7 @@ public:
     void startListTypeListening();
     void startAlarmListening();
     void startOrderListening();
+    void startBrokerSummaryListening();
 
     MinuteTick *getMinuteTick(const QString &code);
 
@@ -72,6 +75,7 @@ public:
     void startSimulation(const QDateTime &dt, qreal speed);
     void stopSimulation();
     YearHighInfo * getYearHighInfo(const QString &code);
+    BrokerSummary * getBrokerSummary(const QString &code);
 
     QStringList getSubscribeCodes();
     QStringList getRecentSearch();
@@ -118,6 +122,7 @@ private:
     SimulationEvent *       simulationEvent;
     StockListThread *       stockListThread;
     TraderThread *          traderThread;
+    BrokerThread *          brokerThread;
 
 
     QString currentStockCode;
@@ -147,6 +152,7 @@ signals:
     void simulationStatusChanged(bool);
     void stockListTypeChanged(QString);
     void orderResultArrived(OrderResult *);
+    void brokerSummaryArrived(BrokerSummary *);
 };
 
 

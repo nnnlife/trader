@@ -9,6 +9,7 @@ from multiprocessing import Process
 
 from stock_service.plugins import today_bull
 from stock_service.plugins import vi
+from stock_service.plugins import subject_analysis
 from utils import trade_logger
 
 
@@ -17,6 +18,7 @@ _LOGGER = trade_logger.get_logger()
 plugins = [
     today_bull.plugin_run,
     vi.plugin_run,
+    subject_analysis.plugin_run,
 ]
 
 def start_plugins():

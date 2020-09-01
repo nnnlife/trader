@@ -46,7 +46,7 @@ def _get_max_price(close_price, is_kospi):
     max_p = int(close_price * 1.3)
     unit = morning_client.get_ask_bid_price_unit((message.KOSPI if is_kospi else message.KOSDAQ), max_p)
     if max_p % unit > 0:
-        max_p = max_p - max_p % unit + unit
+        max_p = max_p - max_p % unit # last value cannot exceed 30%
     return max_p
 
 
@@ -54,7 +54,7 @@ def _get_min_price(close_price, is_kospi):
     min_p = int(close_price * 0.7) 
     unit = morning_client.get_ask_bid_price_unit((message.KOSPI if is_kospi else message.KOSDAQ), min_p)
     if min_p % unit > 0:
-        min_p = min_p - min_p % unit - unit
+        min_p = min_p + (unit - min_p % unit)
 
     return min_p
 
@@ -72,14 +72,14 @@ def _get_prev_price(open_price, is_kospi):
     prev_p = int(open_price * 0.9) 
     unit =  morning_client.get_ask_bid_price_unit((message.KOSPI if is_kospi else message.KOSDAQ), prev_p)
     if prev_p % unit > 0:
-        prev_p = prev_p - prev_p % unit - unit
+        prev_p = prev_p - prev_p % unit
 
     return prev_p
 
 
 def calculate_vi_prices():
     while True:
-        code = vi_queue.get(True)
+        code, is_kospi = vi_queue.get(True)
 
         vi_prices = []
         if code in _code_info:
@@ -121,7 +121,7 @@ def tick_subscriber():
             if _code_info[code][1] == 0:
                 _code_info[code][1] = msg.current_price - msg.yesterday_diff
                 _code_info[code][2] = open_price
-                vi_queue.put_nowait(code)
+                vi_queue.put_nowait((code, msg.is_kospi))
 
             if msg.market_type == 49:
                 _code_info[code][0] = True
@@ -129,7 +129,7 @@ def tick_subscriber():
                 if _code_info[code][0]:
                     _code_info[code][0] = False
                     _code_info[code][2] = msg.current_price
-                    vi_queue.put_nowait(code)
+                    vi_queue.put_nowait((code, msg.is_kospi))
         else: # already set close
             pass
 
@@ -160,4 +160,14 @@ def plugin_run():
 
 
 if __name__ == '__main__':
+    """
+    code = 'A003000'
+    is_kospi = False
+    _code_info['A003000'] = [True, 11400, 11500]
+    max_price = _get_max_price(_code_info[code][1], is_kospi)
+    min_price = _get_min_price(_code_info[code][1], is_kospi)
+    next_target = _get_next_price(_code_info[code][2], is_kospi)
+    prev_target = _get_prev_price(_code_info[code][2], is_kospi)
+    print(max_price, min_price, next_target, prev_target)
+    """
     plugin_run()
