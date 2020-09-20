@@ -272,7 +272,7 @@ def consumer():
                 print('investor,code')
             else:
                 code = inv_detail[1]
-                print(stock_api.request_investor_data(message_reader, code, date(2020,1,31), date(2020,1,31)))
+                print(stock_api.request_investor_data(message_reader, code, date(2020,1,31), date(2020,9,4)))
         elif command.startswith('kinvestorc'):
             invc_detail = command.split(',')
             if len(invc_detail) != 2:

@@ -38,12 +38,17 @@ _code_subject_queue = dict()
 _domestic_brokers = ['미래에셋대우', '신한금융투자', 'NH투자', '키움증권', '삼성증권', '한화투자', 'SK  증권', '한국증권', 'KB증권', '대신증권', '하나금융투자', '동부증권', '유진증권', 'HI증권', '유안타증권', '케이티비', '현대차투자증', '부국증권', '이베스트', '한양증권', '교보증권', '메리츠증권', '신영증권', 'BNK증권', '리딩투자증권', 'IBK증권', '흥국증권', '유화증권', '브릿지증권', '바로증권', '코리아에셋', '토러스']
 _foreign_brokers = ['모건스탠리', '메릴린치증권', 'UBS', '제이피모간증', '씨티그룹', 'CS증권', '노무라증권', '골드만삭스증', '케이프', '맥쿼리', 'SG증권', '다이와', 'H.S.B.C증권', 'C.L.S.A증권', 'CIMB', '비엔피']
 
+_watch_list = ['CS증권']
+_watch_amount = {'CS증권': (300000000, 100000000)}
+_watch_code = []
+
 
 def clear_all():
     _subject_summary_dict.clear()
     _price_range_dict.clear()
     _price_all_range.clear()
     _code_subject_queue.clear()
+    _watch_code.clear()
     print('clear all')
     
 
@@ -127,6 +132,23 @@ def send_summary(code):
                     broker_log.sell_broker[name] = volume
                 else:
                     broker_log.sell_broker[name] += volume
+
+
+    if preload.is_kospi(code) and code not in _watch_code:
+        for w in _watch_list:
+            amount = 0
+            for broker_log in broker_summary.broker_log:
+                if w in broker_log.buy_broker:
+                    amount += broker_log.buy_broker[w] * broker_log.from_price
+
+                if w in broker_log.sell_broker:
+                    amount -= broker_log.sell_broker[w] * broker_log.until_price
+
+            desired_amount = (_watch_amount[w][0] if preload.is_kospi(code) else _watch_amount[w][1])
+            if amount > desired_amount:
+                _watch_code.insert(0, code)
+                stub.SetStrategyList(stock_provider_pb2.CodeList(codelist=_watch_code))
+
 
     max_volume = 0
     for broker_log in broker_summary.broker_log:

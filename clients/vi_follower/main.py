@@ -69,7 +69,7 @@ def today_bull_record():
     tdata = list(db_collection['yamount'].find({'date': now_date}))
     if len(tdata) == 0:
         market_code = morning_client.get_all_market_code()
-        today_list = get_day_data(now, market_code)
+        today_list, _ = get_day_data(now, market_code)
         today_list = sorted(today_list, key=lambda x: x['amount'], reverse=True)
         today_list = today_list[:1000]
         codes = [c['code'] for c in today_list]
@@ -81,6 +81,7 @@ def today_bull_record():
 
 def get_day_data(query_date, market_code):
     result = []
+    no_record_codes = []
     for progress, code in enumerate(market_code):
         print('collect data', f'{progress+1}/{len(market_code)}', end='\r')
         data = morning_client.get_past_day_data(code, query_date, query_date)
@@ -88,8 +89,11 @@ def get_day_data(query_date, market_code):
             data = data[0]
             data['code'] = code
             result.append(data)
+        else:
+            if morning_client.check_is_new_open(code, query_date):
+                no_record_codes.append(code)
     print('')
-    return result
+    return result, no_record_codes
 
 
 def start_vi_follower():
@@ -105,21 +109,20 @@ def start_vi_follower():
         morning_client.code_to_name(m)
 
     yesterday = holidays.get_yesterday(datetime.now())
-    yesterday_date = yesterday.year * 10000 + yesterday.month * 100 + yesterday.day
-    ydata = list(db_collection['yamount'].find({'date': yesterday_date}))
+    #yesterday_date = yesterday.year * 10000 + yesterday.month * 100 + yesterday.day
+    #ydata = list(db_collection['yamount'].find({'date': yesterday_date}))
 
-    if len(ydata) == 0:
-        yesterday_list = get_day_data(yesterday, market_code)
-        yesterday_list = sorted(yesterday_list, key=lambda x: x['amount'], reverse=True)
-        yesterday_list = yesterday_list[:1000]
-        codes = [c['code'] for c in yesterday_list]
-        db_collection['yamount'].insert_one({'date': yesterday_list[0]['0'], 'codes': codes})
-    else:
-        codes = ydata[0]['codes']
+    yesterday_list, new_open_codes = get_day_data(yesterday, market_code)
+    yesterday_list = sorted(yesterday_list, key=lambda x: x['amount'], reverse=True)
+    yesterday_list = yesterday_list[:1000]
+    codes = [c['code'] for c in yesterday_list]
+    #db_collection['yamount'].insert_one({'date': yesterday_list[0]['0'], 'codes': codes})
 
     if len(codes) == 0:
         print('Critical Error, No CODES')
         sys.exit(0)
+
+    codes.extend(new_open_codes)
 
     followers = []
     for code in codes:

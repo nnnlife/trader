@@ -191,11 +191,6 @@ class StockStub(object):
         request_serializer=stock__provider__pb2.CodeList.SerializeToString,
         response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
         )
-    self.SetOpenQuoteRatioList = channel.unary_unary(
-        '/stock_api.Stock/SetOpenQuoteRatioList',
-        request_serializer=stock__provider__pb2.CodeList.SerializeToString,
-        response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
-        )
     self.GetBrokerSummary = channel.unary_unary(
         '/stock_api.Stock/GetBrokerSummary',
         request_serializer=stock__provider__pb2.StockCodeQuery.SerializeToString,
@@ -205,6 +200,16 @@ class StockStub(object):
         '/stock_api.Stock/SetBrokerSummary',
         request_serializer=stock__provider__pb2.BrokerSummary.SerializeToString,
         response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+        )
+    self.AddBrokerMinuteTick = channel.unary_unary(
+        '/stock_api.Stock/AddBrokerMinuteTick',
+        request_serializer=stock__provider__pb2.BrokerMinuteTick.SerializeToString,
+        response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+        )
+    self.GetBrokerMinuteTick = channel.unary_unary(
+        '/stock_api.Stock/GetBrokerMinuteTick',
+        request_serializer=stock__provider__pb2.StockCodeQuery.SerializeToString,
+        response_deserializer=stock__provider__pb2.BrokerMinuteTickList.FromString,
         )
     self.GetTodayTopAmountList = channel.unary_unary(
         '/stock_api.Stock/GetTodayTopAmountList',
@@ -221,10 +226,15 @@ class StockStub(object):
         request_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
         response_deserializer=stock__provider__pb2.CodeList.FromString,
         )
-    self.GetOpenQuoteList = channel.unary_unary(
-        '/stock_api.Stock/GetOpenQuoteList',
+    self.GetStrategyList = channel.unary_unary(
+        '/stock_api.Stock/GetStrategyList',
         request_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
         response_deserializer=stock__provider__pb2.CodeList.FromString,
+        )
+    self.SetStrategyList = channel.unary_unary(
+        '/stock_api.Stock/SetStrategyList',
+        request_serializer=stock__provider__pb2.CodeList.SerializeToString,
+        response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
         )
     self.ListenCurrentStock = channel.unary_stream(
         '/stock_api.Stock/ListenCurrentStock',
@@ -240,6 +250,11 @@ class StockStub(object):
         '/stock_api.Stock/ListenBrokerSummary',
         request_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
         response_deserializer=stock__provider__pb2.BrokerSummary.FromString,
+        )
+    self.ListenBrokerMinuteTick = channel.unary_stream(
+        '/stock_api.Stock/ListenBrokerMinuteTick',
+        request_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+        response_deserializer=stock__provider__pb2.BrokerMinuteTick.FromString,
         )
     self.ListenCybosTickData = channel.unary_stream(
         '/stock_api.Stock/ListenCybosTickData',
@@ -552,13 +567,6 @@ class StockServicer(object):
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
 
-  def SetOpenQuoteRatioList(self, request, context):
-    # missing associated documentation comment in .proto file
-    pass
-    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-    context.set_details('Method not implemented!')
-    raise NotImplementedError('Method not implemented!')
-
   def GetBrokerSummary(self, request, context):
     # missing associated documentation comment in .proto file
     pass
@@ -567,6 +575,20 @@ class StockServicer(object):
     raise NotImplementedError('Method not implemented!')
 
   def SetBrokerSummary(self, request, context):
+    # missing associated documentation comment in .proto file
+    pass
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
+  def AddBrokerMinuteTick(self, request, context):
+    # missing associated documentation comment in .proto file
+    pass
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
+  def GetBrokerMinuteTick(self, request, context):
     # missing associated documentation comment in .proto file
     pass
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -594,7 +616,14 @@ class StockServicer(object):
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
 
-  def GetOpenQuoteList(self, request, context):
+  def GetStrategyList(self, request, context):
+    # missing associated documentation comment in .proto file
+    pass
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
+  def SetStrategyList(self, request, context):
     # missing associated documentation comment in .proto file
     pass
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -616,6 +645,13 @@ class StockServicer(object):
     raise NotImplementedError('Method not implemented!')
 
   def ListenBrokerSummary(self, request, context):
+    # missing associated documentation comment in .proto file
+    pass
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
+  def ListenBrokerMinuteTick(self, request, context):
     # missing associated documentation comment in .proto file
     pass
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -884,11 +920,6 @@ def add_StockServicer_to_server(servicer, server):
           request_deserializer=stock__provider__pb2.CodeList.FromString,
           response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
       ),
-      'SetOpenQuoteRatioList': grpc.unary_unary_rpc_method_handler(
-          servicer.SetOpenQuoteRatioList,
-          request_deserializer=stock__provider__pb2.CodeList.FromString,
-          response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
-      ),
       'GetBrokerSummary': grpc.unary_unary_rpc_method_handler(
           servicer.GetBrokerSummary,
           request_deserializer=stock__provider__pb2.StockCodeQuery.FromString,
@@ -898,6 +929,16 @@ def add_StockServicer_to_server(servicer, server):
           servicer.SetBrokerSummary,
           request_deserializer=stock__provider__pb2.BrokerSummary.FromString,
           response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+      ),
+      'AddBrokerMinuteTick': grpc.unary_unary_rpc_method_handler(
+          servicer.AddBrokerMinuteTick,
+          request_deserializer=stock__provider__pb2.BrokerMinuteTick.FromString,
+          response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+      ),
+      'GetBrokerMinuteTick': grpc.unary_unary_rpc_method_handler(
+          servicer.GetBrokerMinuteTick,
+          request_deserializer=stock__provider__pb2.StockCodeQuery.FromString,
+          response_serializer=stock__provider__pb2.BrokerMinuteTickList.SerializeToString,
       ),
       'GetTodayTopAmountList': grpc.unary_unary_rpc_method_handler(
           servicer.GetTodayTopAmountList,
@@ -914,10 +955,15 @@ def add_StockServicer_to_server(servicer, server):
           request_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
           response_serializer=stock__provider__pb2.CodeList.SerializeToString,
       ),
-      'GetOpenQuoteList': grpc.unary_unary_rpc_method_handler(
-          servicer.GetOpenQuoteList,
+      'GetStrategyList': grpc.unary_unary_rpc_method_handler(
+          servicer.GetStrategyList,
           request_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
           response_serializer=stock__provider__pb2.CodeList.SerializeToString,
+      ),
+      'SetStrategyList': grpc.unary_unary_rpc_method_handler(
+          servicer.SetStrategyList,
+          request_deserializer=stock__provider__pb2.CodeList.FromString,
+          response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
       ),
       'ListenCurrentStock': grpc.unary_stream_rpc_method_handler(
           servicer.ListenCurrentStock,
@@ -933,6 +979,11 @@ def add_StockServicer_to_server(servicer, server):
           servicer.ListenBrokerSummary,
           request_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
           response_serializer=stock__provider__pb2.BrokerSummary.SerializeToString,
+      ),
+      'ListenBrokerMinuteTick': grpc.unary_stream_rpc_method_handler(
+          servicer.ListenBrokerMinuteTick,
+          request_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+          response_serializer=stock__provider__pb2.BrokerMinuteTick.SerializeToString,
       ),
       'ListenCybosTickData': grpc.unary_stream_rpc_method_handler(
           servicer.ListenCybosTickData,

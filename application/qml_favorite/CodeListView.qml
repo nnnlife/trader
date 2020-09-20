@@ -15,13 +15,47 @@ ListView {
         id: profitText
         Text {
             leftPadding: 5
-
+            horizontalAlignment: Text.AlignCenter
             verticalAlignment: Text.AlignVCenter
             color: {
                 if (profit < 0.0)
                     return "blue"
                 else if (profit > 0.0)
                     return "red"
+
+                return "black"
+            }
+            text: profit.toFixed(2) + "%"
+        }
+    }
+
+    Component {
+        id: smallProfitText
+        Text {
+            leftPadding: 5
+            font.pixelSize: 8
+            horizontalAlignment: Text.AlignCenter
+            verticalAlignment: Text.AlignVCenter
+            color: {
+                if (profit < 0.0)
+                    return "blue"
+                else if (profit > 0.0)
+                    return "red"
+
+                return "black"
+            }
+            text: profit.toFixed(2) + "%"
+        }
+    }
+
+    Component {
+        id: yearProfitText
+        Text {
+            leftPadding: 0
+            verticalAlignment: Text.AlignVCenter
+            color: {
+                if (profit > -15.0 && profit != 0.0)
+                    return "magenta"
 
                 return "black"
             }
@@ -51,19 +85,19 @@ ListView {
         GridLayout {
             anchors.fill: parent
             rows: 3
-            columns: 6
+            columns: 8
             rowSpacing: 0
             columnSpacing: 0
             Rectangle {
                 Layout.row: 0
                 Layout.column: 0
-                Layout.minimumWidth: parent.width * 4 / 6
-                Layout.maximumWidth: parent.width * 4 / 6
+                Layout.minimumWidth: parent.width * 6 / 8
+                Layout.maximumWidth: parent.width * 6 / 8
                 Layout.minimumHeight: parent.height * 2 / 3
-                width: parent.width * 4 / 6
+                width: parent.width * 6 / 8
                 height: parent.height * 2 / 3
                 Layout.rowSpan: 2
-                Layout.columnSpan: 4
+                Layout.columnSpan: 6
                 color: is_favorite?"#50FFFF00":"#FFFFFF"
                 Text {
                     text: display
@@ -78,7 +112,7 @@ ListView {
             Loader {
                 sourceComponent: amountText
                 Layout.row: 0
-                Layout.column: 4
+                Layout.column: 6
                 Layout.columnSpan: 2
                 Layout.fillWidth: true
                 height: parent.height / 3
@@ -87,7 +121,7 @@ ListView {
             Loader {
                 sourceComponent: amountText
                 Layout.row: 1
-                Layout.column: 4
+                Layout.column: 6
                 Layout.columnSpan: 2
                 Layout.fillWidth: true
                 height: parent.height / 3
@@ -99,28 +133,39 @@ ListView {
                 Layout.row: 2
                 Layout.column: 0
                 Layout.columnSpan: 2
-                width: parent.width * 2 / 6
+                width: parent.width * 1 / 4
                 height: parent.height / 3
                 sourceComponent: profitText
                 property double profit: tprofit
             }
-             Loader {
+            Loader {
                 Layout.row: 2
                 Layout.column: 2
                 Layout.columnSpan: 2
-                width: parent.width * 2 / 6
+                width: parent.width * 1 / 4
                 height: parent.height / 3
                 sourceComponent: profitText
-                property double profit: yprofit
+                property double profit: topen_profit
             }
-            Text {
+            Loader {
                 Layout.row: 2
                 Layout.column: 4
                 Layout.columnSpan: 2
-                width: parent.width * 2 / 6
+                width: parent.width * 1 / 4
                 height: parent.height / 3
-                text: code
+                sourceComponent: smallProfitText
+                property double profit: yprofit
             }
+            Loader {
+                Layout.row: 2
+                Layout.column: 6
+                Layout.columnSpan: 2
+                width: parent.width * 1 / 4
+                height: parent.height / 3
+                sourceComponent: yearProfitText
+                property double profit: yearprofit
+            }
+
         }
         
         MouseArea {

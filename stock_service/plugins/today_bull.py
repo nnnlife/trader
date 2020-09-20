@@ -33,7 +33,6 @@ _listen_quote_ratio = True
 _amount_ratio_list = {}
 _amount_momentum_list = {}
 _amount_top_list = {}
-_open_quote_ratio_list = {}
 _last_push_time = None
 
 
@@ -44,7 +43,6 @@ def clear_all():
     _amount_momentum_list.clear()
     _listen_quote_ratio = True
     _amount_ratio_list.clear()
-    _open_quote_ratio_list.clear()
 
 
 def send_list():
@@ -58,11 +56,6 @@ def send_list():
     stub.SetTodayAmountTopList(stock_provider_pb2.CodeList(codelist=[ba[0] for ba in by_amount[:20]]))
 
     _amount_momentum_list.clear()
-
-
-def send_open_quote_ratio():
-    by_quote_ratio = sorted(_open_quote_ratio_list.items(), key=lambda x: x[1], reverse=True)
-    stub.SetOpenQuoteRatioList(stock_provider_pb2.CodeList(codelist=[oq[0] for oq in by_quote_ratio[:10]]))
 
 
 def tick_subscriber():
@@ -87,14 +80,6 @@ def tick_subscriber():
         yesterday_amount = preload.get_yesterday_amount(code)
         yesterday_close = preload.get_yesterday_close(code)
         tick_date = msg.tick_date.ToDatetime() + timedelta(hours=9)
-
-        if _listen_quote_ratio and code not in _open_quote_ratio_list and msg.time <= 900 and msg.market_type == 50:
-            _open_quote_ratio_list[code] = amount / yesterday_amount
-
-        if _listen_quote_ratio and tick_date > datetime.combine(tick_date.date(), time(9, 0, 15)):
-            print('SEND QUOTE RATIO', tick_date, datetime.combine(tick_date.date(), time(9, 0, 15)))
-            _listen_quote_ratio = False
-            gevent.spawn(send_open_quote_ratio)
 
         if yesterday_amount >= 3000000000 and yesterday_close * 1.15 > msg.current_price > yesterday_close:
             _amount_ratio_list[code] = [amount / yesterday_amount, msg.current_price, msg.current_price - msg.yesterday_diff]

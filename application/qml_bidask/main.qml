@@ -54,7 +54,7 @@ ApplicationWindow {
                         font.pointSize: 12
                         rightPadding: 5
                         font.bold: {
-                            if (typeof(display) == "number" && bidaskModel.todayHigh == display)
+                            if (typeof(display) == "number" && (bidaskModel.todayHigh == display || bidaskModel.todayOpen == display))
                                 return true;
                             return false;
                         }
@@ -62,7 +62,10 @@ ApplicationWindow {
                             var fcolor = "black"
 
                             if (typeof(display) == "number"){
-                                if (display > bidaskModel.yesterdayClose) {
+                                if (display == bidaskModel.todayOpen) {
+                                    fcolor = 'green'
+                                }
+                                else if (display > bidaskModel.yesterdayClose) {
                                     fcolor = "red"
                                 }
                                 else if (display < bidaskModel.yesterdayClose) {
@@ -350,6 +353,7 @@ ApplicationWindow {
                         }
 
                     }
+
                     Rectangle {
                         id: orderBox
                         anchors.fill: parent
@@ -377,8 +381,10 @@ ApplicationWindow {
                                 implicitHeight: parent.height
                                 text: '매수'
                                 onClicked: {
-                                    bidAskTable.activeBuyRow = -1
+                                    // order is important
+                                    console.log('BUY ', buySpinBox.value)
                                     bidaskModel.buy_on_price(model.row, buySpinBox.value)
+                                    bidAskTable.activeBuyRow = -1
                                 }
                             }
                         }

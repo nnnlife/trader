@@ -47,5 +47,9 @@ Module {
             name: "setBrokerSummary"
             Parameter { name: "summary"; type: "BrokerSummary"; isPointer: true }
         }
+        Method {
+            name: "updateBrokerMinuteTick"
+            Parameter { name: "minuteTick"; type: "BrokerMinuteTick"; isPointer: true }
+        }
     }
 }

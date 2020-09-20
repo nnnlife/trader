@@ -15,6 +15,7 @@ class BidAskModel : public QAbstractTableModel {
     Q_PROPERTY(int totalBidRemain READ getTotalBidRemain WRITE setTotalBidRemain NOTIFY totalBidRemainChanged)
     Q_PROPERTY(int totalAskRemain READ getTotalAskRemain WRITE setTotalAskRemain NOTIFY totalAskRemainChanged)
     Q_PROPERTY(int todayHigh READ getTodayHigh WRITE setTodayHigh NOTIFY todayHighChanged)
+    Q_PROPERTY(int todayOpen READ getTodayOpen WRITE setTodayOpen NOTIFY todayOpenChanged)
     Q_PROPERTY(int upperViPrice READ getUpperViPrice NOTIFY upperViPriceChanged)
     Q_PROPERTY(int lowerViPrice READ getLowerViPrice NOTIFY lowerViPriceChanged)
     
@@ -119,6 +120,7 @@ signals:
     void todayHighChanged();
     void upperViPriceChanged();
     void lowerViPriceChanged();
+    void todayOpenChanged();
 };
 
 

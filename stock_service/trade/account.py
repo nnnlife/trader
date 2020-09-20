@@ -5,6 +5,7 @@ from stock_service.trade import simulstatus
 
 
 DEFAULT_BALANCE = 10000000
+MAXIMUM_ONE_SHOT = 1000000
 ONE_SHOT_DIV = 3
 _balance = DEFAULT_BALANCE
 TAX_RATE = 0.0028 # tax 0.25%, trade fee: 0.015% * 2
@@ -26,6 +27,8 @@ def get_balance():
 
     if _one_shot == 0:
         _one_shot = int(balance.balance / ONE_SHOT_DIV)
+        if _one_shot > MAXIMUM_ONE_SHOT:
+            _one_shot = MAXIMUM_ONE_SHOT
 
     return balance.balance
 

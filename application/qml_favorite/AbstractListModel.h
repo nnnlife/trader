@@ -17,6 +17,8 @@ public:
     qreal yesterdayProfit() const;
     uint64_t yesterdayAmount() const;
     qreal todayProfit() const;
+    qreal todayOpenProfit() const;
+    qreal yearHighProfit() const;
     uint64_t todayAmount() const;
     bool isFavorite() const;
 
@@ -43,7 +45,9 @@ public:
                  {Qt::UserRole + 2, "tprofit"},
                  {Qt::UserRole + 3, "yamount"},
                  {Qt::UserRole + 4, "tamount"},
-                 {Qt::UserRole + 5, "is_favorite"}};
+                 {Qt::UserRole + 5, "is_favorite"},
+                 {Qt::UserRole + 6, "topen_profit"},
+                 {Qt::UserRole + 7, "yearprofit"}};
     }
     Q_INVOKABLE void currentSelectionChanged(int index);
     Q_INVOKABLE void setCurrentIndex(int index);

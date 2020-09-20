@@ -8,6 +8,8 @@
 #define YAMOUNT_ROLE    (Qt::UserRole + 3)
 #define TAMOUNT_ROLE    (Qt::UserRole + 4)
 #define FAVORITE_ROLE   (Qt::UserRole + 5)
+#define TOPEN_ROLE      (Qt::UserRole + 6)
+#define YEARPROFIT_ROLE      (Qt::UserRole + 7)
 
 
 AbstractListModel::AbstractListModel(QObject *parent)
@@ -149,6 +151,10 @@ QVariant AbstractListModel::data(const QModelIndex &index, int role) const {
         return uint64ToString(rc->todayAmount());
     else if (role == FAVORITE_ROLE)
         return QVariant(rc->isFavorite());
+    else if (role == TOPEN_ROLE)
+        return QVariant(rc->todayOpenProfit());
+    else if (role == YEARPROFIT_ROLE)
+        return QVariant(rc->yearHighProfit());
 
     return "";
 }
@@ -184,6 +190,26 @@ qreal ListItem::yesterdayProfit() const {
     StockInfo * info = StockStat::instance()->getInfo(m_code);
     if (info->beforeYesterdayClosePrice() > 0) {
         qreal profit = ((qreal)info->getYesterdayData().close_price() - info->beforeYesterdayClosePrice()) / info->beforeYesterdayClosePrice() * 100.0;
+        return profit;
+    }
+    return 0.0;
+}
+
+
+qreal ListItem::todayOpenProfit() const {
+    StockInfo * info = StockStat::instance()->getInfo(m_code);
+    if (info->todayOpenPrice() > 0 && info->todayCurrentPrice() > 0) {
+        qreal profit = ((qreal)info->todayCurrentPrice() - info->todayOpenPrice()) / info->todayOpenPrice() * 100.0;
+        return profit;
+    }
+    return 0.0;
+}
+
+
+qreal ListItem::yearHighProfit() const {
+    StockInfo * info = StockStat::instance()->getInfo(m_code);
+    if (info->todayCurrentPrice() > 0 && info->yearHighPrice() > 0) {
+        qreal profit = ((qreal)info->todayCurrentPrice() - info->yearHighPrice()) / info->yearHighPrice() * 100.0;
         return profit;
     }
     return 0.0;

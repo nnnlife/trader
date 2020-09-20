@@ -11,7 +11,7 @@ public:
     StrategyListModel(QObject *parent=nullptr);
     QStringList getServerList() override;
     Q_INVOKABLE void menuClicked(int index) override;
-    QString sectionName() { return "openquote"; }
+    QString sectionName() { return "strategy"; }
 };
 
 

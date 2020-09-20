@@ -63,7 +63,6 @@ void MinInfo::setData(CybosDayDatas *cd) {
 
     for (int i = 0; i < cd->day_data_size(); i++) {
         const CybosDayData &d = cd->day_data(i);
-        
         if (d.date() == currentDate && d.time() > currentTime)
             break;
 

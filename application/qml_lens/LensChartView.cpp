@@ -54,6 +54,7 @@ void LensChartView::tickArrived(CybosTickData *data) {
 
 
     if (QString::fromStdString(data->code()) == mCurrentStockCode) {
+        mOpen = data->start_price();
         mCurrentCandle.addTickData(data->current_price(),
                                    data->volume(), data->buy_or_sell(), dt);
         isUpdate = true;
@@ -141,6 +142,7 @@ void LensChartView::resetData() {
     mTickInterval = INTERVAL_MSEC;
     mCurrentCandle.clear();
     mMaxVolume = 0;
+    mOpen = 0;
     mCurrentHighPrice = mCurrentLowPrice = 0;
     mCandles.clear();
     mPriceSteps.clear();
@@ -291,6 +293,19 @@ void LensChartView::displayLowHighText(QPainter *painter, qreal x, qreal cellWid
 }
 
 
+void LensChartView::displayOpenPriceLine(QPainter *painter, qreal x, qreal endX, qreal startY, qreal endY) {
+    painter->save();
+    QPen pen;
+    pen.setStyle(Qt::DashLine);
+    pen.setWidth(1);
+    pen.setColor("#00ff00");
+    painter->setPen(pen);
+    qreal yPos = mapPriceToPos(mOpen, endY, startY);
+    painter->drawLine(QLineF(x, yPos, endX, yPos));
+    painter->restore();
+}
+
+
 void LensChartView::paint(QPainter *painter) {
     QSizeF canvasSize = size();
     qreal cellHeight = canvasSize.height() / ROW_COUNT;
@@ -320,4 +335,7 @@ void LensChartView::paint(QPainter *painter) {
 
     if (mCurrentLowPrice != 0 && mCurrentHighPrice != 0)
         displayLowHighText(painter, 0, cellWidth, 0.0, cellHeight * PRICE_ROW_COUNT);
+
+    if (mOpen != 0)
+        displayOpenPriceLine(painter, 0, canvasSize.width(), 0.0, cellHeight * PRICE_ROW_COUNT);
 }

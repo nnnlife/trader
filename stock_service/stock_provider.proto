@@ -52,19 +52,25 @@ service Stock {
   rpc SetTodayAmountRatioList(CodeList) returns (google.protobuf.Empty) {}
   rpc SetTodayAmountMomentumList(CodeList) returns (google.protobuf.Empty) {}
   rpc SetTodayAmountTopList(CodeList) returns (google.protobuf.Empty) {}
-  rpc SetOpenQuoteRatioList(CodeList) returns (google.protobuf.Empty) {}
 
   rpc GetBrokerSummary(StockCodeQuery) returns (BrokerSummary) {}
   rpc SetBrokerSummary(BrokerSummary) returns (google.protobuf.Empty) {}
 
+  rpc AddBrokerMinuteTick(BrokerMinuteTick) returns (google.protobuf.Empty) {}
+  rpc GetBrokerMinuteTick(StockCodeQuery) returns (BrokerMinuteTickList) {}
+
   rpc GetTodayTopAmountList(TodayTopOption) returns (CodeList) {}
   rpc GetRecentSearch(google.protobuf.Empty) returns (CodeList) {}
   rpc GetViList(google.protobuf.Empty) returns (CodeList) {}
-  rpc GetOpenQuoteList(google.protobuf.Empty) returns (CodeList) {}
+
+  rpc GetStrategyList(google.protobuf.Empty) returns (CodeList) {}
+  rpc SetStrategyList(CodeList) returns (google.protobuf.Empty) {}
 
   rpc ListenCurrentStock(google.protobuf.Empty) returns (stream StockCodeQuery) {}
   rpc ListenListChanged(google.protobuf.Empty) returns (stream ListType) {}
   rpc ListenBrokerSummary(google.protobuf.Empty) returns (stream BrokerSummary) {}
+
+  rpc ListenBrokerMinuteTick(google.protobuf.Empty) returns (stream BrokerMinuteTick) {}
 
   rpc ListenCybosTickData(google.protobuf.Empty) returns (stream CybosTickData) {}
   rpc ListenCybosBidAsk(google.protobuf.Empty) returns (stream CybosBidAskTickData) {}
@@ -132,6 +138,26 @@ message BrokerSummary {
     int64 foreigner_total = 2;
     repeated BrokerLog broker_log = 3;
     int64 max_volume = 4;
+}
+
+
+message BrokerStat {
+    int64 buy_volume = 1;
+    int64 sell_volume = 2;
+}
+
+
+message BrokerMinuteTickList {
+    string code = 1;
+    repeated BrokerMinuteTick minute_tick = 2;
+}
+
+
+message BrokerMinuteTick {
+    string code = 1;
+    google.protobuf.Timestamp from_datetime = 2;
+    google.protobuf.Timestamp until_datetime = 3;
+    map<string, BrokerStat> brokers_map = 4;
 }
 
 

@@ -18,6 +18,7 @@ MinuteTick::MinuteTick(const QString &_code, const QDateTime &dt, int intervalMi
     yesterdayClose = 0;
     highestVolume = 0;
     openPrice = 0;
+    mAmount = 0;
     highestPrice = lowestPrice = 0;
     intervalMinute = intervalMin;
 }
@@ -42,6 +43,7 @@ void MinuteTick::minuteDataReady(QString _code, CybosDayDatas * data) {
         for (int i = 0; i < data->day_data_size(); i++) {
             const CybosDayData &d = data->day_data(i);
             uint time = d.time();
+            mAmount += (long long)d.amount();
             //qWarning() << "data time : " << time;
             if (time > t) 
                 break;
@@ -293,13 +295,15 @@ void MinuteData::requestPreviousData(MinuteTick *tick) {
                 this, &MinuteData::minuteTickUpdated);
     const QDateTime &dt = tick->getCreateDateTime();
 
-    if (dt.date() == QDateTime::currentDateTime().date()) {
-        //qWarning() << "request Today Minute Data";
+    QDateTime currentDateTime = QDateTime::currentDateTime();
+    QDateTime todayLimit = QDateTime(currentDateTime.date(), QTime(18, 30, 0));
+    if (dt.date() == currentDateTime.date() && currentDateTime < todayLimit) {
+        qWarning() << "request Today Minute Data";
         dayDataProvider->requestTodayMinuteData(tick->getCode());
     }
     else {
         dayDataProvider->requestMinuteData(tick->getCode(), dt, dt); // does not matter since query is done with 1 day
-        //qWarning() << "request past minute data " << tick->getCode() << "\t" << dt;
+        qWarning() << "request past minute data " << tick->getCode() << "\t" << dt;
     }
 }
 

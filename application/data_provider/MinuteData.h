@@ -31,6 +31,7 @@ public:
     int     getLowestPrice() { return lowestPrice; }
     int     getOpenPrice() { return openPrice; }
     uint    getHighestVolume() { return highestVolume; }
+    long long getAmount() { return mAmount; }
     const QDateTime &getCreateDateTime() { return createDateTime; }
     const QString &getCode() { return code; }
     bool isPreviousDataReceived() { return previousDataReceived; }
@@ -49,6 +50,7 @@ private:
     int lowestPrice;
     int openPrice;
     uint highestVolume;
+    long long mAmount;
 
     bool previousDataReceived;
     bool isSimulation;

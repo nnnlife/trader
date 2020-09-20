@@ -11,6 +11,7 @@
 #include "AlarmThread.h"
 #include "StockListThread.h"
 #include "BrokerThread.h"
+#include "BrokerMinuteThread.h"
 #include "StockSelectionThread.h"
 #include "MinuteData.h"
 #include "DayDataProvider.h"
@@ -67,6 +68,8 @@ DataProvider::DataProvider()
     qRegisterMetaType<Timestamp>("Timestamp");
     qRegisterMetaType<CybosStockAlarm>("CybosStockAlarm");
     qRegisterMetaType<CybosStockAlarm>("BrokerSummary");
+    qRegisterMetaType<CybosStockAlarm>("BrokerMinuteTick");
+    qRegisterMetaType<CybosStockAlarm>("BrokerMinuteTickList");
 
     stub_ = Stock::NewStub(grpc::CreateChannel("localhost:50052", grpc::InsecureChannelCredentials()));
 
@@ -80,6 +83,7 @@ DataProvider::DataProvider()
     stockSelectionThread = new StockSelectionThread(stub_);
     dayDataProvider = new DayDataProvider(stub_);
     brokerThread = new BrokerThread(stub_);
+    brokerMinuteThread = new BrokerMinuteThread(stub_);
     SimulationEvent *simulationEvent = new SimulationEvent(stub_);
     traderThread = new TraderThread(stub_);
     m_simulationStatus = _isSimulation() ? RUNNING: STOP;
@@ -87,6 +91,7 @@ DataProvider::DataProvider()
     connect(tickThread, &TickThread::tickArrived, this, &DataProvider::tickArrived);
     connect(bidAskThread, &BidAskThread::tickArrived, this, &DataProvider::bidAskTickArrived);
     connect(brokerThread, &BrokerThread::summaryArrived, this, &DataProvider::brokerSummaryArrived);
+    connect(brokerMinuteThread, &BrokerMinuteThread::brokerMinuteTickArrived, this, &DataProvider::brokerMinuteTickArrived);
     connect(stockSelectionThread, &StockSelectionThread::stockCodeChanged, this, &DataProvider::stockCodeReceived);
     connect(dayDataProvider, &DayDataProvider::dataReady, this, &DataProvider::dayDataReady);
     connect(dayDataProvider, &DayDataProvider::minuteDataReady, this, &DataProvider::minuteDataReady);
@@ -195,22 +200,32 @@ void DataProvider::collectMinuteData(int min) {
 
 
 void DataProvider::startStockTick() {
-    tickThread->start();
+    if (!tickThread->isRunning())
+        tickThread->start();
 }
 
 
 void DataProvider::startBidAskTick() {
-    bidAskThread->start();
+    if (!bidAskThread->isRunning())
+        bidAskThread->start();
 }
 
 
 void DataProvider::startStockCodeListening() {
-    stockSelectionThread->start();
+    if (!stockSelectionThread->isRunning())
+        stockSelectionThread->start();
 }
 
 
 void DataProvider::startBrokerSummaryListening() {
-    brokerThread->start();
+    if (!brokerThread->isRunning())
+        brokerThread->start();
+}
+
+
+void DataProvider::startBrokerMinuteTickListening() {
+    if (!brokerMinuteThread->isRunning())
+        brokerMinuteThread->start();
 }
 
 
@@ -297,13 +312,24 @@ BrokerSummary * DataProvider::getBrokerSummary(const QString &code) {
 }
 
 
+BrokerMinuteTickList *DataProvider::getBrokerMinuteTick(const QString &code) {
+    ClientContext context;
+    BrokerMinuteTickList *list = new BrokerMinuteTickList;
+    StockCodeQuery scq;
+    scq.set_code(code.toStdString());
+    stub_->GetBrokerMinuteTick(&context, scq, list);
+    return list;
+}
+
+
 MinuteTick * DataProvider::getMinuteTick(const QString &code) {
     if (minuteData && !code.isEmpty()) {
         if (isSimulation())
             return minuteData->getMinuteTick(code, currentDateTime());
         else {
             QDateTime dt = QDateTime::currentDateTime();
-            if (currentDateTime().date() == dt.date())
+            QDateTime todayLimit = QDateTime(dt.date(), QTime(18, 30, 0));
+            if (currentDateTime().date() == dt.date() && dt < todayLimit)
                 return minuteData->getMinuteTick(code, QDateTime::currentDateTime());
             else
                 return minuteData->getMinuteTick(code, currentDateTime());
@@ -424,7 +450,7 @@ QStringList DataProvider::getStrategyList() {
     ClientContext context;
     CodeList * codeList = new CodeList;
     Empty empty;
-    stub_->GetOpenQuoteList(&context, empty, codeList);
+    stub_->GetStrategyList(&context, empty, codeList);
     QStringList list;
     for (int i = 0; i < codeList->codelist_size(); i++)
         list.append(QString::fromStdString(codeList->codelist(i)));

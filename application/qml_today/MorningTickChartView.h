@@ -24,6 +24,8 @@ class MorningTickChartView : public QQuickPaintedItem {
     Q_PROPERTY(bool subjectVisible READ subjectVisible WRITE setSubjectVisible NOTIFY subjectVisibleChanged)
     Q_PROPERTY(int foreignerVolume READ foreignerVolume WRITE setForeignerVolume NOTIFY foreignerVolumeChanged)
     Q_PROPERTY(QString corporationName READ corporationName WRITE setCorporationName NOTIFY corporationNameChanged)
+    Q_PROPERTY(QString yesterdayAmount READ yesterdayAmount NOTIFY yesterdayAmountChanged)
+    Q_PROPERTY(QString todayAmount READ todayAmount NOTIFY todayAmountChanged)
 
 public:
     enum {
@@ -48,6 +50,9 @@ public:
     QString corporationName();
     void setCorporationName(const QString &name);
 
+    QString todayAmount() { return mTodayAmount; }
+    QString yesterdayAmount() { return mYesterdayAmount; }
+
 private:
     QString currentStockCode;
     QList<int> priceSteps;
@@ -65,14 +70,19 @@ private:
     bool mSubjectVisible = false;
     int mForeignerVolume = 0;
     QString mCorporationName;
+    QString mTodayAmount;
+    QString mYesterdayAmount;
 
     BrokerSummary *mBrokerSummary = NULL;
+    BrokerMinuteTickList *mBrokerMinuteTickList = NULL;
     std::vector<std::vector<pair> > mBuyBroker;
     std::vector<std::vector<pair> > mSellBroker;
 
     void resetData();
     void clearBroker();
+    void clearBrokerMinuteTickList();
     void setBroker(BrokerSummary *summary);
+    void setBrokerMinuteTickList(BrokerMinuteTickList *list);
     void sendRequestData();
     void calculateMinMaxRange();
     void setPriceSteps(int h, int l);
@@ -80,6 +90,7 @@ private:
     void setVolumeMinMax(uint h, uint l);
     void updateVolumeMax(uint h);
     void addToTimePricePair(QList<QPair<int,int> > &lp, const CybosDayData &);
+    void setAmount(long long amount, bool isYesterday);
 
     qreal getCandleLineWidth(qreal w);
     //qreal getTimeToXPos(uint time, qreal tickWidth, uint dataStartHour);
@@ -108,11 +119,14 @@ private slots:
     void dayDataReceived(QString code, CybosDayDatas *);
     void minuteDataReceived(QString code, CybosDayDatas *);
     void setBrokerSummary(BrokerSummary *summary);
+    void updateBrokerMinuteTick(BrokerMinuteTick *minuteTick);
 
 signals:
     void subjectVisibleChanged();
     void foreignerVolumeChanged();
     void corporationNameChanged();
+    void yesterdayAmountChanged();
+    void todayAmountChanged();
 };
 
 #endif

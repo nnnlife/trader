@@ -22,6 +22,14 @@ ApplicationWindow {
             checked: false
             text: 'Set to pin Code'
         }
+
+        Button {
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+            font.pixelSize: 12
+            text: 'Reset'
+        }
+
         Label {
             Layout.fillHeight: true
             Layout.fillWidth: true

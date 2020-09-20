@@ -45,6 +45,7 @@ private:
     qint64 mMaxVolume = 0;
     int mCurrentHighPrice = 0;
     int mCurrentLowPrice = 0;
+    int mOpen = 0;
 
     void resetData();
 
@@ -58,6 +59,7 @@ private:
     void drawCandle(QPainter *painter, const Candle &candle, qreal x, qreal candleWidth, qreal startY, qreal endY);
     void drawVolume(QPainter *painter, const Candle &candle, qreal x, qreal volumeWidth, qreal startY, qreal endY);
     void displayLowHighText(QPainter *painter, qreal x, qreal cellWidth, qreal startY, qreal endY);
+    void displayOpenPriceLine(QPainter *painter, qreal x, qreal endX, qreal startY, qreal endY);
 
 private slots:
     void setCurrentStock(QString);

@@ -29,7 +29,7 @@ _trade_reader = None
 _trade_broadcast_receiver = None
 
 _mongo_collection = None
-MAVG=20
+MAVG = 20
 _kosdaq_code = None
 _kospi_code = None
 
@@ -101,6 +101,9 @@ def get_subscribe_codes():
 
 def is_kospi_code(code):
     global _kospi_code
+    if _kospi_code is None:
+        get_all_market_code()
+
     if _kospi_code is not None and code in _kospi_code:
         return True
     return False
@@ -204,6 +207,16 @@ def _convert_data_readable(code, past_data):
     return converted_data
 
 
+def check_is_new_open(code, dt):
+    dt = dt if dt.__class__.__name__ == 'date' else dt.date()
+    # Usually use to get yesterday data and dt is yesterday, therefore use dt as until_datetime (not dt - timedelta(days=1))
+    past_data = stock_api.request_stock_day_data(get_reader(), code, dt - timedelta(days=60), dt)
+    if len(past_data) == 0:
+        return True
+
+    return False
+
+
 def get_past_day_data(code, from_date, until_date, mavg=MAVG):
     from_date = from_date if from_date.__class__.__name__ == 'date' else from_date.date()
     until_date = until_date if until_date.__class__.__name__ == 'date' else until_date.date()
@@ -218,7 +231,8 @@ def get_past_day_data(code, from_date, until_date, mavg=MAVG):
             cut_by_date_data.append(data)
 
     if holidays.count_of_working_days(from_date, until_date) > len(cut_by_date_data):
-        print('get_past_day_data days not matched', code, from_date, until_date, 'data',
+        print('get_past_day_data days not matched', code,
+                from_date, until_date, 'data',
                 "expected:", holidays.count_of_working_days(from_date, until_date), "actual:", len(cut_by_date_data))
         #return []
 

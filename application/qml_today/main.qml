@@ -36,12 +36,39 @@ ApplicationWindow {
             height: parent.height
         }
 
-
         Text {
             text: qsTr("%L1").arg(morningTickChart.foreignerVolume)
             verticalAlignment: Text.AlignVCenter
             leftPadding: 5 
             color: morningTickChart.foreignerVolume > 0? 'red': 'blue'
+            height: parent.height
+        }
+
+        Text {
+            text: '전일'
+            verticalAlignment: Text.AlignVCenter
+            leftPadding: 50 
+            height: parent.height
+        }
+
+        Text {
+            text: morningTickChart.yesterdayAmount
+            verticalAlignment: Text.AlignVCenter
+            leftPadding: 5
+            height: parent.height
+        }
+
+        Text {
+            text: '금일'
+            verticalAlignment: Text.AlignVCenter
+            leftPadding: 50 
+            height: parent.height
+        }
+
+        Text {
+            text: morningTickChart.todayAmount
+            verticalAlignment: Text.AlignVCenter
+            leftPadding: 5
             height: parent.height
         }
     }

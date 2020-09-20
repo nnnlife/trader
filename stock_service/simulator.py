@@ -208,22 +208,19 @@ def tick_sender(tick_queue, speed):
         now = datetime.now()
         datatime = None
         last_datatime = None
-        timeadjust = timedelta(seconds=0)
+        #timeadjust = timedelta(seconds=0)
         for d in data:
             if simulation_status != STARTED:
                 break
             
+            d_date = d['date']
             if datatime is None:
-                datatime = d['date'] - timedelta(seconds=1)
+                datatime = d_date
                 last_datatime = datatime
             
-            # TIME_SPEED greater, then tick deliver speed will be more slow
-
-            while (d['date'] - datatime) * speed > datetime.now() - now:
-                gevent.sleep(0.00001)
-
-            timeadjust = (datetime.now() - now) - (d['date'] - datatime) * speed
-            d_date = d['date']
+            while (d_date - datatime) * speed > datetime.now() - now:
+                gevent.sleep(((d_date - datatime) * speed - (datetime.now() - now)).microseconds / 1000000)
+            now = datetime.now()
 
             if d['type'] == 'subject':
                 request_iterator.append_subject(subject_to_grpc(d))
@@ -242,8 +239,8 @@ def tick_sender(tick_queue, speed):
                 stub.SetCurrentDateTime(tick_date)
                 last_datatime = d_date
 
-            datatime = d_date - timeadjust
-            now = datetime.now()
+            datatime = d_date
+
         
     print('exit tick sender')
 

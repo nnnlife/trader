@@ -21,6 +21,7 @@ public:
     int beforeYesterdayClosePrice();
     int todayOpenPrice() { return m_todayOpen; }
     int todayCurrentPrice() { return m_currentPrice; }
+    int yearHighPrice() { return m_yearHigh; }
     uint64_t todayAmount() { return m_todayAmount; }
 
 private:
@@ -28,6 +29,7 @@ private:
     QString m_name;
     int m_todayOpen;
     int m_currentPrice;
+    int m_yearHigh;
     bool m_isKospi;
     uint64_t m_todayAmount;
     CybosDayData yesterdayData;

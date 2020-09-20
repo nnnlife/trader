@@ -139,6 +139,20 @@
                         "constant": false,
                         "designable": true,
                         "final": false,
+                        "name": "todayOpen",
+                        "notify": "todayOpenChanged",
+                        "read": "getTodayOpen",
+                        "required": false,
+                        "scriptable": true,
+                        "stored": true,
+                        "type": "int",
+                        "user": false,
+                        "write": "setTodayOpen"
+                    },
+                    {
+                        "constant": false,
+                        "designable": true,
+                        "final": false,
                         "name": "upperViPrice",
                         "notify": "upperViPriceChanged",
                         "read": "getUpperViPrice",
@@ -197,6 +211,11 @@
                     {
                         "access": "public",
                         "name": "lowerViPriceChanged",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "name": "todayOpenChanged",
                         "returnType": "void"
                     }
                 ],

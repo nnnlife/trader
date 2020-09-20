@@ -6,7 +6,7 @@
 #include "stock_provider.grpc.pb.h"
 
 
-#define TICK_SPACE_RATIO    (2.0/6.0)
+#define TICK_SPACE_RATIO    (1.0/3.0)
 
 
 MorningTickChartView::MorningTickChartView(QQuickItem *parent)
@@ -23,6 +23,7 @@ MorningTickChartView::MorningTickChartView(QQuickItem *parent)
     connect(DataProvider::getInstance(), &DataProvider::dayDataReady, this, &MorningTickChartView::dayDataReceived);
     connect(DataProvider::getInstance(), &DataProvider::minuteDataReady, this, &MorningTickChartView::minuteDataReceived);
     connect(DataProvider::getInstance(), &DataProvider::brokerSummaryArrived, this, &MorningTickChartView::setBrokerSummary);
+    connect(DataProvider::getInstance(), &DataProvider::brokerMinuteTickArrived, this, &MorningTickChartView::updateBrokerMinuteTick);
 
     // sequence is important, first MinuteData clear data and then call timeInfoArrived of MorningTickChartView
     DataProvider::getInstance()->collectMinuteData(3);
@@ -31,6 +32,7 @@ MorningTickChartView::MorningTickChartView(QQuickItem *parent)
     DataProvider::getInstance()->startStockCodeListening();
     DataProvider::getInstance()->startStockTick();
     DataProvider::getInstance()->startBrokerSummaryListening();
+    //DataProvider::getInstance()->startBrokerMinuteTickListening();
 }
 
 
@@ -133,13 +135,49 @@ void MorningTickChartView::clearBroker() {
 }
 
 
+void MorningTickChartView::clearBrokerMinuteTickList() {
+    if (mBrokerMinuteTickList != NULL) {
+        delete mBrokerMinuteTickList;
+        mBrokerMinuteTickList = NULL;
+    }
+}
+
+
+void MorningTickChartView::setAmount(long long amount, bool isYesterday) {
+    QString amountStr = QString::number(amount);
+    if (amount >= 1000000000) {
+        qreal f = amount / 1000000000.0;
+        amountStr = QString::number(f, 'f', 1) + " B";
+    }
+    else if (amount >= 1000000) {
+        qreal f = amount / 1000000.0;
+        amountStr = QString::number(f, 'f', 1) + " M";
+    }
+    else if (amount >= 1000) {
+        qreal f = amount / 1000.0;
+        amountStr = QString::number(f, 'f', 1) + " K";
+    }
+
+    if (isYesterday) {
+        mYesterdayAmount = amountStr;
+        emit yesterdayAmountChanged();
+    }
+    else {
+        mTodayAmount = amountStr;
+        emit todayAmountChanged();
+    }
+}
+
+
 void MorningTickChartView::resetData() {
     currentVolumeMin = currentVolumeMax = 0;
     pastMinuteDataReceived = false;
     mScale = 1.0;
     clearBroker();
+    clearBrokerMinuteTickList();
     mDrawHorizontalCurrentX = 0.0;
     mDrawHorizontalStartX = 0.0;
+    mTodayAmount = "";
     mTransform.reset();
     priceSteps.clear();
     yesterdayMinInfo.clear();
@@ -164,10 +202,12 @@ void MorningTickChartView::sendRequestData() {
         setCorporationName(DataProvider::getInstance()->getCompanyName(currentStockCode));
 
         setBroker(DataProvider::getInstance()->getBrokerSummary(currentStockCode));
+        //setBrokerMinuteTickList(DataProvider::getInstance()->getBrokerMinuteTick(currentStockCode));
 
         DataProvider::getInstance()->requestDayData(currentStockCode, 20, currentDateTime.addDays(-1));
     }
 }
+
 
 
 void MorningTickChartView::setCurrentStock(QString code) {
@@ -207,6 +247,7 @@ void MorningTickChartView::dayDataReceived(QString code, CybosDayDatas *data) {
     int count = data->day_data_size();
     if (count > 0) {
         const CybosDayData &d = data->day_data(count - 1);
+        setAmount(d.amount(), true);
         QDate date = morning::Util::convertToDate(d.date());
         DataProvider::getInstance()->requestMinuteData(currentStockCode, QDateTime(date, QTime(0, 0, 0)), QDateTime(date, QTime(23, 59, 0)));
     }
@@ -236,7 +277,6 @@ void MorningTickChartView::calculateMinMaxRange() {
         updatePriceSteps(highest, lowest);
     }
 
-
     setVolumeMinMax(highestVolume, yesterdayMinInfo.getLowestVolume());
 }
 
@@ -259,6 +299,17 @@ void MorningTickChartView::minuteDataReceived(QString code, CybosDayDatas *data)
         qWarning() << "NO MINUTE DATA";
     }
     pastMinuteDataReceived = true;
+}
+
+
+void MorningTickChartView::setBrokerMinuteTickList(BrokerMinuteTickList *list) {
+    clearBrokerMinuteTickList();
+}
+
+
+void MorningTickChartView::updateBrokerMinuteTick(BrokerMinuteTick *minuteTick) {
+    if (QString::fromStdString(minuteTick->code()) != currentStockCode)
+        return;
 }
 
 
@@ -699,6 +750,7 @@ void MorningTickChartView::paint(QPainter *painter) {
         if (mt == NULL)
             return;
 
+        setAmount(mt->getAmount(), false);
         const CybosDayDatas &queue = mt->getQueue();
         drawTimeLabels(painter, todayTickWidth, cellWidth, cellHeight, startX,
                         TODAY_COLUMN_COUNT, todayStartTime.hour() * 100 + todayStartTime.minute());

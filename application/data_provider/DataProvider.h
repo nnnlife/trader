@@ -19,6 +19,7 @@ class StockListThread;
 class AlarmThread;
 class TraderThread;
 class BrokerThread;
+class BrokerMinuteThread;
 
 using stock_api::CybosBidAskTickData;
 using stock_api::CybosTickData;
@@ -33,6 +34,8 @@ using stock_api::OrderResult;
 using stock_api::TodayTopSelection;
 using stock_api::YearHighInfo;
 using stock_api::BrokerSummary;
+using stock_api::BrokerMinuteTick;
+using stock_api::BrokerMinuteTickList;
 using google::protobuf::Timestamp;
 
 
@@ -61,6 +64,7 @@ public:
     void startAlarmListening();
     void startOrderListening();
     void startBrokerSummaryListening();
+    void startBrokerMinuteTickListening();
 
     MinuteTick *getMinuteTick(const QString &code);
 
@@ -76,6 +80,7 @@ public:
     void stopSimulation();
     YearHighInfo * getYearHighInfo(const QString &code);
     BrokerSummary * getBrokerSummary(const QString &code);
+    BrokerMinuteTickList *getBrokerMinuteTick(const QString &code);
 
     QStringList getSubscribeCodes();
     QStringList getRecentSearch();
@@ -123,6 +128,7 @@ private:
     StockListThread *       stockListThread;
     TraderThread *          traderThread;
     BrokerThread *          brokerThread;
+    BrokerMinuteThread *    brokerMinuteThread;
 
 
     QString currentStockCode;
@@ -153,6 +159,7 @@ signals:
     void stockListTypeChanged(QString);
     void orderResultArrived(OrderResult *);
     void brokerSummaryArrived(BrokerSummary *);
+    void brokerMinuteTickArrived(BrokerMinuteTick *);
 };
 
 

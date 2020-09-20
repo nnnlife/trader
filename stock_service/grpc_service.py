@@ -40,6 +40,7 @@ is_subscribe_bidask = {}
 is_subscribe_subject = {}
 vi_price_info = {}
 subject_summary = {}
+broker_minute_tick = {}
 
 
 
@@ -58,6 +59,7 @@ class StockServicer(stock_provider_pb2_grpc.StockServicer):
         self.alarm_subscribe_clients = []
         self.list_changed_subscribe_clients = []
         self.subject_summary_subscribe_clients = []
+        self.subject_minute_tick_subscribe_clients = []
         self.current_stock_selection_subscribe_clients = []
         self.simulation_changed_subscribe_clients = []
         self.order_result_subscribe_clients  = []
@@ -69,7 +71,7 @@ class StockServicer(stock_provider_pb2_grpc.StockServicer):
         self.current_datetime = None
         self.simulation_on = False
         self.today_top_list = {'momentum': [], 'ratio': [], 'amount': []}
-        self.open_quote_list = []
+        self.strategy_list = []
         preload.load(datetime.now(), self.skip_ydata)
 
         _LOGGER.info('StockService init ready')
@@ -302,6 +304,23 @@ class StockServicer(stock_provider_pb2_grpc.StockServicer):
             return stock_provider_pb2.Prices(price=vi_price_info[request.code])
         return stock_provider_pb2.Prices(price=[])
 
+    def AddBrokerMinuteTick(self, request, context):
+        if request.code not in broker_minute_tick:
+            broker_minute_tick[request.code] = []
+
+        broker_minute_tick[request.code].append(request)
+
+        for q in self.subject_minute_tick_subscribe_clients:
+            q.put_nowait(request)
+
+        return Empty()
+
+    def GetBrokerMinuteTick(self, request, context):
+        if request.code in broker_minute_tick:
+            return stock_provider_pb2.BrokerMinuteTickList(code=request.code, minute_tick=broker_minute_tick[request.code])
+        return stock_provider_pb2.BrokerMinuteTickList(code=request.code)
+
+
     def GetBrokerSummary(self, request, context):
         if request.code in subject_summary:
             return subject_summary[request.code]
@@ -338,12 +357,13 @@ class StockServicer(stock_provider_pb2_grpc.StockServicer):
             preload.load(request.ToDatetime() + timedelta(hours=9), self.skip_ydata)
             vi_price_info.clear()
             subject_summary.clear()
-            self.open_quote_list = []
             self.today_top_list['momentum'] = []
             self.today_top_list['ratio'] = []
             self.today_top_list['amount'] = []
+            print('clear strategy_list', self.strategy_list)
+            self.strategy_list = []
             self.send_list_changed('ttopamount')
-            self.send_list_changed('openquote')
+            self.send_list_changed('strategy')
 
         self.handle_time(request.ToDatetime())
         return Empty()
@@ -604,6 +624,13 @@ class StockServicer(stock_provider_pb2_grpc.StockServicer):
         for d in data:
             yield d
 
+    def ListenBrokerMinuteTick(self, request, context):
+        data = self.handle_queue_based_listener('ListenBrokerMinuteTick', self.subject_minute_tick_subscribe_clients, context)
+        for d in data:
+            yield d
+
+
+
     def ListenCybosTickData(self, request, context):
         q = Queue()
         self.stock_subscribe_clients.append(q)
@@ -684,13 +711,14 @@ class StockServicer(stock_provider_pb2_grpc.StockServicer):
     def GetFavoriteList(self, request, context):
         return stock_provider_pb2.CodeList(codelist=favorite.get_favorite())
 
-    def GetOpenQuoteList(self, request, context):
-        return stock_provider_pb2.CodeList(codelist=self.open_quote_list)
+    def GetStrategyList(self, request, context):
+        return stock_provider_pb2.CodeList(codelist=self.strategy_list)
 
-    def SetOpenQuoteRatioList(self, request, context):
-        _LOGGER.info('OPEN QUOTE LIST %d', len(request.codelist))
-        self.open_quote_list = request.codelist
-        self.send_list_changed('openquote')
+    def SetStrategyList(self, request, context):
+        _LOGGER.info('STRATEGY LIST %d', len(request.codelist))
+        self.strategy_list = request.codelist
+        self.send_list_changed('strategy')
+
         return Empty()
 
     def SetTodayAmountTopList(self, request, context):
@@ -790,7 +818,7 @@ class StockServicer(stock_provider_pb2_grpc.StockServicer):
 
 
 def serve(is_skip_ydata):
-    server = grpc.server(futures.ThreadPoolExecutor(max_workers=60))
+    server = grpc.server(futures.ThreadPoolExecutor(max_workers=100))
     stock_provider_pb2_grpc.add_StockServicer_to_server(StockServicer(is_skip_ydata), server)
     server.add_insecure_port('[::]:50052')
     server.start()

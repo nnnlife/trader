@@ -103,6 +103,7 @@ void BidAskModel::setCurrentStock(QString code) {
 void BidAskModel::setTodayOpen(int tc) {
     if (mTodayOpen != tc) {
         mTodayOpen = tc;
+        emit todayOpenChanged();
     }
 }
 

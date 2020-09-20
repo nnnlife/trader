@@ -125,10 +125,11 @@ void StockStat::clearRecentList() {
 StockInfo::StockInfo(const QString &code, const QDateTime &dt)
 : QObject(nullptr) {
     m_code = code;
-    m_todayOpen = m_currentPrice = 0;
+    m_todayOpen = m_currentPrice = m_yearHigh = 0;
     m_todayAmount = 0;
     m_isKospi = DataProvider::getInstance()->isKospi(code);
     m_name = DataProvider::getInstance()->getCompanyName(code);
+    m_yearHigh = DataProvider::getInstance()->getYearHighInfo(code)->price();
     connect(DataProvider::getInstance(), &DataProvider::dayDataReady, this, &StockInfo::dayDataReceived);
     DataProvider::getInstance()->requestDayData(m_code, 5, dt.addDays(-1));
 }
