@@ -31,7 +31,7 @@ def request_stock_day_data(reader, code, from_date, until_date, method=message.D
     return reader.block_write(header, body)
 
 
-def request_stock_month_data(reader, code, from_date, until_date, method=message.MONTH):
+def request_stock_month_data(reader, code, from_date, until_date, method=message.MONTH_DATA):
     header = stream_readwriter.create_header(message.REQUEST, message.MARKET_STOCK, method)
     header['code'] = code
     header['from'] = from_date

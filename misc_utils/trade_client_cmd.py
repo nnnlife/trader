@@ -104,6 +104,14 @@ def consumer():
             stock_api.subscribe_trade(subscribe_reader, display_trade_result)
         elif command.startswith('trade_stop_subscribe'):
             stock_api.stop_subscribe_trade(subscribe_reader)
+        elif command.startswith('stockm'):
+            month_detail = command.split(',')
+            if len(month_detail) != 2:
+                print('stockm,code')
+            else:
+                result = stock_api.request_stock_month_data(message_reader, month_detail[1], date(2010, 1, 1), date(2020, 9, 18))
+                print(len(result))
+                print(result[-1])
         elif command.startswith('min_data'):
             min_detail = command.split(',')
             if len(min_detail) != 2:
