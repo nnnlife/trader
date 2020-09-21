@@ -37,6 +37,9 @@ def handle_request(sock, header, body):
     elif header['method'] == message.MINUTE_DATA:
         _, data = stock_chart.get_min_period_data(header['code'], header['from'], header['until'])
         stream_readwriter.write(sock, header, data)
+    elif header['method'] == message.MONTH_DATA:
+        _, data = stock_chart.get_month_period_data(header['code'], header['from'], header['until'])
+        stream_readwriter.write(sock, header, data)
     elif header['method'] == message.TODAY_MINUTE_DATA:
         _, data = stock_today_data.get_today_min_data(header['code'])
         stream_readwriter.write(sock, header, data)

@@ -62,10 +62,10 @@ def find_bull(query):
 if __name__ == '__main__':
     db = MongoClient('mongodb://127.0.0.1:27017').trade_alarm
     collections = db.collection_names()
-    collections = ['T20200907']
+    collections = ['T20200701']
 
     test_code = []
-    test_code = ['A013810', 'A100130', 'A093320', 'A126880', 'A206640', 'A214870']
+    #test_code = ['A108320']
 
     for cname in collections:
         if cname.startswith('T'):

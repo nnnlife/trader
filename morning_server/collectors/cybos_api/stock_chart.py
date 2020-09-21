@@ -69,5 +69,10 @@ def get_min_period_data(code, startdate, enddate):
     return len(result), result
 
 
+def get_month_period_data(code, startdate, enddate):
+    l, result = get_period_data_raw(code, startdate, enddate, period_type='M')
+    return l, result
+
+
 if __name__ == '__main__':
     print(get_day_period_data('A000250', datetime(2019, 12, 20), datetime(2019, 12, 20)))

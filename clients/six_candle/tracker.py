@@ -1,7 +1,7 @@
 import ticktracker
 import strategy
 from morning.pipeline.converter import dt
-
+import account
 
 tick_trackers = {}
 ba_trackers = {}
@@ -38,3 +38,5 @@ def handle_bidask(t):
 def finalize():
     for k, v in tick_trackers.items():
         v.finalize()
+
+    account.finalize()

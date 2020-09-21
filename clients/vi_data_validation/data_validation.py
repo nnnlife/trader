@@ -20,14 +20,19 @@ from utils import time_converter
 db_collection = None
 
 
-def validate_tick_data(code, today, h=0, m=0):
+def validate_tick_data(code, today, h=0, m=0, gap=300):
     from_datetime = datetime.combine(today, time(h,m))
     until_datetime = datetime.combine(today + timedelta(days=1), time(0,0))
     data = list(db_collection[code].find({'date': {'$gte': from_datetime, '$lte': until_datetime}}))
     # from 9 am to 3:20 pm no gap over 5 minutes
-    if len(data) < 100: # at least 100 (because consider alarm datetime)
-        print(code, 'length is not enough')
-        return False
+    if not code.endswith(message.SUBJECT_SUFFIX):
+        if len(data) < 100: # at least 100 (because consider alarm datetime)
+            print(code, 'length is not enough')
+            return False
+    else:
+        if len(data) < 10:
+            print(code, 'subject length is not enough')
+            return False
 
     start_time = data[0]['date']
     end_time = data[-1]['date']
@@ -41,7 +46,7 @@ def validate_tick_data(code, today, h=0, m=0):
         return False
 
     for d in data:
-        if d['date'] - current_time > timedelta(minutes=5):
+        if d['date'] - current_time > timedelta(minutes=gap):
             if d['date'].hour <= 15 and d['date'].minute <= 20:
                 print(code, 'time gap is bigger than 5 min', d['date'] - current_time, d['date'], current_time)
                 return False
@@ -52,6 +57,10 @@ def validate_tick_data(code, today, h=0, m=0):
 
 def validate_ba_tick_data(code, today, h=0, m=0):
     return validate_tick_data(code + message.BIDASK_SUFFIX, today, h, m)
+
+
+def validate_subject_tick_data(code, today, h=0, m=0):
+    return validate_tick_data(code + message.SUBJECT_SUFFIX, today, h, m, 3600)
 
 
 def get_alarm_list(today):
@@ -77,15 +86,15 @@ def validate_alarm_data(code, today, alarm_datetime):
     return True
 
 
-def start_validation(codes=[]):
+def start_validation(today, codes=[]):
     global db_collection
 
     if len(codes) > 0:
         market_code = codes
     else:
-        market_code = morning_client.get_market_code()
+        market_code = morning_client.get_all_market_code()
 
-    today = datetime.now().date()
+    #today = datetime.now().date()
     yesterday = holidays.get_yesterday(today)
     db_collection = MongoClient(db.HOME_MONGO_ADDRESS).trade_alarm
 
@@ -103,12 +112,23 @@ def start_validation(codes=[]):
     yesterday_list = yesterday_list[:1000]
     failed_tick_codes = []
     failed_ba_tick_codes = []
+    failed_subject_tick_codes = []
     # 1. validate yesterday_list :100's today tick data
     for ydata in yesterday_list:
+        print('CHECK', ydata['code'])
+        failed = False
         if not validate_tick_data(ydata['code'], today):
             failed_tick_codes.append(ydata['code'])
+            print('TICK FAILED')
         if not validate_ba_tick_data(ydata['code'], today):
             failed_ba_tick_codes.append(ydata['code'])
+            failed = True
+            print('BA FAILED')
+        if not validate_subject_tick_data(ydata['code'], today, 9, 10):
+            failed_subject_tick_codes.append(ydata['code'])
+            failed = True
+            print('SUBJECT FAILED')
+
 
     if len(failed_tick_codes) > 0:
         print('FAILED TICK', failed_tick_codes)
@@ -120,27 +140,13 @@ def start_validation(codes=[]):
     else:
         print('TICK BA ALL SUCCESS')
 
-    # 2. validate today alarm tick data 
-    alarm_list = get_alarm_list(today)
-    alarm_failed_codes = []
-    if len(alarm_list) > 0:
-        for ac in alarm_list:
-            if len(codes) > 0 and ac['3'] not in codes:
-                continue
-
-            if not validate_alarm_data(ac['3'], today, ac['date']):
-                alarm_failed_codes.append(ac['3'])
-
-        if len(alarm_failed_codes) > 0:
-            print('FAILED ALARM CODES', alarm_failed_codes, len(alarm_failed_codes), '/', len(alarm_list))
-        else:
-            print('ALARM ALL SUCCESS', len(alarm_list))
+    if len(failed_subject_tick_codes) > 0:
+        print('FAILED SUBJECT TICK', failed_subject_tick_codes)
     else:
-        print('NO ALARM TODAY')
+        print('SUBJECT ALL SUCCESS')
 
 
 if __name__ == '__main__':
-    if len(sys.argv) > 1:
-        start_validation(sys.argv[1:])
-    else:
-        start_validation()
+    # START FROM 2020/03/27 (KOSDAQ, KOSPI 1000은 3/11 일부터 시작)
+    # KNOWN ERROR: 3/13, 3/17, 4/21, 4/27, 6/4, 6/5, 8/3, 8/5, 8/12, 8/13, 8/27, 8/31, 9/1
+    start_validation(datetime(2020, 7, 1).date(), [])

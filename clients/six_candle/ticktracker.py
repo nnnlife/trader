@@ -12,6 +12,7 @@ from morning_server import message
 import prevdata
 import pandas as pd
 import trendline
+import account
 
 
 # handle 2 cases
@@ -112,43 +113,60 @@ class TickTracker:
         self.high = 0
         self.low = 0
         self.trend_time = None
-        self.trend_records = []
+        self.buy_info = None # [code, time, buy_price, cut_price, found_resistance]
+        self.strend = False
+        self.cut_price = 0
     
-    def calculate_trendline(self, tick_time, ask_price):
+    def calculate_trendline(self, tick_time, ask_price, bid_price):
         resistance = trendline.get_resistance_points(self.second_ticks)
         support = trendline.get_support_points(self.second_ticks)
         high = max([r[1] for r in resistance])
         low = min([s[1] for s in support])
-        resistance_min = min([r[1] for r in resistance])
-        safe_seconds = trendline.get_safe_seconds(self.second_ticks)
         strend = trendline.is_support_up_trend(support)
-        rtrend = trendline.is_resistance_up_trend(resistance)
+        """
+        if self.buy_info is not None:
+            if self.buy_info[3] > bid_price:
+                #print('CUT', self.code, 'buy time', self.buy_info[1], 'sell_time', tick_time)
+                account.add_trade(self.code, False, bid_price, tick_time)
+                self.buy_info = None
+            else:
+                if bid_price > self.buy_info[2] * 1.0128:
+                    account.add_trade(self.code, False, bid_price, tick_time)
+                    self.buy_info = None
+                #print('SUCCESS', self.code, 'buy time', self.buy_info[1], 'sell_time', tick_time)
+                
+        else:
+        """
+        if (len(support) >= 2 and strend and
+                low * 1.1 >= high and low * 1.03 <= high and
+                self.open != 0 and bid_price >= self.open):
+            support_max = max([s[1] for s in support])
+            self.strend = True
+            self.cut_price = support_max
         
-        if (len(resistance) >= 2 and len(support) >= 2 and strend and
-                low * 1.05 >= high and support[-1][0] > resistance[-1][0] and
-                tick_time - support[-1][0] >= timedelta(seconds=safe_seconds) and ask_price < resistance_min and
-                self.open != 0 and support[-1][1] >= self.open):
-            self.trend_records.append({'code': self.code, 'time': tick_time,
-                                       'strend': strend,
-                                       'rtrend': rtrend})
+            """
+            support_max = max([s[1] for s in support])
+            account.add_trade(self.code, True, ask_price, tick_time)
 
-    def push_second_tick(self, tick_time, ask_price):
+            self.buy_info = [self.code, tick_time, ask_price, support_max]
+            """
+
+
+    def push_second_tick(self, tick_time, ask_price, bid_price):
         if self.second_tick.is_empty():
             return
 
         self.second_ticks.append(self.second_tick.finish(tick_time))
         self.tick_time = tick_time
 
-        if len(self.second_ticks) >= 300 and ask_price > 0:   
+        if len(self.second_ticks) >= 150 and ask_price > 0:   
             if self.trend_time is None or tick_time - self.trend_time > timedelta(seconds=10):
-                self.calculate_trendline(tick_time, ask_price)
+                self.calculate_trendline(tick_time, ask_price, bid_price)
                 self.trend_time = tick_time
 
     def set_prices(self, price):
         if self.open == 0:
             self.open = price
-            if self.open < self.yesterday_close:
-                self.is_skip = True 
 
         if self.low == 0 or self.low < price:
             self.low = price
@@ -161,10 +179,27 @@ class TickTracker:
             self.tick_time = t['date']
 
         if t['market_type'] == 50:
+            if self.is_skip:
+                return
+
+            if self.buy_info is None:
+                if self.strend and t['bid_price'] >= self.high:
+                    self.buy_info = [self.code, t['date'], t['ask_price'], self.cut_price]
+                    account.add_trade(self.code, True, t['ask_price'], t['date'])
+            else:
+                if self.buy_info[3] > t['bid_price'] or self.buy_info[2] * 0.99 > t['bid_price']:
+                    account.add_trade(self.code, False, t['bid_price'], t['date'])
+                    self.buy_info = None
+                    self.is_skip = True
+                elif t['bid_price'] >= self.buy_info[2] * 1.0128:
+                    account.add_trade(self.code, False, t['bid_price'], t['date'])
+                    self.buy_info = None
+                    self.is_skip = True
+
             self.set_prices(t['current_price'])
 
             if t['date'] - self.tick_time >= timedelta(seconds=1):
-                self.push_second_tick(t['date'], t['ask_price'])
+                self.push_second_tick(t['date'], t['ask_price'], t['bid_price'])
             self.second_tick.set_open(t['bid_price'])
             self.second_tick.set_close(t['bid_price'])
             self.second_tick.add_volume(t['volume'])
@@ -172,10 +207,12 @@ class TickTracker:
             self.second_tick.set_high(t['bid_price'])
             self.second_tick.set_low(t['bid_price'])
         else:
-            self.push_second_tick(t['date'], 0)
+            self.push_second_tick(t['date'], 0, 0)
 
     def finalize(self):
         #df = pd.DataFrame([s.to_dict() for s in self.second_ticks])
         #print(len(df))
-        #df.to_excel(self.code + '_sec_tick.xlsx') 
-        print(self.code, self.trend_records)
+        #df.to_excel(self.code + '_sec_tick.xlsx')
+        #print(self.code, self.trend_records)
+        if self.buy_info is not None:
+            print('timeout', self.code)
