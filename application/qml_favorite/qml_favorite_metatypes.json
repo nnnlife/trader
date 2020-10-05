@@ -555,6 +555,42 @@
                         "value": "auto"
                     }
                 ],
+                "className": "UpperLimitListModel",
+                "methods": [
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "name": "index",
+                                "type": "int"
+                            }
+                        ],
+                        "name": "menuClicked",
+                        "returnType": "void"
+                    }
+                ],
+                "object": true,
+                "qualifiedClassName": "UpperLimitListModel",
+                "superClasses": [
+                    {
+                        "access": "public",
+                        "name": "AbstractListModel"
+                    }
+                ]
+            }
+        ],
+        "inputFile": "UpperLimitListModel.h",
+        "outputRevision": 67
+    },
+    {
+        "classes": [
+            {
+                "classInfos": [
+                    {
+                        "name": "QML.Element",
+                        "value": "auto"
+                    }
+                ],
                 "className": "StrategyListModel",
                 "methods": [
                     {

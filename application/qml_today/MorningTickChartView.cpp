@@ -752,6 +752,7 @@ void MorningTickChartView::paint(QPainter *painter) {
 
         setAmount(mt->getAmount(), false);
         const CybosDayDatas &queue = mt->getQueue();
+	qWarning() << "queue size : " << queue.day_data_size();
         drawTimeLabels(painter, todayTickWidth, cellWidth, cellHeight, startX,
                         TODAY_COLUMN_COUNT, todayStartTime.hour() * 100 + todayStartTime.minute());
         

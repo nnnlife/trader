@@ -14,6 +14,9 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), *(['.
 
 from gevent.queue import Queue
 from gevent.lock import Semaphore
+from pymongo import MongoClient
+from datetime import datetime
+
 from stock_service import stock_provider_pb2_grpc
 from stock_service import stock_provider_pb2 as stock_provider
 
@@ -23,8 +26,8 @@ from stock_service.trade import account
 from stock_service.trade import markettime
 from stock_service.trade import simulstatus
 from stock_service.trade import trademachine
+from configs import db
 
-from datetime import datetime
 
 
 stub = None
@@ -32,6 +35,45 @@ spread_dict = dict()
 order_queue = Queue()
 company_name_dict = {}
 sem_dict = dict()
+_trader_db = MongoClient(db.HOME_MONGO_ADDRESS).trader['order']
+
+
+def store_order_msg(order_msg):
+    is_simulation = simulstatus.is_simulation()
+    dt = markettime.get_current_datetime()
+    data = {'type': 'order',
+            'simulation': is_simulation,
+            'date': dt,
+            'code': order_msg.code,
+            'is_buy': order_msg.is_buy,
+            'price': order_msg.price,
+            'quantity': order_msg.quantity,
+            'percentage': order_msg.percentage,
+            'method': int(order_msg.method),
+            'order_num': order_msg.order_num,
+            'order_type': int(order_msg.order_type)}
+    _trader_db.insert_one(data)
+
+
+def store_report(report):
+    is_simulation = simulstatus.is_simulation()
+    dt = markettime.get_current_datetime()
+    data = {'type': 'report',
+            'simulation': is_simulation,
+            'date': dt,
+            'code': report.code,
+            'is_buy': report.is_buy,
+            'flag': int(report.flag),
+            'method': int(report.method),
+            'hold_price': report.hold_price,
+            'price': report.price,
+            'quantity': report.quantity,
+            'internal_order_num': report.internal_order_num,
+            'order_num': report.order_num,
+            'traded_quantity': report.traded_quantity,
+            'traded_price': report.traded_price}
+    _trader_db.insert_one(data)
+
 
 
 def get_company_name(code):
@@ -77,6 +119,7 @@ def order_callback(result):
     print('-'*5, 'Reporting','-'*5)
     report = stock_provider.OrderResult(report=[result], current_balance=account.get_balance())
     stub.ReportOrderResult(report)
+    store_report(result)
     print(report, '-'*5, 'Reporting Done', '-'*5, '\n')
 
 def handle_order():
@@ -99,6 +142,7 @@ def trade_subscriber():
         print('-'*5, 'Trade Msg', '-'*5)
         if msg.msg_type == stock_provider.TradeMsgType.ORDER_MSG:
             order_queue.put_nowait(msg.order_msg)
+            store_order_msg(msg.order_msg)
         elif msg.msg_type == stock_provider.TradeMsgType.GET_BALANCE:
             stub.ReportOrderResult(stock_provider.OrderResult(current_balance=account.get_balance()))
         print(msg, '-'*5, 'Trade Msg Done', '-'*5, '\n')

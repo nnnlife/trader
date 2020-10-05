@@ -5,12 +5,17 @@
 #include <QList>
 #include <iostream>
 #include <QMap>
+#include <QPair>
+#include <QDateTime>
 #include <QDebug>
 
 
 #include "stock_provider.grpc.pb.h"
 using stock_api::CybosBidAskTickData;
 using stock_api::CybosTickData;
+
+
+#define SUSTAIN_TIME_MSECS  30000
 
 class BidAskUnit {
 public:
@@ -48,23 +53,56 @@ public:
     int price() const { return mPrice; }
     bool isBuy() const { return mIsBuy; }
 
-    void setData(int price, int vol, bool isBuy) {
+    void setData(int price, int vol, bool isBuy, const QDateTime &dt) {
         mPrice = price;
         mVolume = vol;
         mIsBuy = isBuy;
 
         if (isBuy) {
-            if (mBuyMap.contains(price))
-                mBuyMap[price] += vol;
-            else
-                mBuyMap[price] = vol;
+            QMapIterator<int, QPair<QDateTime, QList<int> > > it(mBuyMap);
+            while (it.hasNext()) {
+                it.next();
+                if (dt.toMSecsSinceEpoch() - it.value().first.toMSecsSinceEpoch() > SUSTAIN_TIME_MSECS) {
+                    mBuyMap.remove(it.key());
+                }
+            }
+
+            if (!mBuyMap.contains(price)) {
+                mBuyMap[price].first = dt;
+                mBuyMap[price].second = QList({0, 0, 0});
+            }
+        
+            mBuyMap[price].first = dt;
+            if (price * vol >= 100000000)
+                mBuyMap[price].second[2] += 1;
+            else if (price * vol >= 50000000)
+                mBuyMap[price].second[1] += 1;
+            else if (price * vol >= 10000000)
+                mBuyMap[price].second[0] += 1;
+
             mTotalBuy += (unsigned long long)vol;
         }
         else {
-            if (mSellMap.contains(price))
-                mSellMap[price] += vol;
-            else
-                mSellMap[price] = vol;
+            QMapIterator<int, QPair<QDateTime, QList<int> > > it(mSellMap);
+            while (it.hasNext()) {
+                it.next();
+                if (dt.toMSecsSinceEpoch() - it.value().first.toMSecsSinceEpoch() > SUSTAIN_TIME_MSECS) {
+                    mSellMap.remove(it.key());
+                }
+            }
+            if (!mSellMap.contains(price)) {
+                mSellMap[price].first = dt;
+                mSellMap[price].second = QList({0, 0, 0});
+            }
+
+            mSellMap[price].first = dt;
+            if (price * vol >= 100000000)
+                mSellMap[price].second[2] += 1;
+            else if (price * vol >= 50000000)
+                mSellMap[price].second[1] += 1;
+            else if (price * vol >= 10000000)
+                mSellMap[price].second[0] += 1;
+            
             mTotalSell += (unsigned long long)vol;
         }
     }
@@ -75,20 +113,20 @@ public:
         return mTotalBuy / float(mTotalBuy + mTotalSell);
     }
 
-    int getVolumeByPrice(bool isBuy, int price) const {
+    QList<int> getVolumeByPrice(bool isBuy, int price) const {
         if (isBuy) {
             if (mBuyMap.contains(price))
-                return mBuyMap[price];
+                return mBuyMap[price].second;
         }
         else {
             if (mSellMap.contains(price))
-                return mSellMap[price];
+                return mSellMap[price].second;
         }
-        return 0;
+        return QList<int>();
     }
 
-    QMap<int, int> mBuyMap;
-    QMap<int, int> mSellMap;
+    QMap<int, QPair<QDateTime, QList<int> > > mBuyMap;
+    QMap<int, QPair<QDateTime, QList<int> > > mSellMap;
 
     void clear() {
         mPrice = mVolume = 0;
@@ -121,7 +159,7 @@ public:
     int getCurrentPrice() const { return mTradeUnit.price(); } 
     bool getIsCurrentBuy() const { return mTradeUnit.isBuy(); }
     int getCurrentVolume() const { return mTradeUnit.volume(); }
-    int getVolumeByPrice(bool isBuy, int price) const { return mTradeUnit.getVolumeByPrice(isBuy, price); }
+    QList<int> getVolumeByPrice(bool isBuy, int price) const { return mTradeUnit.getVolumeByPrice(isBuy, price); }
     qreal getBuyRate() const { return mTradeUnit.getBuyRate(); }
     bool speculateIsViPrice(int price, bool isKospi) const;
 

@@ -5,12 +5,18 @@ import QtQuick.Controls 2.12
 
 ApplicationWindow {
     id: root
-    width: 1200; height: 800
+    width: 1440; height: 800
     visible: true
 
     RowLayout { 
         anchors.fill: parent
         spacing: 0.0
+
+        FavoriteList {
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+        }
+
         StrategyList {
             Layout.fillWidth: true
             Layout.fillHeight: true
@@ -24,15 +30,18 @@ ApplicationWindow {
             Layout.fillWidth: true
             Layout.fillHeight: true
         }*/
-        FavoriteList {
+        
+        UpperLimitList {
             Layout.fillWidth: true
             Layout.fillHeight: true
         }
-        RecentList {
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-        }
+
         YtopAmountList {
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+        }
+
+        RecentList {
             Layout.fillWidth: true
             Layout.fillHeight: true
         }

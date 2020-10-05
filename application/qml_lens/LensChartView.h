@@ -5,66 +5,71 @@
 #include <QPainter>
 #include <QTransform>
 #include <QPair>
+#include <QMap>
 #include <QWheelEvent>
-#include "DataProvider.h"
 #include "Candle.h"
+#include "StockData.h"
 
-#include <google/protobuf/timestamp.pb.h>
-using google::protobuf::Timestamp;
-
-#define INTERVAL_MSEC   5000 // 5 sec
-#define DISPLAY_MSEC    600000 // 10 min
 
 
 class LensChartView : public QQuickPaintedItem {
     Q_OBJECT
     QML_ELEMENT
+    Q_PROPERTY(bool pinCode READ pinCode WRITE setPinCode NOTIFY pinCodeChanged)
+    Q_PROPERTY(QString corpName READ corpName NOTIFY corpNameChanged)
+    Q_PROPERTY(QString currentAmount READ currentAmount NOTIFY currentAmountChanged)
+    Q_PROPERTY(QString currentRatio READ currentRatio NOTIFY currentRatioChanged)
+    Q_PROPERTY(QString openProfit READ openProfit NOTIFY openProfitChanged)
+
 public:
-    enum {
-        ROW_COUNT = 13,
-        PRICE_ROW_COUNT = 10,
-        COLUMN_COUNT = 11,
-        VOLUME_ROW_COUNT = 2,
-        PRICE_COLUMN_COUNT = 10,
-        TIME_LABEL_ROW_COUNT = 1,
-    };
     LensChartView(QQuickItem *parent = 0);
+
+    bool pinCode() { return mPinCode; }
+    void setPinCode(bool p);
+
     void paint(QPainter *painter);
 
-    qreal mapPriceToPos(int price, qreal endY, qreal startY);
-    qreal getVolumeHeight(qint64 volume, qreal volumeHeight);
+    const QString &corpName() { return mCorpName; }
+    const QString &currentAmount() { return mCurrentAmount; }
+    const QString &currentRatio() { return mCurrentRatio; }
+    const QString &openProfit() { return mOpenProfit; }
+
+    Q_INVOKABLE void sendCurrentCode();
 
 private:
     QString mCurrentStockCode;
-    QList<qreal> mPriceSteps;
-    QList<Candle> mCandles;
-    Candle mCurrentCandle;
     QDateTime mCurrentDateTime;
-    QDateTime mTickBeginDateTime;
-    qint64 mTickInterval = INTERVAL_MSEC;
-    qint64 mMaxVolume = 0;
-    int mCurrentHighPrice = 0;
-    int mCurrentLowPrice = 0;
-    int mOpen = 0;
+
+    QString mCorpName;
+    QString mCurrentAmount;
+    QString mCurrentRatio;
+    QString mOpenProfit;
+    bool mPinCode = false;
+
+    QMap<QString, StockData *> mStockMap;
 
     void resetData();
 
-    QDateTime timestampToQDateTime(const Timestamp &t);
-    qreal getCandleLineWidth(qreal w);
-    void checkVolumeMax();
+    void setCurrentRatio(const QString &ratio);
+    void setCurrentAmount(const QString &amount);
+    void setOpenProfit(const QString &p);
+    void setCorpName(const QString &name);
 
-    void checkPriceRange(int price);
     void drawGridLine(QPainter *painter, qreal cw, qreal ch);
-    void drawCurrentPriceLine(QPainter *painter, int price, qreal fromX, qreal untilX, qreal startY, qreal endY, qreal cellWidth);
-    void drawCandle(QPainter *painter, const Candle &candle, qreal x, qreal candleWidth, qreal startY, qreal endY);
-    void drawVolume(QPainter *painter, const Candle &candle, qreal x, qreal volumeWidth, qreal startY, qreal endY);
-    void displayLowHighText(QPainter *painter, qreal x, qreal cellWidth, qreal startY, qreal endY);
-    void displayOpenPriceLine(QPainter *painter, qreal x, qreal endX, qreal startY, qreal endY);
+    void drawVolumeCenterLine(QPainter *painter, qreal x, qreal endX, qreal startY, qreal endY);
+    void drawAmountRatioGridLine(QPainter *painter, qreal x, qreal endX, qreal startY, qreal endY);
 
 private slots:
     void setCurrentStock(QString);
     void timeInfoArrived(QDateTime);
     void tickArrived(CybosTickData *data);
+
+signals:
+    void pinCodeChanged();
+    void corpNameChanged();
+    void currentRatioChanged();
+    void currentAmountChanged();
+    void openProfitChanged();
 };
 
 #endif

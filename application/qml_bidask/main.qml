@@ -422,8 +422,7 @@ ApplicationWindow {
                             else if (model.row == 21 && model.column == 5)
                                 return "1/2 BUY"
                             else if (model.column == 0 || model.column == 6) {
-                                if (typeof(display) == "number" && display > 0) 
-                                    return display
+                                return display
                             }
                             return ""
                         }

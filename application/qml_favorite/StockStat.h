@@ -60,6 +60,7 @@ public:
     TopList * getYtopAmountList();
     QStringList getTtopAmountList(TodayTopSelection s);
     QStringList getStrategyList();
+    QStringList getUpperLimitList();
     void addToFavorite(const QString &code);
     void removeFromFavorite(const QString &code);
 

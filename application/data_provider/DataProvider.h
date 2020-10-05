@@ -88,6 +88,7 @@ public:
     QStringList getViList();
     QStringList getTtopAmountList(TodayTopSelection s);
     QStringList getStrategyList();
+    QStringList getYesterdayUpperLimitList();
 
     TopList* getYtopAmountList();
     void clearRecentList();

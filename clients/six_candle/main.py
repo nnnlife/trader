@@ -65,7 +65,7 @@ if __name__ == '__main__':
     collections = ['T20200701']
 
     test_code = []
-    #test_code = ['A108320']
+    #test_code = ['A160550']
 
     for cname in collections:
         if cname.startswith('T'):

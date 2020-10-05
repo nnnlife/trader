@@ -19,6 +19,12 @@ QStringList StockStat::getRecentSearch() {
 }
 
 
+QStringList StockStat::getUpperLimitList() {
+    qWarning() << "getUpperLimistList : " << DataProvider::getInstance()->getYesterdayUpperLimitList().count();
+    return DataProvider::getInstance()->getYesterdayUpperLimitList();
+}
+
+
 QStringList StockStat::getFavoriteList() {
     mCurrentFavoriteList = DataProvider::getInstance()->getFavoriteList();
     return mCurrentFavoriteList;

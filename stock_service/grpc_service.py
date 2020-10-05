@@ -31,6 +31,7 @@ from stock_service.candidate import favorite
 
 
 
+RATIO_MIN_AMOUNT = 100000000
 SLEEP_DURATION = 0.0001
 recent_search_codes = []
 is_subscribe_alarm = False
@@ -67,6 +68,7 @@ class StockServicer(stock_provider_pb2_grpc.StockServicer):
         self.trader_clients = []
         self.current_stock_code = ""
         self.simulation_operators = []
+        self.amount_gauge = {} # {'code': [buy_amount, sell_amount, market_type]}
 
         self.current_datetime = None
         self.simulation_on = False
@@ -357,6 +359,7 @@ class StockServicer(stock_provider_pb2_grpc.StockServicer):
             preload.load(request.ToDatetime() + timedelta(hours=9), self.skip_ydata)
             vi_price_info.clear()
             subject_summary.clear()
+            self.amount_gauge.clear()
             self.today_top_list['momentum'] = []
             self.today_top_list['ratio'] = []
             self.today_top_list['amount'] = []
@@ -445,6 +448,24 @@ class StockServicer(stock_provider_pb2_grpc.StockServicer):
         data = data_arr[0]
         tick_date = Timestamp()
         tick_date.FromDatetime(data['date'] - timedelta(hours=9))
+        if code not in self.amount_gauge:
+            self.amount_gauge[code] = [0, 0, 49]
+
+        if data['20'] == 50:
+            if self.amount_gauge[code][2] != 50:
+                self.amount_gauge[code] = [0, 0, 50]
+            else:
+                if data['14'] == ord('1'):
+                    self.amount_gauge[code][0] += int(data['13']) * data['17']
+                else:
+                    self.amount_gauge[code][1] += int(data['13']) * data['17']
+        else:
+            self.amount_gauge[code] = [0, 0, data['20']]
+
+        amount_ratio = 0.0
+        if self.amount_gauge[code][0] > RATIO_MIN_AMOUNT and self.amount_gauge[code][1] > RATIO_MIN_AMOUNT:
+            amount_ratio = self.amount_gauge[code][0] / (self.amount_gauge[code][0] + self.amount_gauge[code][1])
+
         try:
             tick_data = stock_provider_pb2.CybosTickData(tick_date=tick_date,
                                                     code=code,
@@ -469,7 +490,8 @@ class StockServicer(stock_provider_pb2_grpc.StockServicer):
                                                     out_time_volume=data['21'],
                                                     cum_sell_volume=data['27'],
                                                     cum_buy_volume=data['28'],
-                                                    is_kospi=preload.is_kospi(code))
+                                                    is_kospi=preload.is_kospi(code),
+                                                    amount_ratio=amount_ratio)
         except ValueError as e:
             print('Tick ValueError', e)
             return
@@ -744,6 +766,11 @@ class StockServicer(stock_provider_pb2_grpc.StockServicer):
         _LOGGER.info('GetYesterdayTopAmountList %s count:%d %s %s', dt, len(top_list[0]), top_list[1], top_list[2])
         return stock_provider_pb2.TopList(codelist=top_list[0], is_today_data=top_list[1], date=top_list[2])
 
+    def GetYesterdayUpperLimitList(self, request, context):
+        upper_limit_list = preload.get_yesterday_upper_limit()
+        _LOGGER.info('GetYesterdayUpperLimitList count:%d', len(upper_limit_list))
+        return stock_provider_pb2.CodeList(codelist=upper_limit_list)
+
     def OrderStock(self, request, context):
         ret = stock_api.order_stock(morning_client.get_reader(), request.code, request.price, request.quantity, request.is_buy)
         _LOGGER.info('OrderStock %s, RET: %s', request, ret)
@@ -799,7 +826,27 @@ class StockServicer(stock_provider_pb2_grpc.StockServicer):
         _LOGGER.info('Simulation Data')
         for smsg in request_iterator:
             if smsg.msgtype == stock_provider_pb2.SimulationMsgType.MSG_TICK:
-                smsg.tick.is_kospi = preload.is_kospi(smsg.tick.code)
+                code = smsg.tick.code
+                smsg.tick.is_kospi = preload.is_kospi(code)
+                if code not in self.amount_gauge:
+                    self.amount_gauge[code] = [0, 0, 49]
+
+                if smsg.tick.market_type == 50:
+                    if self.amount_gauge[code][2] != 50:
+                        self.amount_gauge[code] = [0, 0, 50]
+                    else:
+                        if smsg.tick.buy_or_sell:
+                            self.amount_gauge[code][0] += smsg.tick.volume * smsg.tick.current_price
+                        else:
+                            self.amount_gauge[code][1] += smsg.tick.volume * smsg.tick.current_price
+                else:
+                    self.amount_gauge[code] = [0, 0, smsg.tick.market_type]
+
+                amount_ratio = 0.0
+                if self.amount_gauge[code][0] > RATIO_MIN_AMOUNT and self.amount_gauge[code][1] > RATIO_MIN_AMOUNT:
+                    amount_ratio = self.amount_gauge[code][0] / (self.amount_gauge[code][0] + self.amount_gauge[code][1])
+                smsg.tick.amount_ratio = amount_ratio
+
                 for q in self.stock_subscribe_clients:
                     q.put_nowait(smsg.tick)
             elif smsg.msgtype == stock_provider_pb2.SimulationMsgType.MSG_BIDASK:

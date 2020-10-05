@@ -206,7 +206,12 @@ QVariant BidAskModel::data(const QModelIndex &index, int role) const
         else if (index.column() == 0 || index.column() == COLUMN_COUNT - 1) {
             bool isBuyCol = index.column() != 0;
             int price = mData.getPriceByRow(index.row() - 1);
-            return QVariant(mData.getVolumeByPrice(isBuyCol, price));
+            QList<int> list = mData.getVolumeByPrice(isBuyCol, price);
+            if (list.count() == 0)
+                return QVariant(QString());
+            else
+                return QVariant(QString::number(list[2]) + " / " + 
+                        QString::number(list[1]) + " / " + QString::number(list[0]));
         }
     }
     else if (index.row() == 0 && (index.column() == 0 || index.column() == 6)) {

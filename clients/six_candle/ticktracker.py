@@ -122,34 +122,33 @@ class TickTracker:
         support = trendline.get_support_points(self.second_ticks)
         high = max([r[1] for r in resistance])
         low = min([s[1] for s in support])
+        resistance_min = min([r[1] for r in resistance])
+        support_max = max([s[1] for s in support])
+
         strend = trendline.is_support_up_trend(support)
-        """
+        safe_seconds = trendline.get_safe_seconds(self.second_ticks)
+        
         if self.buy_info is not None:
             if self.buy_info[3] > bid_price:
-                #print('CUT', self.code, 'buy time', self.buy_info[1], 'sell_time', tick_time)
                 account.add_trade(self.code, False, bid_price, tick_time)
                 self.buy_info = None
+                self.is_skip = True
             else:
                 if bid_price > self.buy_info[2] * 1.0128:
                     account.add_trade(self.code, False, bid_price, tick_time)
                     self.buy_info = None
-                #print('SUCCESS', self.code, 'buy time', self.buy_info[1], 'sell_time', tick_time)
-                
+                    self.is_skip = True
         else:
-        """
-        if (len(support) >= 2 and strend and
-                low * 1.1 >= high and low * 1.03 <= high and
+            if (len(support) >= 2 and strend and
+                low * 1.7 >= high and low * 1.03 <= high and
+                support[-1][0] > resistance[-1][0] and
+                tick_time - support[-1][0] >= timedelta(seconds=safe_seconds) and
+                ask_price < resistance_min and ask_price > support_max and
                 self.open != 0 and bid_price >= self.open):
-            support_max = max([s[1] for s in support])
-            self.strend = True
-            self.cut_price = support_max
-        
-            """
-            support_max = max([s[1] for s in support])
-            account.add_trade(self.code, True, ask_price, tick_time)
-
-            self.buy_info = [self.code, tick_time, ask_price, support_max]
-            """
+                print(self.code, tick_time, 'resistance_min', resistance_min,
+                        'support_max', support_max, 'ask_price', ask_price)
+                account.add_trade(self.code, True, ask_price, tick_time)
+                self.buy_info = [self.code, tick_time, ask_price, support_max]
 
 
     def push_second_tick(self, tick_time, ask_price, bid_price):
@@ -181,20 +180,6 @@ class TickTracker:
         if t['market_type'] == 50:
             if self.is_skip:
                 return
-
-            if self.buy_info is None:
-                if self.strend and t['bid_price'] >= self.high:
-                    self.buy_info = [self.code, t['date'], t['ask_price'], self.cut_price]
-                    account.add_trade(self.code, True, t['ask_price'], t['date'])
-            else:
-                if self.buy_info[3] > t['bid_price'] or self.buy_info[2] * 0.99 > t['bid_price']:
-                    account.add_trade(self.code, False, t['bid_price'], t['date'])
-                    self.buy_info = None
-                    self.is_skip = True
-                elif t['bid_price'] >= self.buy_info[2] * 1.0128:
-                    account.add_trade(self.code, False, t['bid_price'], t['date'])
-                    self.buy_info = None
-                    self.is_skip = True
 
             self.set_prices(t['current_price'])
 

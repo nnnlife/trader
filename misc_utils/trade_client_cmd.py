@@ -109,7 +109,7 @@ def consumer():
             if len(month_detail) != 2:
                 print('stockm,code')
             else:
-                result = stock_api.request_stock_month_data(message_reader, month_detail[1], date(2010, 1, 1), date(2020, 9, 18))
+                result = stock_api.request_stock_month_data(message_reader, month_detail[1], date(2020, 8, 1), date(2020, 8, 1))
                 print(len(result))
                 print(result[-1])
         elif command.startswith('min_data'):
@@ -280,7 +280,7 @@ def consumer():
                 print('investor,code')
             else:
                 code = inv_detail[1]
-                print(stock_api.request_investor_data(message_reader, code, date(2020,1,31), date(2020,9,4)))
+                print(stock_api.request_investor_data(message_reader, code, date(2020,10,5), date(2020,10,5)))
         elif command.startswith('kinvestorc'):
             invc_detail = command.split(',')
             if len(invc_detail) != 2:

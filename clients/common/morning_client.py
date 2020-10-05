@@ -239,6 +239,29 @@ def get_past_day_data(code, from_date, until_date, mavg=MAVG):
     return cut_by_date_data
 
 
+def get_highest_price_all(code, from_date, until_date):
+    from_date = from_date if from_date.__class__.__name__ == 'date' else from_date.date()
+    until_date = until_date if until_date.__class__.__name__ == 'date' else until_date.date()
+    first = until_date.replace(day=1)
+    last_month = first - timedelta(days=1)
+    mdata = stock_api.request_stock_month_data(get_reader(), code, last_month, last_month)
+
+    from_date_number = from_date.year * 10000 + from_date.month * 100
+    filtered_mdata = list(filter(lambda d: d['0'] >= from_date_number, mdata))
+    if len(filtered_mdata) == 0:
+        high_price_from_month_data = 0
+    else:
+        high_price_from_month_data = max([d['3'] for d in filtered_mdata])
+
+    data = get_past_day_data(code, first, until_date, 0)
+    high_price_from_day_data = max([d['highest_price'] for d in data])
+    return (high_price_from_day_data if high_price_from_day_data > high_price_from_month_data else high_price_from_month_data)
+
+
+def get_highest_price_in_year(code, until_date):
+    return get_highest_price_all(code, until_date - timedelta(days=365), until_date)
+
+
 def get_uni_current_period_data(code, from_date, until_date):
     from_date = from_date if from_date.__class__.__name__ == 'date' else from_date.date()
     until_date = until_date if until_date.__class__.__name__ == 'date' else until_date.date()
@@ -286,7 +309,7 @@ def get_balance(): # return amount  {'balance': 1543974}
 
 
 def get_long_list():
-    return stock_api.request_long_list(get_reader())
+    return stock_api.request_long_list(get_trade_reader())
 
 
 def get_yesterday_top_amount(dt):
@@ -352,9 +375,11 @@ def db_setup():
     _mongo_collection = MongoClient(db.HOME_MONGO_ADDRESS).trade_alarm
 
 if __name__ == '__main__':
+    print(get_highest_price_all('A005490', datetime(2010, 9, 21), datetime(2020, 9, 21)))
+    print(get_highest_price_in_year('A005490', datetime(2020, 9, 21)))
     #print(get_uni_current_data('A005930'))
     #print(get_uni_day_data('A005930'))
-    print(get_uni_current_period_data('A005930', date(2020, 7, 31), date(2020, 8, 1)))
+    #print(get_uni_current_period_data('A005930', date(2020, 7, 31), date(2020, 8, 1)))
     #codes = get_all_market_code()
     #print(len(codes))
     #print(get_balance())

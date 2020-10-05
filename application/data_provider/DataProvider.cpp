@@ -185,6 +185,7 @@ void DataProvider::requestDayData(const QString &code, int countOfDays, const QD
 
 
 void DataProvider::requestMinuteData(const QString &code, const QDateTime &fromTime, const QDateTime &untilTime) {
+    qWarning() << "request minute data: " << code << " from:" << fromTime << " until:" << untilTime;
     dayDataProvider->requestMinuteData(code, fromTime, untilTime);
 }
 
@@ -439,6 +440,20 @@ QStringList DataProvider::getTtopAmountList(TodayTopSelection s) {
     opt.set_selection(s);
     stub_->GetTodayTopAmountList(&context, opt, codeList);
     QStringList list;
+    for (int i = 0; i < codeList->codelist_size(); i++)
+        list.append(QString::fromStdString(codeList->codelist(i)));
+    delete codeList;
+    return list;
+}
+
+
+QStringList DataProvider::getYesterdayUpperLimitList() {
+    ClientContext context;
+    CodeList * codeList = new CodeList;
+    Empty empty;
+    stub_->GetYesterdayUpperLimitList(&context, empty, codeList);
+    QStringList list;
+    qWarning() << "getYesterdayUpperLimitList: " << codeList->codelist_size();
     for (int i = 0; i < codeList->codelist_size(); i++)
         list.append(QString::fromStdString(codeList->codelist(i)));
     delete codeList;

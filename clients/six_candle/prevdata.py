@@ -17,8 +17,7 @@ def get_uni_data(codes, dt):
         if len(uni_c) == 1:
             _uni_data[code] = uni_c[0]
         else:
-            
-            print('cannot find unidata', code)
+            _uni_data[code] = {'highest_in_this_year': morning_client.get_highest_price_in_year(code, dt)}            
 
 
 def _get_yesterday_day_data(query_date, market_code):

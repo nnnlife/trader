@@ -28,6 +28,8 @@ MOC_DIR=generated_files
 
 # Input
 SOURCES += main.cpp \
+	   StockData.cpp \
            LensChartView.cpp 
 
-HEADERS += LensChartView.h 
+HEADERS += StockData.h \ 
+	   LensChartView.h 

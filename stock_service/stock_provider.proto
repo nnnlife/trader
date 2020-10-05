@@ -48,6 +48,7 @@ service Stock {
   rpc ClearRecentList(google.protobuf.Empty) returns (google.protobuf.Empty) {}
 
   rpc GetYesterdayTopAmountList(google.protobuf.Timestamp) returns (TopList) {}
+  rpc GetYesterdayUpperLimitList(google.protobuf.Empty) returns (CodeList) {}
 
   rpc SetTodayAmountRatioList(CodeList) returns (google.protobuf.Empty) {}
   rpc SetTodayAmountMomentumList(CodeList) returns (google.protobuf.Empty) {}
@@ -399,6 +400,7 @@ message CybosTickData {
     uint64 cum_sell_volume = 22;
     uint64 cum_buy_volume = 23;
     bool is_kospi = 24;
+    float amount_ratio = 25;
 }
 
 message CybosBidAskTickData {

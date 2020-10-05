@@ -4,8 +4,8 @@ from stock_service import stock_provider_pb2 as stock_provider
 from stock_service.trade import simulstatus
 
 
-DEFAULT_BALANCE = 10000000
-MAXIMUM_ONE_SHOT = 1000000
+DEFAULT_BALANCE = 100000000
+MAXIMUM_ONE_SHOT = 10000000
 ONE_SHOT_DIV = 3
 _balance = DEFAULT_BALANCE
 TAX_RATE = 0.0028 # tax 0.25%, trade fee: 0.015% * 2

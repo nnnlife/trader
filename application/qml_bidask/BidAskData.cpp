@@ -1,5 +1,8 @@
 #include "BidAskData.h"
 #include <QDebug>
+#include <google/protobuf/util/time_util.h>
+using google::protobuf::util::TimeUtil;
+
 
 //#define BIDASK_DEBUG
 
@@ -126,10 +129,8 @@ void BidAskData::setTick(CybosTickData *d) {
     debugTick(d);
     debugCurrentBidAsk();
 #endif
-    mTradeUnit.setData(d->current_price(), d->volume(), d->buy_or_sell());
-
-    //if (d->start_price() > 0 && mLowerViPrices.count() == 0)
-    //    setViPrices(d->start_price());
+    long msec = TimeUtil::TimestampToMilliseconds(d->tick_date());
+    mTradeUnit.setData(d->current_price(), d->volume(), d->buy_or_sell(), QDateTime::fromMSecsSinceEpoch(msec));
 
     if (!mBidAskTickReceived) {
         if (mBidSpread.count() == 0) 

@@ -70,7 +70,7 @@ def start_service(skip_ydata, run_trader, run_plugin, run_simulator):
 if __name__ == '__main__':
     multiprocessing.set_start_method('spawn')
 
-    is_skip_ydata = True # currently not seemed to collect ydata in grpc_service
+    is_skip_ydata = False # currently not seemed to collect ydata in grpc_service
     run_trader = True
     run_plugin = True
     run_simulator = False

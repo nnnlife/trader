@@ -9,12 +9,14 @@ from stock_service.preloadtype import uni_current
 from stock_service.preloadtype import code_info
 from utils import time_converter
 from utils import trade_logger
+from morning_server import message
 
 
 _last_date = None
 _market_codes = []
 _yesterday_minute_data = {}
 _yesterday_day_data = {}
+_yesterday_upper_limit_codes = []
 
 loading = False
 _request_stop = False
@@ -34,10 +36,10 @@ def _get_yesterday_min_data(query_date, market_code):
     global _yesterday_minute_data
     fail_count = 0 
     _LOGGER.info('START collect yesterday min data')
-    for progress, code in enumerate(market_code):
+    for code in market_code:
         if _request_stop:
             break
-        #print('collect yesterday minute data', f'{progress+1}/{len(market_code)}/{fail_count}', end='\r')
+
         mdata = morning_client.get_minute_data(code, query_date, query_date)
         if len(mdata) > 0:
             _yesterday_minute_data[code] = mdata
@@ -45,26 +47,40 @@ def _get_yesterday_min_data(query_date, market_code):
             fail_count += 1
 
     _LOGGER.info('DONE collect yesterday min data, fail cnt %d', fail_count)
-    #print('')
+
+
+def _get_max_price(close_price, kospi):
+    max_p = int(close_price * 1.3)
+    unit = morning_client.get_ask_bid_price_unit((message.KOSPI if kospi else message.KOSDAQ), max_p)
+    if max_p % unit > 0:
+        max_p = max_p - max_p % unit # last value cannot exceed 30%
+    return max_p
 
 
 def _get_yesterday_day_data(query_date, market_code):
     global _yesterday_day_data
     fail_count = 0
     _LOGGER.info('START collect yesterday day data')
-    for progress, code in enumerate(market_code):
+    for code in market_code:
         if _request_stop:
             break
         #print('collect yesterday day data', f'{progress+1}/{len(market_code)}/{fail_count}', end='\r')
-        data = morning_client.get_past_day_data(code, query_date, query_date)
-        if len(data) == 1:
-            data = data[0]
-            data['code'] = code
-            _yesterday_day_data[code] = data
+        before_yesterday = holidays.get_yesterday(query_date)
+        data = morning_client.get_past_day_data(code, before_yesterday, query_date)
+        if len(data) >= 1:
+            ydata = data[-1]
+            ydata['code'] = code
+            ydata_close = ydata['close_price']
+            _yesterday_day_data[code] = ydata
+
+            if len(data) >= 2:
+                byclose = data[-2]['close_price']
+                upper_limit_price = _get_max_price(byclose, is_kospi(code))
+                if ydata_close == upper_limit_price:
+                    _yesterday_upper_limit_codes.append(code)
         else:
             fail_count += 1
     _LOGGER.info('DONE collect yesterday day data, fail cnt %d', fail_count)
-    #print('')
 
 
 def start_preload(dt, skip_ydata, skip_uni):
@@ -80,6 +96,7 @@ def start_preload(dt, skip_ydata, skip_uni):
 
     _yesterday_minute_data.clear()
     _yesterday_day_data.clear()
+    _yesterday_upper_limit_codes.clear()
     yesterday = holidays.get_yesterday(dt)
     _yesterday = time_converter.datetime_to_intdate(yesterday)
 
@@ -138,6 +155,10 @@ def get_yesterday_amount(code):
     return 0
 
 
+def get_yesterday_upper_limit():
+    return _yesterday_upper_limit_codes
+
+
 def get_yesterday_year_high(code):
     if _yesterday == 0:
         return 0
@@ -157,7 +178,7 @@ def get_yesterday_year_high_datetime(code):
 
 
 if __name__ == '__main__':
-    load(datetime(2020, 6, 15, 7, 0, 0), False)
+    load(datetime(2020, 9, 28, 7, 0, 0), False)
     while loading:
         gevent.sleep(1)
     print('Done') 
@@ -167,7 +188,7 @@ if __name__ == '__main__':
     print('year high', get_yesterday_year_high(code))
     print('get_yesterday_close', get_yesterday_close(code))
     print('get_yesterday_amount', get_yesterday_amount(code))
-
+    print('get upper limit count', len(get_yesterday_upper_limit()))
 
     """
     _market_codes = morning_client.get_all_market_code()

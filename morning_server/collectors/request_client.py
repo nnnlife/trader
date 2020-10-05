@@ -7,7 +7,7 @@ from PyQt5 import QtCore
 import socket
 
 from morning_server import message, stream_readwriter
-from morning_server.collectors.cybos_api import stock_chart, stock_subscribe, bidask_subscribe, connection, stock_code, abroad_chart, investor_7254, stock_today_data
+from morning_server.collectors.cybos_api import stock_chart, stock_subscribe, bidask_subscribe, connection, stock_code, abroad_chart, investor_7254, stock_today_data, investor_7221s
 from morning_server.collectors.cybos_api import trade_util, long_manifest_6033, order, modify_order, cancel_order, order_in_queue, balance, trade_subject, world_subscribe, index_subscribe, stock_alarm, stock_uni_chart
 from configs import client_info
 
@@ -24,6 +24,7 @@ subscribe_bidask = dict()
 subscribe_subject = dict()
 subscribe_world = dict()
 subscribe_index = dict()
+subscribe_industry_invest = dict()
 
 
 def handle_request(sock, header, body):
@@ -118,6 +119,12 @@ def callback_bidask_subscribe(code, datas):
 def callback_subject_subscribe(code, datas):
     header = stream_readwriter.create_header(message.SUBSCRIBE_RESPONSE, message.MARKET_STOCK, message.SUBJECT_DATA)
     header['code'] = code + message.SUBJECT_SUFFIX
+    stream_readwriter.write(_sock, header, datas)
+
+
+def callback_industry_invest_subscribe(code, datas):
+    header = stream_readwriter.create_header(message.SUBSCRIBE_RESPONSE, message.MARKET_STOCK, message.INDUSTRY_INVEST_DATA)
+    header['code'] = code + message.INDUSTRY_INVEST_SUFFIX
     stream_readwriter.write(_sock, header, datas)
 
 
@@ -277,6 +284,13 @@ def handle_subscribe(sock, header, body):
     elif header['method'] == message.STOP_ALARM_DATA:
         if subscribe_alarm is not None:
             subscribe_alarm.stop_subscribe()
+    elif header['method'] == message.INDUSTRY_INVEST_DATA:
+        if code not in subscribe_industry_invest:
+            subscribe_industry_invest[code] = investor_7221s.IndustryInvestSubscribe(code, callback_industry_invest_subscribe)
+        subscribe_industry_invest[code].start_subscribe()
+    elif header['method'] == message.STOP_INDUSTRY_INVEST_DATA:
+        if code in subscribe_industry_invest:
+            subscribe_industry_invest[code].stop_subscribe()
 
 
 read_buf = stream_readwriter.ReadBuffer()

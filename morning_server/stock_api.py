@@ -82,6 +82,7 @@ def request_stock_uni_day_data(reader, code):
 def request_stock_today_tick_data(reader, code):
     return request_stock_today_data(reader, code, message.TODAY_TICK_DATA)
 
+
 def request_investor_data(reader, code, from_date, until_date):
     now = datetime.now().date()
     if now - from_date > timedelta(days=365):
@@ -157,6 +158,17 @@ def subscribe_world(reader, code, handler):
 def stop_subscribe_world(reader, code):
     _send_stop_subscribe(reader, code + message.WORLD_SUFFIX, message.STOP_WORLD_DATA)
     
+
+def subscribe_industry_invest(reader, code, handler):
+    header = stream_readwriter.create_header(message.SUBSCRIBE, message.MARKET_STOCK, message.INDUSTRY_INVEST_DATA)
+    body = []
+    code += message.INDUSTRY_INVEST_SUFFIX
+    reader.subscribe_write(header, body, code, handler)
+
+
+def stop_subscribe_industry_invest(reader, code, handler):
+    _send_stop_subscribe(reader, code + message.INDUSTRY_INVEST_SUFFIX, message.STOP_INDUSTRY_INVEST_DATA)
+
 
 def subscribe_index(reader, code, handler):
     header = stream_readwriter.create_header(message.SUBSCRIBE, message.MARKET_STOCK, message.INDEX_DATA)
