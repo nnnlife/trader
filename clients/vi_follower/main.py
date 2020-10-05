@@ -22,6 +22,13 @@ from configs import time_info
 db_collection = None
 
 
+def industry_invest_handler(code, data):
+    if len(data) != 1:
+        return
+    data = data[0]
+    db_collection[code].insert_one(data)
+
+
 def vi_handler(_, data):
     print('ALARM', data)
     data = data[0]
@@ -138,9 +145,11 @@ def start_vi_follower():
     kospi_index.subscribe_at_startup()
     followers.append(kospi_index)
 
+    stock_api.subscribe_alarm(morning_client.get_broadcast_receiver(), vi_handler)
+    stock_api.subscribe_industry_invest(morning_client.get_broadcast_receiver(), 'U001', industry_invest_handler)
+    stock_api.subscribe_industry_invest(morning_client.get_broadcast_receiver(), 'U201', industry_invest_handler)
     print('Start Listening...')
     slack.send_slack_message('START LISTENING')
-    stock_api.subscribe_alarm(morning_client.get_broadcast_receiver(), vi_handler)
 
     time_check_thread = gevent.spawn(check_time)
     today_bull_record_thread = gevent.spawn(today_bull_record)

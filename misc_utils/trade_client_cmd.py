@@ -64,6 +64,10 @@ def display_index_data(code, data):
     print('INDEX', code, data)
 
 
+def display_industry_invest_data(code, data):
+    print('INDUSTRY_INVEST', code, data)
+
+
 def consumer():
     global message_reader
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -281,6 +285,20 @@ def consumer():
             else:
                 code = inv_detail[1]
                 print(stock_api.request_investor_data(message_reader, code, date(2020,10,5), date(2020,10,5)))
+        elif command.startswith('indinv'):
+            inv_detail = command.split(',')
+            if len(inv_detail) != 2:
+                print('indinv,code')
+            else:
+                code = inv_detail[1]
+                stock_api.subscribe_industry_invest(message_reader, code, display_industry_invest_data)
+        elif command.startswith('stop_indinv'):
+            inv_detail = command.split(',')
+            if len(inv_detail) != 2:
+                print('stop_indinv,code')
+            else:
+                code = inv_detail[1]
+                stock_api.stop_subscribe_industry_invest(message_reader, code)
         elif command.startswith('kinvestorc'):
             invc_detail = command.split(',')
             if len(invc_detail) != 2:

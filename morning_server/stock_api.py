@@ -166,7 +166,7 @@ def subscribe_industry_invest(reader, code, handler):
     reader.subscribe_write(header, body, code, handler)
 
 
-def stop_subscribe_industry_invest(reader, code, handler):
+def stop_subscribe_industry_invest(reader, code):
     _send_stop_subscribe(reader, code + message.INDUSTRY_INVEST_SUFFIX, message.STOP_INDUSTRY_INVEST_DATA)
 
 
