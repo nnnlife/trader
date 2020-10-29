@@ -129,6 +129,8 @@ def start_vi_follower():
         print('Critical Error, No CODES')
         sys.exit(0)
 
+    codes.append('A233740') # KOSDAQ 150 leverage
+    codes.append('A251340') # KOSDAQ Inverse
     codes.extend(new_open_codes)
 
     followers = []
@@ -144,6 +146,14 @@ def start_vi_follower():
     kospi_index = stock_follower.StockFollower(morning_client.get_broadcast_receiver(), db_collection, 'U001')
     kospi_index.subscribe_at_startup()
     followers.append(kospi_index)
+
+    kospi_future_index = stock_follower.StockFollower(morning_client.get_reader(), db_collection, 'U180')
+    kospi_future_index.subscribe_at_startup()
+    followers.append(kospi_future_index)
+
+    kosdaq_future_index = stock_follower.StockFollower(morning_client.get_reader(), db_collection, 'U390')
+    kosdaq_future_index.subscribe_at_startup()
+    followers.append(kosdaq_future_index)
 
     stock_api.subscribe_alarm(morning_client.get_broadcast_receiver(), vi_handler)
     stock_api.subscribe_industry_invest(morning_client.get_broadcast_receiver(), 'U001', industry_invest_handler)

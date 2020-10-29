@@ -339,19 +339,25 @@ class StockServicer(stock_provider_pb2_grpc.StockServicer):
 
     def SetCurrentStock(self, request, context):
         global recent_search_codes
+
         if len(request.code) == 0:
             return Empty()
 
-        self.current_stock_code = request.code
+        parsed_code = preload.parse_code(request.code)
+
+        if len(parsed_code) == 0:
+            return Empty()
+
+        self.current_stock_code = parsed_code
 
         for q in self.current_stock_selection_subscribe_clients:
-            q.put_nowait(stock_provider_pb2.StockCodeQuery(code=request.code))
+            q.put_nowait(stock_provider_pb2.StockCodeQuery(code=parsed_code))
 
         if request.code not in recent_search_codes: # TODO: when code is selected in recent list then?
-            recent_search_codes.insert(0, request.code)
+            recent_search_codes.insert(0, parsed_code)
             self.send_list_changed('recent')
 
-        _LOGGER.debug('SetCurrentStock %s', request.code())
+        _LOGGER.debug('SetCurrentStock %s', parsed_code)
         return Empty()
 
     def SetCurrentDateTime(self, request ,context):

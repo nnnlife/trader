@@ -375,6 +375,11 @@ message CybosSubjectTickData {
 }
 
 
+message CybosTickDatas {
+    repeated CybosTickData tick_data = 1;
+}
+
+
 message CybosTickData {
     google.protobuf.Timestamp tick_date = 1;
     string code = 2;

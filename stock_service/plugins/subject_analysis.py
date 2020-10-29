@@ -92,7 +92,11 @@ def get_potion(code, fromp, untilp, start_price, one_step, step_count):
             break
         else:
             #print('~', until_price, (until_price - current_price) / distance)
-            potions.append((i, (until_price - current_price) / distance))
+            if distance == 0:
+                potions.append((i, 1.0))
+                break   # This is occured at 15:30
+            else:
+                potions.append((i, (until_price - current_price) / distance))
 
         current_price = until_price
     return potions
@@ -266,7 +270,6 @@ def subject_subscriber():
 
         msg.ClearField('tick_date')  
         if previous_msg == msg:
-            #print('found same', previous_msg.name, msg.name)
             continue
 
         previous_msg.CopyFrom(msg)

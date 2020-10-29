@@ -145,6 +145,21 @@ def get_corp_name(code):
     return code_info.get_corp_name(code)
 
 
+def parse_code(code):
+    if has_code_info(code):
+        return code
+    
+    return get_name_to_code(code)
+
+
+def get_name_to_code(name):
+    return code_info.get_name_to_code(name)
+
+
+def has_code_info(code):
+    return code_info.has_code_info(code)
+
+
 def get_year_high(code, dt):
     return uni_current.get_year_high(code, dt)
 

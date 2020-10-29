@@ -60,6 +60,7 @@ using stock_api::TodayTopOption;
 DataProvider::DataProvider()
 : QObject(0) {
     qRegisterMetaType<CybosTickData>("CybosTickData");
+    qRegisterMetaType<CybosTickData>("CybosTickDatas");
     qRegisterMetaType<CybosDayDatas>("CybosDayDatas");
     qRegisterMetaType<CybosBidAskTickData>("CybosBidAskTickData");
     qRegisterMetaType<CybosSubjectTickData>("CybosSubjectTickData");

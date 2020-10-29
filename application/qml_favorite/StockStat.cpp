@@ -137,7 +137,7 @@ StockInfo::StockInfo(const QString &code, const QDateTime &dt)
     m_name = DataProvider::getInstance()->getCompanyName(code);
     m_yearHigh = DataProvider::getInstance()->getYearHighInfo(code)->price();
     connect(DataProvider::getInstance(), &DataProvider::dayDataReady, this, &StockInfo::dayDataReceived);
-    DataProvider::getInstance()->requestDayData(m_code, 5, dt.addDays(-1));
+    DataProvider::getInstance()->requestDayData(m_code, 10, dt.addDays(-1));
 }
 
 
