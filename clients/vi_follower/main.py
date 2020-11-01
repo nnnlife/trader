@@ -147,11 +147,11 @@ def start_vi_follower():
     kospi_index.subscribe_at_startup()
     followers.append(kospi_index)
 
-    kospi_future_index = stock_follower.StockFollower(morning_client.get_reader(), db_collection, 'U180')
+    kospi_future_index = stock_follower.StockFollower(morning_client.get_broadcast_receiver(), db_collection, 'U180')
     kospi_future_index.subscribe_at_startup()
     followers.append(kospi_future_index)
 
-    kosdaq_future_index = stock_follower.StockFollower(morning_client.get_reader(), db_collection, 'U390')
+    kosdaq_future_index = stock_follower.StockFollower(morning_client.get_broadcast_receiver(), db_collection, 'U390')
     kosdaq_future_index.subscribe_at_startup()
     followers.append(kosdaq_future_index)
 
