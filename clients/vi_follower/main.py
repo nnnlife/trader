@@ -131,6 +131,10 @@ def start_vi_follower():
 
     codes.append('A233740') # KOSDAQ 150 leverage
     codes.append('A251340') # KOSDAQ Inverse
+    codes.append('A229200') # KOSDAQ 150
+    codes.append('A252670') # KODEX 200 inverse 2x
+    codes.append('A069500') # KODEX 200
+    codes.append('A122630') # KODEX Leverage
     codes.extend(new_open_codes)
 
     followers = []
