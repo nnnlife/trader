@@ -31,6 +31,11 @@ class StockFollower:
         subject_data = data[0]
         self.db_collection[code].insert_one(subject_data)
 
+    def index_handler(self, code, data):
+        if len(data) != 1:
+            return
+        index_data = data[0]
+        self.db_collection[code].insert_one(index_data)
 
     def subscribe_at_startup(self):
         self.started_at_startup = True
@@ -38,4 +43,5 @@ class StockFollower:
         if self.code.startswith('A'):
             stock_api.subscribe_stock_bidask(self.reader, self.code, self.ba_data_handler)
             stock_api.subscribe_stock_subject(self.reader, self.code, self.subject_handler)
-
+        elif self.code.startswith('U'):
+            stock_api.subscribe_index(self.reader, self.code, self.index_handler)
