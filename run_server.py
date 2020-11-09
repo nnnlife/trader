@@ -10,6 +10,7 @@ import gevent
 from clients.vi_follower import main
 from morning.back_data import holidays
 from clients.vi_data_validation import data_validation_only_tick as data_validation
+from clients.instantaneous_trendline import main as trend_trade
 from datetime import datetime
 from multiprocessing import Process
 import multiprocessing
@@ -23,7 +24,6 @@ vbox_on = False
 def run_subscriber():
     while True:
         print('Run subscriber Wait')
-
         time.sleep(600) # wait until virtual machine is on
         now = datetime.now()
         year, month, day = now.year, now.month, now.day
@@ -33,6 +33,10 @@ def run_subscriber():
             print('Run subscriber')
             subscribe_process = Process(target=main.start_vi_follower)
             subscribe_process.start()
+            time.sleep(60)
+            trend_process = Process(target=trend_trade.start_trade)
+            trend_process.start()
+            trend_process.join()
             subscribe_process.join()
             time.sleep(600)
             print('Done subscriber')
