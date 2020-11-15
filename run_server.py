@@ -23,7 +23,6 @@ vbox_on = False
 
 def run_subscriber():
     while True:
-        print('Run subscriber Wait')
         time.sleep(600) # wait until virtual machine is on
         now = datetime.now()
         year, month, day = now.year, now.month, now.day
@@ -33,8 +32,8 @@ def run_subscriber():
             print('Run subscriber')
             subscribe_process = Process(target=main.start_vi_follower)
             subscribe_process.start()
-            time.sleep(60)
-            trend_process = Process(target=trend_trade.start_trade)
+            time.sleep(300)
+            trend_process = Process(target=trend_trade.start_trader)
             trend_process.start()
             trend_process.join()
             subscribe_process.join()
@@ -57,9 +56,6 @@ if __name__ == '__main__':
     if len(sys.argv) > 1 and sys.argv[1] == 'vbox':
         vbox_on = True
 
-    #log_server = Process(target=logger_server.start_log_server)
-    #log_server.start()
-
     api_server = Process(target=start_server, args=(vbox_on,))
     subscriber = Process(target=run_subscriber)
 
@@ -68,4 +64,3 @@ if __name__ == '__main__':
 
     api_server.join()
     subscriber.join()
-    #log_server.join()
