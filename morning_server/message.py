@@ -42,6 +42,7 @@ CODE_TO_NAME_DATA = 'code_name_data'
 USCODE_DATA = 'uscode_data'
 INVESTOR_DATA = 'investor_data'
 INVESTOR_ACCUMULATE_DATA = 'investor_accumulate_data'
+INVESTOR_CURRENT_DATA = 'investor_current'
 
 UNI_DATA = 'uni_data'
 UNI_PERIOD_DATA = 'uni_period_data'
@@ -88,6 +89,7 @@ INDEX_SUFFIX = '_I'
 UNI_DAY_SUFFIX = '_UD'
 UNI_CURRENT_SUFFIX = '_UC'
 INDUSTRY_INVEST_SUFFIX = '_II'
+INVESTOR_CURRENT_SUFFIX = '_IC' # only for db
 
 # Period Type for abroad
 PERIOD_DAY = 'D'

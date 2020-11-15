@@ -217,7 +217,7 @@ def check_is_new_open(code, dt):
     return False
 
 
-def get_past_day_data(code, from_date, until_date, mavg=MAVG):
+def get_past_day_data(code, from_date, until_date, mavg=MAVG, verbose_warning=False):
     from_date = from_date if from_date.__class__.__name__ == 'date' else from_date.date()
     until_date = until_date if until_date.__class__.__name__ == 'date' else until_date.date()
 
@@ -230,7 +230,7 @@ def get_past_day_data(code, from_date, until_date, mavg=MAVG):
         if from_date <= data['date'].date() <= until_date:
             cut_by_date_data.append(data)
 
-    if holidays.count_of_working_days(from_date, until_date) > len(cut_by_date_data):
+    if holidays.count_of_working_days(from_date, until_date) > len(cut_by_date_data) and verbose_warning:
         print('get_past_day_data days not matched', code,
                 from_date, until_date, 'data',
                 "expected:", holidays.count_of_working_days(from_date, until_date), "actual:", len(cut_by_date_data))
@@ -245,16 +245,19 @@ def get_highest_price_all(code, from_date, until_date):
     first = until_date.replace(day=1)
     last_month = first - timedelta(days=1)
     mdata = stock_api.request_stock_month_data(get_reader(), code, last_month, last_month)
-
     from_date_number = from_date.year * 10000 + from_date.month * 100
     filtered_mdata = list(filter(lambda d: d['0'] >= from_date_number, mdata))
+
     if len(filtered_mdata) == 0:
         high_price_from_month_data = 0
     else:
         high_price_from_month_data = max([d['3'] for d in filtered_mdata])
 
     data = get_past_day_data(code, first, until_date, 0)
-    high_price_from_day_data = max([d['highest_price'] for d in data])
+    if len(data) > 0:
+        high_price_from_day_data = max([d['highest_price'] for d in data])
+    else:
+        high_price_from_day_data = 0
     return (high_price_from_day_data if high_price_from_day_data > high_price_from_month_data else high_price_from_month_data)
 
 
@@ -282,6 +285,10 @@ def get_uni_day_period_data(code, from_date, until_date):
 
 def get_uni_day_data(code):
     return _convert_uni_day_data_readable(code, stock_api.request_stock_uni_day_data(get_reader(), code))
+
+
+def get_investor_current(code):
+    return stock_api.request_stock_investor_current_data(get_reader(), code)
 
 
 def get_minute_data(code, from_date, until_date, t = 0):

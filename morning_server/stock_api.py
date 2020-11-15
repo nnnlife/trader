@@ -79,6 +79,13 @@ def request_stock_uni_day_data(reader, code):
     return reader.block_write(header, body)
 
 
+def request_stock_investor_current_data(reader, code):
+    header = stream_readwriter.create_header(message.REQUEST, message.MARKET_STOCK, message.INVESTOR_CURRENT_DATA)
+    header['code'] = code
+    body = []
+    return reader.block_write(header, body)
+
+
 def request_stock_today_tick_data(reader, code):
     return request_stock_today_data(reader, code, message.TODAY_TICK_DATA)
 
@@ -117,6 +124,8 @@ def request_stock_minute_data(reader, code, from_date, until_date):
 
 
 def subscribe_stock(reader, code, handler):
+    if '_' in code:
+        return
     header = stream_readwriter.create_header(message.SUBSCRIBE, message.MARKET_STOCK, message.STOCK_DATA)
     body = []
     reader.subscribe_write(header, body, code, handler)
@@ -127,6 +136,9 @@ def stop_subscribe_stock(reader, code):
 
 
 def subscribe_stock_bidask(reader, code, handler):
+    if '_' in code:
+        return
+
     header = stream_readwriter.create_header(message.SUBSCRIBE, message.MARKET_STOCK, message.BIDASK_DATA)
     body = []
     code += message.BIDASK_SUFFIX
@@ -138,6 +150,9 @@ def stop_subscribe_stock_bidask(reader, code):
 
 
 def subscribe_stock_subject(reader, code, handler):
+    if '_' in code:
+        return
+
     header = stream_readwriter.create_header(message.SUBSCRIBE, message.MARKET_STOCK, message.SUBJECT_DATA)
     body = []
     code += message.SUBJECT_SUFFIX
@@ -149,6 +164,9 @@ def stop_subscribe_stock_subject(reader, code):
 
 
 def subscribe_world(reader, code, handler):
+    if '_' in code:
+        return
+
     header = stream_readwriter.create_header(message.SUBSCRIBE, message.MARKET_STOCK, message.WORLD_DATA)
     body = []
     code += message.WORLD_SUFFIX
@@ -160,6 +178,9 @@ def stop_subscribe_world(reader, code):
     
 
 def subscribe_industry_invest(reader, code, handler):
+    if '_' in code:
+        return
+
     header = stream_readwriter.create_header(message.SUBSCRIBE, message.MARKET_STOCK, message.INDUSTRY_INVEST_DATA)
     body = []
     code += message.INDUSTRY_INVEST_SUFFIX
@@ -171,6 +192,9 @@ def stop_subscribe_industry_invest(reader, code):
 
 
 def subscribe_index(reader, code, handler):
+    if '_' in code:
+        return
+
     header = stream_readwriter.create_header(message.SUBSCRIBE, message.MARKET_STOCK, message.INDEX_DATA)
     body = []
     code += message.INDEX_SUFFIX
