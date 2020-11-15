@@ -32,7 +32,7 @@ def investor_current(code):
         d = {}
         d['date'] = now
         d['intdate'] = collect_date
-        d['inttime'] = colletc_time
+        d['inttime'] = collect_time
         d['code'] = obj.GetDataValue(0, i)
         d['name'] = obj.GetDataValue(1, i)
         d['current_price'] = obj.GetDataValue(2, i)
