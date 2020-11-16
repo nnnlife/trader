@@ -131,6 +131,19 @@ def subscribe_stock(reader, code, handler):
     reader.subscribe_write(header, body, code, handler)
 
 
+def subscribe_future(reader, code, handler):
+    if '_' in code:
+        return
+
+    header = stream_readwriter.create_header(message.SUBSCRIBE, message.MARKET_STOCK, message.FUTURE_DATA)
+    body = []
+    reader.subscribe_write(header, body, code, handler)
+
+
+def stop_subscribe_future(reader, code):
+    _send_stop_subscribe(reader, code, message.STOP_FUTURE_DATA)
+
+
 def stop_subscribe_stock(reader, code):
     _send_stop_subscribe(reader, code, message.STOP_STOCK_DATA)
 
@@ -222,6 +235,32 @@ def stop_subscribe_alarm(reader):
 def request_stock_code(reader, market_type):
     header = stream_readwriter.create_header(message.REQUEST, message.MARKET_STOCK, message.CODE_DATA)
     header['market_type'] = market_type
+    body = []
+    return reader.block_write(header, body)
+
+
+def request_future_code(reader):
+    header = stream_readwriter.create_header(message.REQUEST, message.MARKET_STOCK, message.FUTURE_LIST_DATA)
+    body = []
+    return reader.block_write(header, body)
+
+
+def request_future_base(reader):
+    header = stream_readwriter.create_header(message.REQUEST, message.MARKET_STOCK, message.FUTURE_BASE_LIST_DATA)
+    body = []
+    return reader.block_write(header, body)
+
+
+def request_future_code_by_base(reader, base_code):
+    header = stream_readwriter.create_header(message.REQUEST, message.MARKET_STOCK, message.FUTURE_LIST_BY_BASE_DATA)
+    header['code'] = base_code
+    body = []
+    return reader.block_write(header, body)
+
+
+def request_future_base_by_stock(reader, stock_code):
+    header = stream_readwriter.create_header(message.REQUEST, message.MARKET_STOCK, message.FUTURE_BASE_BY_CODE_DATA)
+    header['code'] = stock_code
     body = []
     return reader.block_write(header, body)
 

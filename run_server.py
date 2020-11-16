@@ -8,8 +8,8 @@ import os
 import sys
 import gevent
 from clients.vi_follower import main
+from clients.vi_follower import investor_loop
 from morning.back_data import holidays
-from clients.vi_data_validation import data_validation_only_tick as data_validation
 from clients.instantaneous_trendline import main as trend_trade
 from datetime import datetime
 from multiprocessing import Process
@@ -35,6 +35,11 @@ def run_subscriber():
             time.sleep(300)
             trend_process = Process(target=trend_trade.start_trader)
             trend_process.start()
+            time.sleep(300)
+            investor_process = Process(target=investor_loop.start_loop)
+            investor_process.start() #finish at 1500 since data stopped at 1430
+
+            investor_process.join()
             trend_process.join()
             subscribe_process.join()
             time.sleep(600)

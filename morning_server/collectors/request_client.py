@@ -7,7 +7,7 @@ from PyQt5 import QtCore
 import socket
 
 from morning_server import message, stream_readwriter
-from morning_server.collectors.cybos_api import stock_chart, stock_subscribe, bidask_subscribe, connection, stock_code, abroad_chart, investor_7254, stock_today_data, investor_7221s
+from morning_server.collectors.cybos_api import stock_chart, stock_subscribe, bidask_subscribe, connection, stock_code, abroad_chart, investor_7254, stock_today_data, investor_7221s, future_subscribe, future_code
 from morning_server.collectors.cybos_api import trade_util, long_manifest_6033, order, modify_order, cancel_order, order_in_queue, balance, trade_subject, world_subscribe, index_subscribe, stock_alarm, stock_uni_chart, investor_7210d
 from configs import client_info
 
@@ -24,6 +24,7 @@ subscribe_bidask = dict()
 subscribe_subject = dict()
 subscribe_world = dict()
 subscribe_index = dict()
+subscribe_future = dict()
 subscribe_industry_invest = dict()
 
 
@@ -69,10 +70,24 @@ def handle_request(sock, header, body):
         stream_readwriter.write(sock, header, stock_uni_chart.get_uni_week_data(header['code']))
     elif header['method'] == message.INVESTOR_CURRENT_DATA:
         stream_readwriter.write(sock, header, investor_7210d.investor_current(header['code']))
+    elif header['method'] == message.FUTURE_LIST_DATA:
+        stream_readwriter.write(sock, header, future_code.get_future_code_list())
+    elif header['method'] == message.FUTURE_BASE_LIST_DATA:
+        stream_readwriter.write(sock, header, future_code.get_future_base_list())
+    elif header['method'] == message.FUTURE_LIST_BY_BASE_DATA:
+        stream_readwriter.write(sock, header, future_code.get_future_code_list_by_base(header['code']))
+    elif header['method'] == message.FUTURE_BASE_BY_CODE_DATA:
+        stream_readwriter.write(sock, header, future_code.get_future_base_by_code(header['code']))
 
 
 def callback_stock_subscribe(code, datas):
     header = stream_readwriter.create_header(message.SUBSCRIBE_RESPONSE, message.MARKET_STOCK, message.STOCK_DATA)
+    header['code'] = code
+    stream_readwriter.write(_sock, header, datas)
+
+
+def callback_future_subscribe(code, datas):
+    header = stream_readwriter.create_header(message.SUBSCRIBE_RESPONSE, message.MARKET_STOCK, message.FUTURE_DATA)
     header['code'] = code
     stream_readwriter.write(_sock, header, datas)
 
@@ -245,6 +260,12 @@ def handle_subscribe(sock, header, body):
         if code not in subscribe_stock:
             subscribe_stock[code] = stock_subscribe.StockSubscribe(code, callback_stock_subscribe)
         subscribe_stock[code].start_subscribe()
+    elif header['method'] == message.FUTURE_DATA:
+        if code not in subscribe_future:
+            subscribe_future = future_subscribe.FutureSubscribe(code, callback_future_subscribe)
+    elif header['method'] == message.STOP_FUTURE_DATA:
+        if code in subscribe_future:
+            subscribe_future[code].stop_subscribe()
     elif header['method'] == message.STOP_STOCK_DATA:
         if code in subscribe_stock:
             subscribe_stock[code].stop_subscribe()
