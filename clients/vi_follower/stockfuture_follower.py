@@ -6,7 +6,7 @@ from datetime import datetime
 
 import gevent
 
-class FutureFollower:
+class StockFutureFollower:
     def __init__(self, reader, db_col, code):
         self.reader = reader
         self.code = code

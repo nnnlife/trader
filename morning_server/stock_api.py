@@ -131,17 +131,17 @@ def subscribe_stock(reader, code, handler):
     reader.subscribe_write(header, body, code, handler)
 
 
-def subscribe_future(reader, code, handler):
+def subscribe_stockfuture(reader, code, handler):
     if '_' in code:
         return
 
-    header = stream_readwriter.create_header(message.SUBSCRIBE, message.MARKET_STOCK, message.FUTURE_DATA)
+    header = stream_readwriter.create_header(message.SUBSCRIBE, message.MARKET_STOCK, message.STOCKFUTURE_DATA)
     body = []
     reader.subscribe_write(header, body, code, handler)
 
 
-def stop_subscribe_future(reader, code):
-    _send_stop_subscribe(reader, code, message.STOP_FUTURE_DATA)
+def stop_subscribe_stockfuture(reader, code):
+    _send_stop_subscribe(reader, code, message.STOP_STOCKFUTURE_DATA)
 
 
 def stop_subscribe_stock(reader, code):
@@ -239,27 +239,27 @@ def request_stock_code(reader, market_type):
     return reader.block_write(header, body)
 
 
-def request_future_code(reader):
-    header = stream_readwriter.create_header(message.REQUEST, message.MARKET_STOCK, message.FUTURE_LIST_DATA)
+def request_stockfuture_code(reader):
+    header = stream_readwriter.create_header(message.REQUEST, message.MARKET_STOCK, message.STOCKFUTURE_LIST_DATA)
     body = []
     return reader.block_write(header, body)
 
 
-def request_future_base(reader):
-    header = stream_readwriter.create_header(message.REQUEST, message.MARKET_STOCK, message.FUTURE_BASE_LIST_DATA)
+def request_stockfuture_base(reader):
+    header = stream_readwriter.create_header(message.REQUEST, message.MARKET_STOCK, message.STOCKFUTURE_BASE_LIST_DATA)
     body = []
     return reader.block_write(header, body)
 
 
-def request_future_code_by_base(reader, base_code):
-    header = stream_readwriter.create_header(message.REQUEST, message.MARKET_STOCK, message.FUTURE_LIST_BY_BASE_DATA)
+def request_stockfuture_code_by_base(reader, base_code):
+    header = stream_readwriter.create_header(message.REQUEST, message.MARKET_STOCK, message.STOCKFUTURE_LIST_BY_BASE_DATA)
     header['code'] = base_code
     body = []
     return reader.block_write(header, body)
 
 
-def request_future_base_by_stock(reader, stock_code):
-    header = stream_readwriter.create_header(message.REQUEST, message.MARKET_STOCK, message.FUTURE_BASE_BY_CODE_DATA)
+def request_stockfuture_base_by_stock(reader, stock_code):
+    header = stream_readwriter.create_header(message.REQUEST, message.MARKET_STOCK, message.STOCKFUTURE_BASE_BY_CODE_DATA)
     header['code'] = stock_code
     body = []
     return reader.block_write(header, body)

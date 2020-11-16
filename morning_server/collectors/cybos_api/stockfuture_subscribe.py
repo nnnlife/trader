@@ -15,7 +15,7 @@ class _CpEvent:
         self.callback(self.code, [d])
 
 
-class _FutureRealtime:
+class _StockFutureRealtime:
     def __init__(self, code, callback):
         self.obj = win32com.client.gencache.EnsureDispatch('CpSysDib.FutStockCurS')
         self.handler = win32com.client.WithEvents(self.obj, _CpEvent)
@@ -29,11 +29,11 @@ class _FutureRealtime:
         self.obj.Unsubscribe()
 
 
-class FutureSubscribe:
+class StockFutureSubscribe:
     def __init__(self, code, callback):
         self.started = False
         self.code = code
-        self.future_realtime = _FutureRealtime(code, callback)
+        self.future_realtime = _StockFutureRealtime(code, callback)
 
     def start_subscribe(self):
         if not self.started:
