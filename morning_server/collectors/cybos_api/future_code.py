@@ -8,7 +8,7 @@ def get_future_code_list():
 
 def get_future_base_list():
     obj = win32com.client.gencache.EnsureDispatch("CpUtil.CpCodeMgr")
-    return obj.GetFutureBaseList()
+    return obj.GetStockFutureBaseList()
 
 
 def get_future_code_list_by_base(base_code):
