@@ -262,7 +262,7 @@ def handle_subscribe(sock, header, body):
         subscribe_stock[code].start_subscribe()
     elif header['method'] == message.STOCKFUTURE_DATA:
         if code not in subscribe_stockfuture:
-            subscribe_stockfuture = stockfuture_subscribe.StockFutureSubscribe(code, callback_stockfuture_subscribe)
+            subscribe_stockfuture[code] = stockfuture_subscribe.StockFutureSubscribe(code, callback_stockfuture_subscribe)
     elif header['method'] == message.STOP_STOCKFUTURE_DATA:
         if code in subscribe_stockfuture:
             subscribe_stockfuture[code].stop_subscribe()
