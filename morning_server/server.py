@@ -146,7 +146,7 @@ def handle_subscribe(sock, header, body):
                     message.STOP_WORLD_DATA,
                     message.STOP_INDEX_DATA,
                     message.STOP_SUBJECT_DATA,
-                    message.STOP_FUTURE_DATA,
+                    message.STOP_STOCKFUTURE_DATA,
                     message.STOP_INDUSTRY_INVEST_DATA]
     if header['method'] in stop_methods:
         client_manager.disconnect_to_subscribe(code, sock, header, body)
