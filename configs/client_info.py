@@ -41,7 +41,7 @@ def get_client_name():
     return _get_client_info()['client_name']
 
 def get_kiwoom_account():
-    if 'kiwwom_account' in _get_client_info():
+    if 'kiwoom_account' in _get_client_info():
         return _get_client_info()['kiwoom_account']
     return ''
 
