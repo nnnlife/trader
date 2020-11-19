@@ -32,6 +32,9 @@ def producer():
         q.put(line)
 
 
+def display_trade_result(result):
+    print('TRADE', result)
+
 
 def display_stockfuture(code, data):
     print('STOCKFUTURE', code, data)
@@ -51,45 +54,50 @@ def consumer():
     subscribe_reader = stream_readwriter.MessageReader(subscribe_sock)
     subscribe_reader.start()
 
+    stock_api.subscribe_trade(message_reader, display_trade_result, message.KIWOOM)
+
     while True:
         val = q.get(True)
         #command = val.decode('ascii').rstrip()
         command = val.strip()
         #print(command)
 
-        if command == 'sfuture_code_list':
-            result = stock_api.request_stockfuture_code(message_reader)
-            for r in result:
-                print(r)
-        elif command == 'sfuture_base_list':
-            print(stock_api.request_stockfuture_base(message_reader))
-        elif command.startswith('sfuture_code_by_base'):
-            code_detail = command.split(',')
-            if len(code_detail) != 2:
-                print('sfuture_code_by_base,code')
+        if command == 'balance':
+            print(stock_api.get_balance(message_reader, message.KIWOOM))
+        elif command == 'get_long':
+            print(stock_api.request_long_list(message_reader, message.KIWOOM))
+        elif command.startswith('buy') or command.startswith('sell'):
+            buy_detail = command.split(',')
+            if len(buy_detail) != 4:
+                print('buy|sell,code,price,quantity')
             else:
-                result = stock_api.request_stockfuture_code_by_base(message_reader, code_detail[1])
+                is_buy = buy_detail[0] == 'buy'
+                code = buy_detail[1]
+                price = int(buy_detail[2])
+                quantity = int(buy_detail[3])
+                result = stock_api.kiwoom_order_stock(message_reader, code, price, quantity, is_buy)
                 print(result)
-        elif command.startswith('sfuture_base_by_stock'):
-            code_detail = command.split(',')
-            if len(code_detail) != 2:
-                print('sfuture_base_by_stock,code')
+        elif command.startswith('modify'):
+            modify_detail = command.split(',')
+            if len(modify_detail) != 5:
+                print('modify,order_num,code,price,quantity')
             else:
-                result = stock_api.request_stockfuture_base_by_stock(message_reader, code_detail[1])
+                order_num = modify_detail[1]
+                code = modify_detail[2]
+                price = int(modify_detail[3])
+                qty = int(modify_detail[4])
+                result = stock_api.kiwoom_modify_order(message_reader, order_num, code, price, qty, False)
                 print(result)
-        elif command.startswith('subscribe_stockfuture'):
-            code_detail = command.split(',')
-            if len(code_detail) != 2:
-                print('subscribe_stockfuture,code')
+        elif command.startswith('cancel'):
+            cancel_detail = command.split(',')
+            if len(cancel_detail) != 4:
+                print('cancel,order_num,code,price')
             else:
-                stock_api.subscribe_stockfuture(subscribe_reader, code_detail[1], display_stockfuture)
-        elif command.startswith('stop_stockfuture'):
-            code_detail = command.split(',')
-            if len(code_detail) != 2:
-                print('stop_stockfuture,code')
-            else:
-                stock_api.stop_subscribe_stockfuture(subscribe_reader, code_detail[1])
-
+                order_num = cancel_detail[1]
+                code = cancel_detail[2]
+                price = int(cancel_detail[3])
+                result = stock_api.kiwoom_cancel_order(message_reader, order_num, code, price, True)
+                print(result)
 
 def main():
     greenlets = [

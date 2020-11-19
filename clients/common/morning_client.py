@@ -307,16 +307,16 @@ def get_today_minute_data(code):
     return _convert_min_data_readable(code, minute_data)
 
 
-def get_balance(): # return amount  {'balance': 1543974}
-    result = stock_api.get_balance(get_trade_reader())
+def get_balance(vendor=message.CYBOS): # return amount  {'balance': 1543974}
+    result = stock_api.get_balance(get_trade_reader(), vendor)
     if 'balance' in result:
         return result['balance']
     
     return 0
 
 
-def get_long_list():
-    return stock_api.request_long_list(get_trade_reader())
+def get_long_list(vendor=message.CYBOS):
+    return stock_api.request_long_list(get_trade_reader(), vendor)
 
 
 def get_yesterday_top_amount(dt):

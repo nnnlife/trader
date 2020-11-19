@@ -279,8 +279,8 @@ def request_us_stock_code(reader, us_type):
     return reader.block_write(header, body)
 
 
-def request_long_list(reader):
-    header = stream_readwriter.create_header(message.REQUEST_TRADE, message.MARKET_STOCK, message.GET_LONG_LIST)
+def request_long_list(reader, vendor=message.CYBOS):
+    header = stream_readwriter.create_header(message.REQUEST_TRADE, message.MARKET_STOCK, message.GET_LONG_LIST, vendor)
     body = []
     return reader.block_write(header, body)
 
@@ -302,14 +302,24 @@ def order_stock(reader, code, price, quantity, is_buy):
     return reader.block_write(header, body)
 
 
-def subscribe_trade(reader, handler):
-    header = stream_readwriter.create_header(message.TRADE_SUBSCRIBE, message.MARKET_STOCK, message.TRADE_DATA)
+def kiwoom_order_stock(reader, code, price, quantity, is_buy):
+    header = stream_readwriter.create_header(message.REQUEST_TRADE, message.MARKET_STOCK, message.ORDER_STOCK, message.KIWOOM)
+    header['code'] = code
+    header['price'] = price
+    header['quantity'] = quantity
+    header['trade_type'] = message.ORDER_BUY if is_buy else message.ORDER_SELL
+    body = []
+    return reader.block_write(header, body)
+
+
+def subscribe_trade(reader, handler, vendor=message.CYBOS):
+    header = stream_readwriter.create_header(message.TRADE_SUBSCRIBE, message.MARKET_STOCK, message.TRADE_DATA, vendor)
     body = []
     reader.subscribe_trade_write(header, body, handler)
 
 
-def stop_subscribe_trade(reader):
-    header = stream_readwriter.create_header(message.TRADE_SUBSCRIBE, message.MARKET_STOCK, message.STOP_TRADE_DATA)
+def stop_subscribe_trade(reader, vendor=message.CYBOS):
+    header = stream_readwriter.create_header(message.TRADE_SUBSCRIBE, message.MARKET_STOCK, message.STOP_TRADE_DATA, vendor)
     body = []
     reader.stop_subscribe_trade_write(header, body)
 
@@ -323,11 +333,32 @@ def modify_order(reader, order_num: int, code, price):
     return reader.block_write(header, body)
 
 
+def kiwoom_modify_order(reader, order_num: str, code, price, quantity, is_buy):
+    header = stream_readwriter.create_header(message.REQUEST_TRADE, message.MARKET_STOCK, message.MODIFY_ORDER, message.KIWOOM)
+    header['code'] = code
+    header['order_number'] = order_num
+    header['price'] = price
+    header['quantity'] = quantity
+    header['trade_type'] = message.ORDER_BUY if is_buy else message.ORDER_SELL
+    body = []
+    return reader.block_write(header, body)
+
+
 def cancel_order(reader, order_num: int, code, amount): # quantity
     header = stream_readwriter.create_header(message.REQUEST_TRADE, message.MARKET_STOCK, message.CANCEL_ORDER)
     header['code'] = code
     header['order_number'] = order_num
     header['amount'] = amount
+    body = []
+    return reader.block_write(header, body)
+
+
+def kiwoom_cancel_order(reader, order_num: str, code, price, is_buy):
+    header = stream_readwriter.create_header(message.REQUEST_TRADE, message.MARKET_STOCK, message.CANCEL_ORDER, message.KIWOOM)
+    header['code'] = code
+    header['order_number'] = order_num
+    header['price'] = price
+    header['trade_type'] = message.ORDER_BUY if is_buy else message.ORDER_SELL
     body = []
     return reader.block_write(header, body)
 
@@ -338,8 +369,8 @@ def request_order_in_queue(reader):
     return reader.block_write(header, body)
 
 
-def get_balance(reader):
-    header = stream_readwriter.create_header(message.REQUEST_TRADE, message.MARKET_STOCK, message.BALANCE)
+def get_balance(reader, vendor=message.CYBOS):
+    header = stream_readwriter.create_header(message.REQUEST_TRADE, message.MARKET_STOCK, message.BALANCE, vendor)
     body = []
     return reader.block_write(header, body)
 

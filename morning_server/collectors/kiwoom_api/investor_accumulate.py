@@ -1,9 +1,8 @@
 from utils import time_converter
-
 from morning_server.collectors.kiwoom_api import base_api
 
 
-def request(ax_obj, msg_id, code, from_date, until_date, amount_by_volume=True):
+def request(ax_obj, rqname, msg_id, code, from_date, until_date, amount_by_volume=True):
     if code.startswith('A'):
         code = code[1:]
     base_api.set_input_value(ax_obj, '종목코드', code)
@@ -20,7 +19,7 @@ def request(ax_obj, msg_id, code, from_date, until_date, amount_by_volume=True):
     # unit: '1000': divide by 1000, '1': no divider
     base_api.set_input_value(ax_obj, '단위구분', '1')
 
-    base_api.comm_rq_data(ax_obj, msg_id, 'opt10061')
+    base_api.comm_rq_data(ax_obj, rqname, 'opt10061', msg_id)
 
 
 def get_data(ax_obj, rqname, trcode):

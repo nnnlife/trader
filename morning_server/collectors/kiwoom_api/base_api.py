@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-import gevent
+import time
 
 
 last_time_request = None
@@ -24,11 +24,12 @@ def set_input_value(ax_obj, vname, value):
     ax_obj.dynamicCall('SetInputValue(QString, QString)', vname, value)
 
 
-def comm_rq_data(ax_obj, rqname, trcode, is_next = False):
+def comm_rq_data(ax_obj, rqname, trcode, msg_id, is_next = False):
     while rq_remain_time() > 0.:
-        gevent.sleep(0.1)
+        time.sleep(0.1)
 
-    ax_obj.dynamicCall('CommRqData(QString, QString, int, QString)', rqname, trcode, (0 if not is_next else 2), '0')
+    print('rqname', rqname, 'trcode', trcode, 'msg_id', msg_id)
+    ax_obj.dynamicCall('CommRqData(QString, QString, int, QString)', rqname, trcode, (0 if not is_next else 2), msg_id)
 
 
 def comm_get_data(ax_obj, rqname, trcode, i, vname):
@@ -36,6 +37,4 @@ def comm_get_data(ax_obj, rqname, trcode, i, vname):
 
 
 if __name__ == '__main__':
-    for i in range(100):
-        print('remain time', rq_remain_time())
-        gevent.sleep(0.1)
+    pass

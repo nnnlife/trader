@@ -7,7 +7,6 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), *(['.
 import gevent
 from clients.scalping_by_amount.mock import datetime
 from clients.scalping_by_amount import tick_analysis
-from clients.scalping_by_amount import time
 from datetime import timedelta
 import pandas as pd
 

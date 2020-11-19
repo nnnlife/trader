@@ -77,6 +77,7 @@ class ClientManager:
             self.trade_subscribe_sockets[v] = []
 
     def _send_stop_msg(self, collector_sock, code):
+        #TODO: no methods for STOP_STOCKFUTURE_DATA, because no suffix currently
         stop_methods = {message.STOCK_ALARM_CODE: message.STOP_ALARM_DATA,
                         message.BIDASK_SUFFIX: message.STOP_BIDASK_DATA,
                         message.SUBJECT_SUFFIX: message.STOP_SUBJECT_DATA,
@@ -254,7 +255,8 @@ class ClientManager:
                 logger.info('ADD NEW SUBSCRIBE %s', code)
                 stream_write(collector.sock, header, body, self)
 
-    def connect_to_trade_subscribe(self, sock, header, body, vendor=message.CYBOS):
+    def connect_to_trade_subscribe(self, sock, header, body):
+        vendor = header['vendor']
         collector = self.get_trade_subscribe_collector(vendor)
         if collector is None:
             logger.error('NO TRADE Subscribe collector %s', vendor)
@@ -298,7 +300,8 @@ class ClientManager:
         for s in self.code_subscribe_info[code][1]:
             stream_write(s, header, body, self)
 
-    def broadcast_trade_data(self, header, body, vendor=message.CYBOS):
+    def broadcast_trade_data(self, header, body):
+        vendor = header['vendor']
         for s in self.trade_subscribe_sockets[vendor]:
             stream_write(s, header, body, self)
 
@@ -326,11 +329,12 @@ class ClientManager:
         stream_write(collector.request_socket(), header, body, self)
 
     def handle_trade_block_request(self, sock, header, body):
-        collector = self.get_available_trade_collector()
+        collector = self.get_available_trade_collector(header['vendor'])
         if collector is None:
             logger.critical('Cannot find collector(trade) %s', header)
             return
         collector.set_request(sock, header['_id'], True)
+        # TODO: same with block, need to return some value to prevent block on client side
         stream_write(collector.sock, header, body, self)
 
     def handle_trade_block_response(self, header, body):

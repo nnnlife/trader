@@ -21,7 +21,6 @@ def get_period_data(code, period_type, count):
 
     chart_obj.SetInputValue(3, count)
     chart_obj.BlockRequest()
-    print('Abroad data len', code, chart_obj.GetHeaderValue(3))
 
     data_len = chart_obj.GetHeaderValue(3)
     for i in range(data_len):

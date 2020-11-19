@@ -51,6 +51,9 @@ def handle_collector(sock, header, body):
         slack.send_slack_message('Unknown Collector connected ')
 
     client_manager.add_client(sock, header, body)
+    if 'vendor' in header and header['vendor'] == 'kiwoom':
+        return
+
     if body['capability'] == message.CAPABILITY_TRADE or body['capability'] == message.CAPABILITY_REQUEST_RESPONSE:
         gevent.sleep(1)
         logger.info('SEND TEST PACKET to %s', body['name'])

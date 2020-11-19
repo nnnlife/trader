@@ -70,9 +70,13 @@ def convert_to_three_min(code, min_data):
 
 
 def test_three_min():
-    ydata = morning_client.get_minute_data('A005930', datetime(2020, 8, 12, 0, 0, 0), datetime(2020, 8, 12, 23, 0, 0))
-    convert_min, _ = convert_to_three_min(ydata)
+    code = 'U390'
+    ydata = morning_client.get_minute_data(code, datetime(2020, 10, 30, 0, 0, 0), datetime(2020, 10, 30, 23, 0, 0))
+    convert_min, _ = convert_to_three_min(code, ydata)
     for cm in convert_min:
         print(cm)
 
 
+
+if __name__ == '__main__':
+    test_three_min()

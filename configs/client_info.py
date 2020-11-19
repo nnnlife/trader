@@ -28,6 +28,7 @@ def _get_client_info():
             _client_info['mongo_password'] = ''
             _client_info['server_ip'] = 'localhost'
             _client_info['collector_count'] = 0
+            _client_info['kiwoom_account'] = ''
     return _client_info
 
 
@@ -38,6 +39,11 @@ def add_client_name_suffix(suffix):
 
 def get_client_name():
     return _get_client_info()['client_name']
+
+def get_kiwoom_account():
+    if 'kiwwom_account' in _get_client_info():
+        return _get_client_info()['kiwoom_account']
+    return ''
 
 def get_client_password():
     return _get_client_info()['password']
