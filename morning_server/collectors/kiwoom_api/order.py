@@ -83,8 +83,8 @@ def encode_msg(ax_obj, fid_list):
     order_msg['flag'] = status_dict[data['주문상태']]
     order_msg['code'] = data['코드'] 
     order_msg['order_number'] = data['주문번호']
-    order_msg['quantity'] = convert_to_int(data['단위체결가'])
-    order_msg['price'] = convert_to_int(data['단위체결량'])
+    order_msg['price'] = convert_to_int(data['단위체결가'])
+    order_msg['quantity'] = convert_to_int(data['단위체결량'])
     order_msg['order_type'] = data['매수구분'] 
     order_msg['total_quantity'] = convert_to_int(data['체결량'])
 
