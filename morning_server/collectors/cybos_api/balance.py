@@ -11,9 +11,8 @@ def get_balance(account_num, account_type):
     acc_obj = win32com.client.gencache.EnsureDispatch('CpTrade.CpTdNew5331A')
     acc_obj.SetInputValue(0, account_num)
     acc_obj.SetInputValue(1, account_type)
-    acc_obj.SetInputValue(5, 'Y')
     acc_obj.BlockRequest()
-    return acc_obj.GetHeaderValue(10)
+    return acc_obj.GetHeaderValue(9) # 증거금 100%
 
 
 if __name__ == '__main__':
