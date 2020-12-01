@@ -1,11 +1,19 @@
 import win32com.client
 
-def get_balance(account_num, account_type):
+def get_balance_old(account_num, account_type):
     acc_obj = win32com.client.gencache.EnsureDispatch('CpTrade.CpTdNew5331A')
     acc_obj.SetInputValue(0, account_num)
     acc_obj.SetInputValue(1, account_type)
     acc_obj.BlockRequest()
     return acc_obj.GetHeaderValue(47)
+
+def get_balance(account_num, account_type):
+    acc_obj = win32com.client.gencache.EnsureDispatch('CpTrade.CpTdNew5331A')
+    acc_obj.SetInputValue(0, account_num)
+    acc_obj.SetInputValue(1, account_type)
+    acc_obj.SetInputValue(5, 'Y')
+    acc_obj.BlockRequest()
+    return acc_obj.GetHeaderValue(10)
 
 
 if __name__ == '__main__':
