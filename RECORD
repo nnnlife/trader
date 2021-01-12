@@ -36,3 +36,5 @@
 * 2020/08/31 - 1시 10분 error발생 HEADER ID ERROR 후 ewouldblock 그리고 reset, collection 에 보낸 데이터가 없는데, hhhlife col1 이 메시지 받음
 * 2020/09/01 - 9시 1분 error 발생, 9:30 분부터 복구
 * 2020/11/04 - Index 처리 실수로 9시부터 약 30분간 데이터 없음 
+* 2020/12/29 - vvvlife col0 disconnected 됨
+* 2021/01/04 - 연결 끊어짐, 장 시작 시간 10시부터인데, investor loop 및 follower 재시작 이유는? -> 2021 년 휴일 지정이 되지 않아, yesterday 가 1월 1일로 설정되어 no codes 에러

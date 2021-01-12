@@ -87,4 +87,4 @@ def get_working_days(from_date, until_date):
 
 if __name__ == '__main__':
     from datetime import datetime
-    print('08-17', is_holidays(datetime(2020, 8, 17)))
+    print('2021-01-01', is_holidays(datetime(2021, 1, 1)))
