@@ -1,0 +1,5 @@
+code name cp prof "b status" "b method" "target p" "b qty" "b not complete qty" "s status" "s method" "target p" "s qty" "s complete qty" "cut p" time last_update_time
+
+
+final (15)
+0. code 1. name 2 buy/sell 3. current 4. hold_price 5. hold_profit 6. flag(status) 7. method 8. price 9. quantity 10. traded_price 11. traded_quantity 12. actions 13. order_num 14. last_update

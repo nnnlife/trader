@@ -1,0 +1,436 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+
+package stock_api;
+
+
+service Stock {
+  rpc SayHello(google.protobuf.Empty) returns (google.protobuf.Empty) {}
+
+  rpc GetDayData(StockQuery) returns (CybosDayDatas) {}
+  rpc GetMinuteData(StockQuery) returns (CybosDayDatas) {}
+  rpc GetTodayMinuteData(StockCodeQuery) returns (CybosDayDatas) {}
+  rpc GetPastMinuteData(PastMinuteQuery) returns (CybosDayDatas) {}
+  rpc GetSubscribeCodes(google.protobuf.Empty) returns (CodeList) {}
+
+  rpc GetBalance(google.protobuf.Empty) returns (Balance) {}
+  rpc OrderStock(OrderMsg) returns (CybosOrderReturn) {}
+  rpc ChangeOrder(OrderMsg) returns (CybosOrderReturn) {}
+  rpc CancelOrder(OrderMsg) returns (CybosOrderReturn) {}
+  rpc GetYearHigh(StockCodeQuery) returns (YearHighInfo) {}
+
+  rpc RequestCybosTickData(StockCodeQuery) returns (google.protobuf.Empty) {}
+  rpc RequestCybosBidAsk(StockCodeQuery) returns (google.protobuf.Empty) {}
+  rpc RequestCybosSubject(StockCodeQuery) returns (google.protobuf.Empty) {}
+  rpc RequestCybosAlarm(google.protobuf.Empty) returns (google.protobuf.Empty) {}
+
+  rpc RequestToTrader(TradeMsg) returns (google.protobuf.Empty) {}
+  rpc RequestCybosTradeResult(google.protobuf.Empty) returns (google.protobuf.Empty) {}
+  rpc ReportOrderResult(OrderResult) returns (google.protobuf.Empty) {}
+
+  rpc IsKospi(StockCodeQuery) returns (Bool) {}
+  rpc SetViPriceInfo(ViPriceInfo) returns (google.protobuf.Empty) {}
+  rpc GetViPrice(StockCodeQuery) returns (Prices) {}
+
+  rpc ListenTraderMsg(google.protobuf.Empty) returns (stream TradeMsg) {}
+  rpc ListenCybosOrderResult(google.protobuf.Empty) returns (stream CybosOrderResult) {}
+  rpc ListenOrderResult(google.protobuf.Empty) returns (stream OrderResult) {}
+
+  rpc SetCurrentStock(StockCodeQuery) returns (google.protobuf.Empty) {}
+  rpc SetCurrentDateTime(google.protobuf.Timestamp) returns (google.protobuf.Empty) {}
+  rpc GetCompanyName(StockCodeQuery) returns (CompanyName) {}
+
+  rpc GetFavoriteList(google.protobuf.Empty) returns (CodeList) {}
+  rpc AddFavorite(StockCodeQuery) returns (google.protobuf.Empty) {}
+  rpc RemoveFavorite(StockCodeQuery) returns (google.protobuf.Empty) {}
+  rpc ClearRecentList(google.protobuf.Empty) returns (google.protobuf.Empty) {}
+
+  rpc GetYesterdayTopAmountList(google.protobuf.Timestamp) returns (TopList) {}
+  rpc GetYesterdayUpperLimitList(google.protobuf.Empty) returns (CodeList) {}
+
+  rpc SetTodayAmountRatioList(CodeList) returns (google.protobuf.Empty) {}
+  rpc SetTodayAmountMomentumList(CodeList) returns (google.protobuf.Empty) {}
+  rpc SetTodayAmountTopList(CodeList) returns (google.protobuf.Empty) {}
+
+  rpc GetBrokerSummary(StockCodeQuery) returns (BrokerSummary) {}
+  rpc SetBrokerSummary(BrokerSummary) returns (google.protobuf.Empty) {}
+
+  rpc AddBrokerMinuteTick(BrokerMinuteTick) returns (google.protobuf.Empty) {}
+  rpc GetBrokerMinuteTick(StockCodeQuery) returns (BrokerMinuteTickList) {}
+
+  rpc GetTodayTopAmountList(TodayTopOption) returns (CodeList) {}
+  rpc GetRecentSearch(google.protobuf.Empty) returns (CodeList) {}
+  rpc GetViList(google.protobuf.Empty) returns (CodeList) {}
+
+  rpc GetStrategyList(google.protobuf.Empty) returns (CodeList) {}
+  rpc SetStrategyList(CodeList) returns (google.protobuf.Empty) {}
+
+  rpc ListenCurrentStock(google.protobuf.Empty) returns (stream StockCodeQuery) {}
+  rpc ListenListChanged(google.protobuf.Empty) returns (stream ListType) {}
+  rpc ListenBrokerSummary(google.protobuf.Empty) returns (stream BrokerSummary) {}
+
+  rpc ListenBrokerMinuteTick(google.protobuf.Empty) returns (stream BrokerMinuteTick) {}
+
+  rpc ListenCybosTickData(google.protobuf.Empty) returns (stream CybosTickData) {}
+  rpc ListenCybosBidAsk(google.protobuf.Empty) returns (stream CybosBidAskTickData) {}
+  rpc ListenCurrentTime(google.protobuf.Empty) returns (stream google.protobuf.Timestamp) {}
+  rpc ListenCybosSubject(google.protobuf.Empty) returns (stream CybosSubjectTickData) {}
+  rpc ListenCybosAlarm(google.protobuf.Empty) returns (stream CybosStockAlarm) {}
+
+  // Simulation RPCs
+  rpc ListenSimulationStatusChanged(google.protobuf.Empty) returns (stream SimulationStatus) {}
+
+  rpc SimulationData(stream SimulationMsg) returns (stream google.protobuf.Empty) {}
+
+  rpc ListenSimulationOperation(google.protobuf.Empty) returns (stream SimulationOperation) {}
+
+  rpc StartSimulation(SimulationOperation) returns (Bool) {}
+  rpc StopSimulation(google.protobuf.Empty) returns (google.protobuf.Empty) {}
+
+  rpc SetSimulationStatus(SimulationStatus) returns (google.protobuf.Empty) {}
+  rpc GetSimulationStatus(google.protobuf.Empty) returns (SimulationStatus) {}
+}
+
+
+message StockCodeQuery {
+    string code = 1;
+}
+
+
+message CodeList {
+    repeated string codelist = 1;
+}
+
+
+message ViPriceInfo {
+    string code = 1;
+    repeated int32 price = 2;
+}
+
+
+message Prices {
+    repeated int32 price = 1;
+}
+
+
+message Bool {
+    bool ret = 1;
+}
+
+
+message BrokerLog {
+    float from_price = 1;
+    float until_price = 2;
+    int64 buy_volume = 3;
+    int64 sell_volume = 4;
+    int64 buy_volume_domestic = 5;
+    int64 buy_volume_foreign = 6;
+    int64 sell_volume_domestic = 7;
+    int64 sell_volume_foreign = 8;
+    map<string, int64> buy_broker = 9;
+    map<string, int64> sell_broker = 10;
+}
+
+
+message BrokerSummary {
+    string code = 1;
+    int64 foreigner_total = 2;
+    repeated BrokerLog broker_log = 3;
+    int64 max_volume = 4;
+}
+
+
+message BrokerStat {
+    int64 buy_volume = 1;
+    int64 sell_volume = 2;
+}
+
+
+message BrokerMinuteTickList {
+    string code = 1;
+    repeated BrokerMinuteTick minute_tick = 2;
+}
+
+
+message BrokerMinuteTick {
+    string code = 1;
+    google.protobuf.Timestamp from_datetime = 2;
+    google.protobuf.Timestamp until_datetime = 3;
+    map<string, BrokerStat> brokers_map = 4;
+}
+
+
+message YearHighInfo {
+    int32 price = 1;
+    google.protobuf.Timestamp high_date = 2; 
+    int32 days_distance = 3;
+}
+
+
+enum SimulationMsgType {
+    MSG_TICK = 0;
+    MSG_BIDASK = 1;
+    MSG_SUBJECT = 2;
+    MSG_ALARM = 3;
+}
+
+
+message SimulationMsg {
+    SimulationMsgType msgtype = 1;
+    CybosTickData tick = 2;
+    CybosBidAskTickData bidask = 3;
+    CybosSubjectTickData subject = 4;
+    CybosStockAlarm alarm = 5;
+}
+
+
+enum TodayTopSelection{
+    TOP_BY_RATIO = 0;
+    TOP_BY_MOMENTUM = 1;
+    TOP_BY_AMOUNT = 2;
+}
+
+
+message TodayTopOption {
+    TodayTopSelection selection = 1;
+}
+
+
+message Balance {
+    int32 balance = 1;
+}
+
+
+message StockQuery {
+    string code = 1;
+    google.protobuf.Timestamp from_datetime = 2;
+    google.protobuf.Timestamp until_datetime = 3;
+}
+
+
+message TopList {
+    repeated string codelist = 1;
+    bool is_today_data = 2;
+    uint32 date = 3;
+}
+
+
+message SimulationOperation {
+    bool is_on = 1;
+    google.protobuf.Timestamp start_datetime = 2;
+    float speed = 3;
+}
+
+
+message SimulationStatus {
+    bool simulation_on = 1;
+    float simulation_speed = 2;
+}
+
+
+enum OrderStatusFlag {
+    STATUS_UNKNOWN = 0;
+    STATUS_REGISTERED = 1;
+    STATUS_TRADING = 2;
+    STATUS_TRADED = 49;
+    STATUS_CONFIRM = 50;
+    STATUS_DENIED = 51;
+    STATUS_SUBMITTED = 52;
+}
+
+enum OrderMethod {
+    TRADE_UNKNOWN = 0;
+    TRADE_IMMEDIATELY = 1;
+    TRADE_ON_BID_ASK_MEET = 2;
+    TRADE_ON_PRICE = 3;
+}
+
+
+enum OrderType {
+    NEW = 0;
+    MODIFY = 1;
+    CANCEL = 2;
+}
+
+
+enum TradeMsgType{
+    UNKNOWN = 0;
+    ORDER_MSG = 1;
+    REQ_ALL_ORDER = 2;
+    GET_BALANCE = 3;
+}
+
+
+message OrderMsg {
+    string code = 1;
+    bool is_buy = 2;
+    int32 price = 3;
+    int32 quantity = 4;
+    int32 percentage = 5;
+    OrderMethod method = 6;
+    string order_num = 7;
+    OrderType order_type = 8;
+}
+
+
+message TradeMsg {
+    int32 msg_type = 1;
+    OrderMsg order_msg = 2;
+}
+
+
+message CybosOrderReturn {
+    int32 result = 1;
+    string msg = 2;
+    int32 order_num = 3;
+}
+
+
+message Report {
+    string code = 1;
+    string company_name = 2;
+    bool is_buy = 3;
+    google.protobuf.Timestamp last_update_datetime = 4;
+    OrderStatusFlag flag = 5;
+    OrderMethod method = 6;
+    float hold_price = 7;
+    int32 price = 8;
+    int32 quantity = 9;
+    string internal_order_num = 10;
+    string order_num = 11;
+    int32 traded_quantity = 12;
+    float traded_price = 13;
+}
+
+
+message OrderResult {
+    repeated Report report = 1;
+    int32 current_balance = 2;
+}
+
+
+message CybosOrderResult {
+    OrderStatusFlag flag = 1;
+    string code = 2;
+    string order_number = 3;
+    int32 quantity = 4;
+    int32 price = 5;
+    bool is_buy = 6;
+    //string order_type = 6; // '1': Sell, '2': Buy
+    int32 total_quantity = 7;
+}
+
+
+message ListType {
+    string type_name = 1;
+}
+
+message CompanyName {
+    string company_name = 1;
+}
+
+
+message PastMinuteQuery {
+    string code = 1;
+    uint32 count_of_days = 2;
+    google.protobuf.Timestamp today = 3;
+}
+
+
+message CybosDayData {
+    uint32 date = 1;
+    uint32 time = 2;
+    uint32 start_price = 3;
+    uint32 highest_price = 4; 
+    uint32 lowest_price = 5;
+    uint32 close_price = 6;
+    int64 volume = 7;
+    uint64 amount = 8;
+    uint64 cum_sell_volume = 9;
+    uint64 cum_buy_volume = 10;
+    int64 foreigner_hold_volume = 11;
+    float foreigner_hold_rate = 12;
+    int64 institution_buy_volume = 13;
+    int64 institution_cum_buy_volume = 14;
+    bool is_synchronized_bidding = 15;
+}
+
+message CybosDayDatas {
+    repeated CybosDayData day_data = 1;
+}
+
+
+message CybosSubjectTickData {
+    google.protobuf.Timestamp tick_date = 1;
+    uint32 time = 2;
+    string name = 3;
+    string code = 4;
+    string company_name = 5;
+    bool buy_or_sell = 6;
+    uint64 volume = 7;
+    int64 total_volume = 8;
+    int64 foreigner_total_volume = 9;
+}
+
+
+message CybosTickDatas {
+    repeated CybosTickData tick_data = 1;
+}
+
+
+message CybosTickData {
+    google.protobuf.Timestamp tick_date = 1;
+    string code = 2;
+    string company_name = 3;
+    int32 yesterday_diff = 4;
+    uint32 time = 5;
+    uint32 start_price = 6;
+    uint32 highest_price = 7;
+    uint32 lowest_price = 8;
+    uint32 ask_price = 9;
+    uint32 bid_price = 10;
+    uint64 cum_volume = 11;
+    uint64 cum_amount = 12;
+    uint32 current_price = 13;
+    bool buy_or_sell = 14;
+    uint64 cum_sell_volume_by_price = 15;
+    uint64 cum_buy_volume_by_price = 16;
+    int64 volume = 17;
+    uint32 time_with_sec = 18;
+    uint32 market_type_exp = 19;
+    uint32 market_type = 20;
+    uint64 out_time_volume = 21;
+    uint64 cum_sell_volume = 22;
+    uint64 cum_buy_volume = 23;
+    bool is_kospi = 24;
+    float amount_ratio = 25;
+}
+
+message CybosBidAskTickData {
+    google.protobuf.Timestamp tick_date = 1;
+    string code = 2;
+    uint32 time = 3;
+    uint64 volume = 4;
+    repeated int32 ask_prices = 5;
+    repeated int32 bid_prices = 6;
+    repeated uint32 ask_remains = 7;
+    repeated uint32 bid_remains = 8;
+    uint64 total_ask_remain = 9;
+    uint64 total_bid_remain = 10;
+    int64 out_time_total_ask_remain = 11;
+    int64 out_time_total_bid_remain = 12;
+}
+
+
+message CybosStockAlarm {
+    google.protobuf.Timestamp tick_date = 1;
+    uint32 time = 2;
+    int32 type_category = 3;
+    int32 market_category = 4;
+    string code = 5;
+    int32 alarm_category = 6;
+    string title = 7;
+    string content = 8;
+}

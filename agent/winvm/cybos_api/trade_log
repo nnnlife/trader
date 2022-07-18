@@ -1,0 +1,67 @@
+flag 가 1번으로 들어오는거는 거래 성공
+'flag': flag,  flag '1': done, '2': ok, '3': denied, '4':queued'
+
+CANCEL
+
+2020-01-22 10:24:20,831 - wwwlife - INFO - TRADE REQUEST {'type': 'request_trade', 'market': 'stock', 'method': 'cancel_order', 'vendor': 'cybos', '_id': '7f5be3dc-a645-4920-879b-57642919aada', 'code': 'A005930', 'order_number': 98639, 'amount': 1}
+2020-01-22 10:24:20,838 - wwwlife - INFO - Cancel Order 98639 A005930 1
+2020-01-22 10:24:20,948 - wwwlife - INFO - ORDER EVENT {'flag': '4', 'code': 'A005930', 'order_number': 99788, 'quantity': 1, 'price': 0, 'order_type': '2', 'total_quantity': 0}
+2020-01-22 10:24:20,952 - wwwlife - INFO - ORDER EVENT {'flag': '2', 'code': 'A005930', 'order_number': 99788, 'quantity': 1, 'price': 0, 'order_type': '2', 'total_quantity': 0}
+
+
+RESULT
+buy,A005930,61100,1
+['buy', 'A005930', '61100', '1']
+{'status': 0, 'msg': '10766 매수주문이 접수되었습니다.(ordss.cststkord)'}
+BUY
+{'flag': '4', 'code': 'A005930', 'order_number': 111684, 'quantity': 1, 'price': 61100, 'order_type': '2', 'total_quantity': 0}
+queue
+queue
+QUEUE
+[{'number': 111684, 'prev': 0, 'code': 'A005930', 'name': '삼성전자', 'desc': '거래소현금매수', 'quantity': 1, 'price': 61100, 'traded_quantity': 0, 'credit_type': '현금', 'edit_available_quantity': 1, 'is_buy': '2', 'credit_date': '', 'flag_describe': '지정가', 'flag': '01'}]
+
+CANCEL
+
+cancel,111684,A005930,1
+{'result': True}
+{'flag': '4', 'code': 'A005930', 'order_number': 112343, 'quantity': 1, 'price': 0, 'order_type': '2', 'total_quantity': 0}
+{'flag': '2', 'code': 'A005930', 'order_number': 112343, 'quantity': 1, 'price': 0, 'order_type': '2', 'total_quantity': 0}
+
+
+MODIFY
+buy,A005930,61100,1
+['buy', 'A005930', '61100', '1']
+{'status': 0, 'msg': '10766 매수주문이 접수되었습니다.(ordss.cststkord)'}
+{'flag': '4', 'code': 'A005930', 'order_number': 113480, 'quantity': 1, 'price': 61100, 'order_type': '2', 'total_quantity': 0}
+modify
+modify
+modify,order_num,code,price
+modify,113480,A005930,61200
+modify,113480,A005930,61200
+{'order_number': 113628}
+{'flag': '4', 'code': 'A005930', 'order_number': 113628, 'quantity': 1, 'price': 61200, 'order_type': '2', 'total_quantity': 0}
+{'flag': '2', 'code': 'A005930', 'order_number': 113628, 'quantity': 1, 'price': 61200, 'order_type': '2', 'total_quantity': 0}
+
+
+1주 구매 후 다시 1주 구매
+buy,A005930,55500,1
+['buy', 'A005930', '55500', '1']
+{'status': 0, 'msg': '10766 매수주문이 접수되었습니다.(ordss.cststkord)'}
+TRADE {'flag': '4', 'code': 'A005930', 'order_number': 197281, 'quantity': 1, 'price': 55500, 'order_type': '2', 'total_quantity': 1}
+TRADE {'flag': '1', 'code': 'A005930', 'order_number': 197281, 'quantity': 1, 'price': 55300, 'order_type': '2', 'total_quantity': 2}
+
+
+
+{'status': 0, 'msg': '10725 매도주문이 접수되었습니다.(ordss.cststkord)'}
+TRADE {'flag': '4', 'code': 'A005930', 'order_number': 198192, 'quantity': 2, 'price': 55100, 'order_type': '1', 'total_quantity': 2}
+TRADE {'flag': '1', 'code': 'A005930', 'order_number': 198192, 'quantity': 2, 'price': 55200, 'order_type': '1', 'total_quantity': 0}
+
+
+
+buy,A005930,100,1
+['buy', 'A005930', '100', '1']
+{'status': -1, 'msg': '10428 단가가 상,하한범위를 넘었습니다. : 상한가[  70400], 하한가[  38000](ordss.cststkord)'}
+buy,A005930,54000,0
+['buy', 'A005930', '54000', '0']
+{'status': -1, 'msg': 'Order Process Error(quantity=0)'}
+

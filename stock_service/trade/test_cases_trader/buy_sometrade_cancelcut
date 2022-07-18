@@ -1,0 +1,102 @@
+1. BUY 1 on price 900, 10qty
+2. 8 qty traded, 2 left
+3. SELL CUT is registered automatically with cancel and Imm
+4. when press cancel on SELL CUT, it will goes to REGISTERED
+
+
+A.1 -> 
+[OR MSG]
+string code = A000000;
+bool is_buy = true;
+price = 900
+quantity = 10
+percentage = 0
+method = ON_P
+type = NEW
+order_num = '';
+-------------------------------
+[OR OBJ B1]
+status = STATUS_REGISTERED
+is_buy = true
+last_update_time = markettime.get_current_datetime()
+quantity = 10
+method = ON_P
+price = 900
+order_num = Order.INTERNAL_ID_PREFIX + code + Order.get_id_number()
+
+[ORSHEET]
+total_qty = 0
+--------------------------------
+-> request
+-> SUBMIT
+-------------------------------
+[OR OBJ B1]
+status = STATUS_SUBMITTED
+is_buy = true
+last_update_time = markettime.get_current_datetime()
+quantity = 10
+method = ON_P
+price = 900
+order_num = new NUM from SERVER
+
+[ORSHEET]
+total_qty = 0
+-------------------------------
+-> TRADED 8 qty
+------------------------------
+[OR OBJ B1]
+status = STATUS_TRADED
+is_buy = true
+last_update_time = markettime.get_current_datetime()
+quantity = 2
+method = ON_P
+price = 900
+order_num = new NUM from SERVER
+
+[ORSHEET]
+total_qty = 8
+hold_average_p = 900
+
+[OR OBJ S1]
+status = STATUS_AUTO_CUT
+is_buy = false
+last_update_time = markettime.get_current_datetime()
+quantity = 8
+method = ON_BA
+price = 850
+order_num = Order.INTERNAL_ID_PREFIX + code + Order.get_id_number()
+-------------------------------
+From UI
+
+[OR MSG]
+string code = A000000;
+bool is_buy = false;
+price = 850
+quantity = 8
+percentage = 0
+type = CANCEL
+method = UNKNOWN
+order_num = "OR OBJ S1" ID;
+------------------------------
+[OR OBJ B1]
+status = STATUS_TRADED
+is_buy = true
+last_update_time = markettime.get_current_datetime()
+quantity = 2
+method = ON_P
+price = 900
+order_num = 
+
+[ORSHEET]
+total_qty = 8
+hold_average_p = 900
+
+[OR OBJ S1]
+status = STATUS_REGISTERED
+is_buy = false
+last_update_time = markettime.get_current_datetime()
+quantity = 8
+method = UNKNOWN
+price = 0
+order_num =
+

@@ -1,0 +1,36 @@
+1. BUY 1 on specific price
+2. cancel order
+2. some of it is traded but remains not
+3-1. cancel remain
+3-2. modify price
+
+1. BUY 1 on specific price
+2. some of it is traded but remains not
+3-1. cancel remain
+3-2. modify price
+
+
+1. BUY 1 on specific price
+2. add BUY on specific price
+3. cancel (1) order
+4. modify (2) order
+
+
+1. BUY 1 on meet on ba
+2. SELL 1 on meet on ba
+
+1. BUY 1 on specific price
+2. BUY 1 on meet on ba
+3. some of quantity in (1) is traded
+4. SELL on meet on ba with 100% quantity
+
+
+900, 1000, 1100 | 1200, 1300, 1400
+
+(1) buy on 900(10)
+(2) buy 800(10) meet on ba
+(3) 900(8) is traded
+(4) sell on meet on ba at 1400
+    current bid is 1400    
+(5) just 8 is traded and remain should be cancel?
+(cannot use specific price since no quantity before buy is succeeded)

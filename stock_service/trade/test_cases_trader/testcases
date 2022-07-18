@@ -1,0 +1,40 @@
+1. IMM BUY
+
+1. IMM BUY NOT TRADED (SUMITTED STATUS)
+2. CHANGE METHOD AGAIN IMM BUY
+
+1. IMM BUY NOT TRADED (SUMITTED STATUS)
+2. CHANGE METHOD AGAIN IMM BUY
+3. CHANGE METHOD AGAIN IMM BUY
+
+1. IMM BUY NOT TRADED (SUMITTED)
+2. CANCEL
+
+1. IMM BUY -> balance is not enough
+
+
+1. IMM BUY
+2. PARTIAL TRADED
+3. CHANGE METHOD AGAIN IMM BUY for NOT TRADED
+
+
+-------------------------------------------
+1. IMM SELL
+
+1. IMM SELL NOT TRADED
+2. CHANGE METHOD AGAIN IMM SELL
+
+1. IMM SELL NOT TRADED
+2. CHANGE METHOD AGAIN IMM SELL
+3. CHANGE METHOD AGAIN IMM SELL
+
+1. IMM SELL NOT TRADED
+2. CANCEL
+
+1. IMM SELL -> no quantity or quantity is not enough
+
+
+------------------------------------------
+Q&A
+
+1. Submitted 되고 주문 번호 발행된 경우, 일부 매수로 2번으로 체결되는 경우는 거래번호가 2개? 아니면 1개?

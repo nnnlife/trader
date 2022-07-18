@@ -1,0 +1,100 @@
+1. BUY 1 immediately
+2. SELL 1 immediately
+
+A.1 -> 
+[OR MSG]
+string code = A000000;
+bool is_buy = true;
+price = 0
+quantity = 0
+percentage = 100
+method = IMM
+type = NEW
+order_num = '';
+
+-------------------------------
+[OR OBJ B1]
+status = STATUS_REGISTERED
+is_buy = true
+last_update_time = markettime.get_current_datetime()
+quantity = 10 -> by calculating
+method = IMM
+price = 900
+order_num = Order.INTERNAL_ID_PREFIX + code + Order.get_id_number()
+
+[ORSHEET]
+total_qty = 0
+--------------------------------
+-> request
+-> SUBMIT
+-------------------------------
+[OR OBJ B1]
+status = STATUS_SUBMITTED
+is_buy = true
+last_update_time = markettime.get_current_datetime()
+quantity = 10
+method = IMM
+price = 900
+order_num = new NUM from SERVER
+
+[ORSHEET]
+total_qty = 0
+----------------------------------
+-> TRADED 10 qty
+---------------------------------
+[OR OBJ B1]
+status = STATUS_TRADED
+is_buy = true
+last_update_time = markettime.get_current_datetime()
+quantity = 0
+method = IMM
+price = 900
+order_num =
+
+[ORSHEET]
+total_qty = 10
+hold_average_p = 900
+
+[OR OBJ S1]
+status = STATUS_AUTO_CUT
+is_buy = false
+last_update_time = markettime.get_current_datetime()
+quantity = 10
+method = ON_BA
+price = 850
+order_num = Order.INTERNAL_ID_PREFIX + code + Order.get_id_number()
+---------------------------------------
+[OR MSG]
+string code = A000000;
+bool is_buy = false;
+price = 0
+quantity = 0
+percentage = 100
+type = MODIFY
+method = IMM
+order_num = "OR OBJ S1" ID
+---------------------------------------
+[OR OBJ B1]
+status = STATUS_TRADED
+is_buy = true
+last_update_time = markettime.get_current_datetime()
+quantity = 0
+method = IMM
+price = 900
+order_num =
+
+[ORSHEET]
+total_qty = 10
+hold_average_p = 900
+
+[OR OBJ S1]
+status = STATUS_AUTO_CUT
+is_buy = false
+last_update_time = markettime.get_current_datetime()
+quantity = 10
+method = IMM
+price = 900
+order_num = Order.INTERNAL_ID_PREFIX + code + Order.get_id_number()
+------------------------------------
+-> request IMM
+

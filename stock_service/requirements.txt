@@ -1,0 +1,7 @@
+gevent
+grpcio
+grpcio-tools
+pymongo
+numpy
+pandas
+xlrd

@@ -1,0 +1,13 @@
+* Min Tick Graph
+    * Show horizontal bar as 10 step to display volume for each price step
+    * Display as 3 min bar graph
+    * Display volume for each time fraction
+    * How to show by each deal company's position?
+    * Display yesterday's and today's tick
+    * How to scale price? check latest is larger or oldest is larger
+        1. check minimum and maximum
+        2. check latest is near to which one
+        3. more closer to maximum then minimum is minimum and maximum * 10%
+        4. more closer to minimum then maximum is maximum and minimum * 10%
+        5. if current value exceeds boundary then expand boundary by 10%
+    * How to scale volume?

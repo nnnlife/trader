@@ -1,0 +1,237 @@
+[
+    {
+        "classes": [
+            {
+                "classInfos": [
+                    {
+                        "name": "QML.Element",
+                        "value": "auto"
+                    },
+                    {
+                        "name": "QML.Singleton",
+                        "value": "true"
+                    }
+                ],
+                "className": "SearchBackend",
+                "methods": [
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "name": "code",
+                                "type": "QString"
+                            }
+                        ],
+                        "name": "sendCurrentStock",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "name": "dt",
+                                "type": "QDateTime"
+                            }
+                        ],
+                        "name": "sendCurrentDateTime",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "name": "launchTick",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "name": "launchTrader",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "name": "launchBidAsk",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "name": "launchDayChart",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "name": "launchFavorite",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "name": "launchLens",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "name": "startSimulation",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "name": "stopSimulation",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "name": "startSubscribeCodes",
+                        "returnType": "void"
+                    }
+                ],
+                "object": true,
+                "properties": [
+                    {
+                        "constant": false,
+                        "designable": true,
+                        "final": false,
+                        "name": "currentCode",
+                        "notify": "currentCodeChanged",
+                        "read": "currentCode",
+                        "required": false,
+                        "scriptable": true,
+                        "stored": true,
+                        "type": "QString",
+                        "user": false,
+                        "write": "setCurrentCode"
+                    },
+                    {
+                        "constant": false,
+                        "designable": true,
+                        "final": false,
+                        "name": "currentDateTime",
+                        "notify": "currentDateTimeChanged",
+                        "read": "currentDateTime",
+                        "required": false,
+                        "scriptable": true,
+                        "stored": true,
+                        "type": "QDateTime",
+                        "user": false,
+                        "write": "setCurrentDateTime"
+                    },
+                    {
+                        "constant": false,
+                        "designable": true,
+                        "final": false,
+                        "name": "serverDateTime",
+                        "notify": "serverDateTimeChanged",
+                        "read": "serverDateTime",
+                        "required": false,
+                        "scriptable": true,
+                        "stored": true,
+                        "type": "QDateTime",
+                        "user": false,
+                        "write": "setServerDateTime"
+                    },
+                    {
+                        "constant": false,
+                        "designable": true,
+                        "final": false,
+                        "name": "simulationRunning",
+                        "notify": "simulationRunningChanged",
+                        "read": "simulationRunning",
+                        "required": false,
+                        "scriptable": true,
+                        "stored": true,
+                        "type": "bool",
+                        "user": false,
+                        "write": "setSimulationRunning"
+                    },
+                    {
+                        "constant": false,
+                        "designable": true,
+                        "final": false,
+                        "name": "simulationSpeed",
+                        "notify": "simulationSpeedChanged",
+                        "read": "simulationSpeed",
+                        "required": false,
+                        "scriptable": true,
+                        "stored": true,
+                        "type": "qreal",
+                        "user": false,
+                        "write": "setSimulationSpeed"
+                    }
+                ],
+                "qualifiedClassName": "SearchBackend",
+                "signals": [
+                    {
+                        "access": "public",
+                        "name": "currentCodeChanged",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "name": "currentDateTimeChanged",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "name": "simulationRunningChanged",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "name": "simulationSpeedChanged",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "name": "serverDateTimeChanged",
+                        "returnType": "void"
+                    }
+                ],
+                "slots": [
+                    {
+                        "access": "private",
+                        "arguments": [
+                            {
+                                "name": "code",
+                                "type": "QString"
+                            }
+                        ],
+                        "name": "stockCodeChanged",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "private",
+                        "arguments": [
+                            {
+                                "name": "dt",
+                                "type": "QDateTime"
+                            }
+                        ],
+                        "name": "timeInfoArrived",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "private",
+                        "arguments": [
+                            {
+                                "name": "status",
+                                "type": "bool"
+                            }
+                        ],
+                        "name": "setSimulationStatus",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "private",
+                        "name": "setCurrentTime",
+                        "returnType": "void"
+                    }
+                ],
+                "superClasses": [
+                    {
+                        "access": "public",
+                        "name": "QObject"
+                    }
+                ]
+            }
+        ],
+        "inputFile": "SearchBackend.h",
+        "outputRevision": 67
+    }
+]

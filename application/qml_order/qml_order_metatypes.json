@@ -1,0 +1,339 @@
+[
+    {
+        "classes": [
+            {
+                "classInfos": [
+                    {
+                        "name": "QML.Element",
+                        "value": "auto"
+                    }
+                ],
+                "className": "LongModel",
+                "methods": [
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "name": "row",
+                                "type": "int"
+                            }
+                        ],
+                        "name": "selectionChanged",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "name": "refresh",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "name": "row",
+                                "type": "int"
+                            }
+                        ],
+                        "name": "setCurrentStock",
+                        "returnType": "void"
+                    }
+                ],
+                "object": true,
+                "properties": [
+                    {
+                        "constant": false,
+                        "designable": true,
+                        "final": false,
+                        "name": "balance",
+                        "notify": "balanceChanged",
+                        "read": "getBalance",
+                        "required": false,
+                        "scriptable": true,
+                        "stored": true,
+                        "type": "int",
+                        "user": false
+                    }
+                ],
+                "qualifiedClassName": "LongModel",
+                "signals": [
+                    {
+                        "access": "public",
+                        "name": "balanceChanged",
+                        "returnType": "void"
+                    }
+                ],
+                "slots": [
+                    {
+                        "access": "private",
+                        "name": "simulationStatusChanged",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "private",
+                        "arguments": [
+                            {
+                                "name": "r",
+                                "type": "OrderResult*"
+                            }
+                        ],
+                        "name": "orderResultArrived",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "private",
+                        "arguments": [
+                            {
+                                "name": "code",
+                                "type": "QString"
+                            },
+                            {
+                                "name": "price",
+                                "type": "int"
+                            }
+                        ],
+                        "name": "setCurrentPrice",
+                        "returnType": "void"
+                    }
+                ],
+                "superClasses": [
+                    {
+                        "access": "public",
+                        "name": "QAbstractTableModel"
+                    }
+                ]
+            }
+        ],
+        "inputFile": "LongModel.h",
+        "outputRevision": 67
+    },
+    {
+        "classes": [
+            {
+                "classInfos": [
+                    {
+                        "name": "QML.Element",
+                        "value": "auto"
+                    }
+                ],
+                "className": "TransactionModel",
+                "methods": [
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "name": "row",
+                                "type": "int"
+                            }
+                        ],
+                        "name": "selectionChanged",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "name": "refresh",
+                        "returnType": "void"
+                    }
+                ],
+                "object": true,
+                "qualifiedClassName": "TransactionModel",
+                "slots": [
+                    {
+                        "access": "private",
+                        "name": "simulationStatusChanged",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "private",
+                        "arguments": [
+                            {
+                                "name": "r",
+                                "type": "OrderResult*"
+                            }
+                        ],
+                        "name": "orderResultArrived",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "private",
+                        "arguments": [
+                            {
+                                "name": "code",
+                                "type": "QString"
+                            },
+                            {
+                                "name": "price",
+                                "type": "int"
+                            }
+                        ],
+                        "name": "setCurrentPrice",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "private",
+                        "arguments": [
+                            {
+                                "name": "code",
+                                "type": "QString"
+                            },
+                            {
+                                "name": "name",
+                                "type": "QString"
+                            },
+                            {
+                                "name": "price",
+                                "type": "int"
+                            },
+                            {
+                                "name": "quantity",
+                                "type": "int"
+                            }
+                        ],
+                        "name": "fillSellOrder",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "private",
+                        "name": "formCleared",
+                        "returnType": "void"
+                    }
+                ],
+                "superClasses": [
+                    {
+                        "access": "public",
+                        "name": "QAbstractTableModel"
+                    }
+                ]
+            }
+        ],
+        "inputFile": "TransactionModel.h",
+        "outputRevision": 67
+    },
+    {
+        "classes": [
+            {
+                "className": "TransactionData",
+                "object": true,
+                "qualifiedClassName": "TransactionData",
+                "signals": [
+                    {
+                        "access": "public",
+                        "name": "formCleared",
+                        "returnType": "void"
+                    }
+                ],
+                "superClasses": [
+                    {
+                        "access": "public",
+                        "name": "QObject"
+                    }
+                ]
+            }
+        ],
+        "inputFile": "TransactionData.h",
+        "outputRevision": 67
+    },
+    {
+        "classes": [
+            {
+                "className": "OrderHandler",
+                "object": true,
+                "qualifiedClassName": "OrderHandler",
+                "signals": [
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "type": "OrderResult*"
+                            }
+                        ],
+                        "name": "orderResultArrived",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "type": "CybosTickData*"
+                            }
+                        ],
+                        "name": "tickArrived",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "name": "code",
+                                "type": "QString"
+                            },
+                            {
+                                "name": "price",
+                                "type": "int"
+                            }
+                        ],
+                        "name": "currentPriceChanged",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "type": "bool"
+                            }
+                        ],
+                        "name": "simulationStatusChanged",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "name": "code",
+                                "type": "QString"
+                            },
+                            {
+                                "name": "name",
+                                "type": "QString"
+                            },
+                            {
+                                "name": "price",
+                                "type": "int"
+                            },
+                            {
+                                "name": "quantity",
+                                "type": "int"
+                            }
+                        ],
+                        "name": "fillSellOrderSelected",
+                        "returnType": "void"
+                    }
+                ],
+                "slots": [
+                    {
+                        "access": "private",
+                        "name": "sendBalanceRequest",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "private",
+                        "arguments": [
+                            {
+                                "type": "CybosTickData*"
+                            }
+                        ],
+                        "name": "tickHandler",
+                        "returnType": "void"
+                    }
+                ],
+                "superClasses": [
+                    {
+                        "access": "public",
+                        "name": "QObject"
+                    }
+                ]
+            }
+        ],
+        "inputFile": "OrderHandler.h",
+        "outputRevision": 67
+    }
+]

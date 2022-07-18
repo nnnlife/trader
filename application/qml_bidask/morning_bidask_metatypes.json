@@ -1,0 +1,276 @@
+[
+    {
+        "classes": [
+            {
+                "classInfos": [
+                    {
+                        "name": "QML.Element",
+                        "value": "auto"
+                    }
+                ],
+                "className": "BidAskModel",
+                "methods": [
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "name": "percentage",
+                                "type": "int"
+                            }
+                        ],
+                        "name": "sell_immediately",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "name": "percentage",
+                                "type": "int"
+                            }
+                        ],
+                        "name": "buy_immediately",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "name": "row",
+                                "type": "int"
+                            },
+                            {
+                                "name": "percentage",
+                                "type": "int"
+                            }
+                        ],
+                        "name": "buy_on_price",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "name": "row",
+                                "type": "int"
+                            },
+                            {
+                                "name": "percentage",
+                                "type": "int"
+                            }
+                        ],
+                        "name": "sell_on_price",
+                        "returnType": "void"
+                    }
+                ],
+                "object": true,
+                "properties": [
+                    {
+                        "constant": false,
+                        "designable": true,
+                        "final": false,
+                        "name": "highlight",
+                        "notify": "highlightChanged",
+                        "read": "getHighlight",
+                        "required": false,
+                        "scriptable": true,
+                        "stored": true,
+                        "type": "int",
+                        "user": false,
+                        "write": "setHighlight"
+                    },
+                    {
+                        "constant": false,
+                        "designable": true,
+                        "final": false,
+                        "name": "yesterdayClose",
+                        "notify": "yesterdayCloseChanged",
+                        "read": "getYesterdayClose",
+                        "required": false,
+                        "scriptable": true,
+                        "stored": true,
+                        "type": "int",
+                        "user": false,
+                        "write": "setYesterdayClose"
+                    },
+                    {
+                        "constant": false,
+                        "designable": true,
+                        "final": false,
+                        "name": "totalBidRemain",
+                        "notify": "totalBidRemainChanged",
+                        "read": "getTotalBidRemain",
+                        "required": false,
+                        "scriptable": true,
+                        "stored": true,
+                        "type": "int",
+                        "user": false,
+                        "write": "setTotalBidRemain"
+                    },
+                    {
+                        "constant": false,
+                        "designable": true,
+                        "final": false,
+                        "name": "totalAskRemain",
+                        "notify": "totalAskRemainChanged",
+                        "read": "getTotalAskRemain",
+                        "required": false,
+                        "scriptable": true,
+                        "stored": true,
+                        "type": "int",
+                        "user": false,
+                        "write": "setTotalAskRemain"
+                    },
+                    {
+                        "constant": false,
+                        "designable": true,
+                        "final": false,
+                        "name": "todayHigh",
+                        "notify": "todayHighChanged",
+                        "read": "getTodayHigh",
+                        "required": false,
+                        "scriptable": true,
+                        "stored": true,
+                        "type": "int",
+                        "user": false,
+                        "write": "setTodayHigh"
+                    },
+                    {
+                        "constant": false,
+                        "designable": true,
+                        "final": false,
+                        "name": "todayOpen",
+                        "notify": "todayOpenChanged",
+                        "read": "getTodayOpen",
+                        "required": false,
+                        "scriptable": true,
+                        "stored": true,
+                        "type": "int",
+                        "user": false,
+                        "write": "setTodayOpen"
+                    },
+                    {
+                        "constant": false,
+                        "designable": true,
+                        "final": false,
+                        "name": "upperViPrice",
+                        "notify": "upperViPriceChanged",
+                        "read": "getUpperViPrice",
+                        "required": false,
+                        "scriptable": true,
+                        "stored": true,
+                        "type": "int",
+                        "user": false
+                    },
+                    {
+                        "constant": false,
+                        "designable": true,
+                        "final": false,
+                        "name": "lowerViPrice",
+                        "notify": "lowerViPriceChanged",
+                        "read": "getLowerViPrice",
+                        "required": false,
+                        "scriptable": true,
+                        "stored": true,
+                        "type": "int",
+                        "user": false
+                    }
+                ],
+                "qualifiedClassName": "BidAskModel",
+                "signals": [
+                    {
+                        "access": "public",
+                        "name": "highlightChanged",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "name": "yesterdayCloseChanged",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "name": "totalAskRemainChanged",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "name": "totalBidRemainChanged",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "name": "todayHighChanged",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "name": "upperViPriceChanged",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "name": "lowerViPriceChanged",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "name": "todayOpenChanged",
+                        "returnType": "void"
+                    }
+                ],
+                "slots": [
+                    {
+                        "access": "private",
+                        "arguments": [
+                            {
+                                "type": "CybosTickData*"
+                            }
+                        ],
+                        "name": "tickArrived",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "private",
+                        "arguments": [
+                            {
+                                "type": "CybosBidAskTickData*"
+                            }
+                        ],
+                        "name": "bidAskTickArrived",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "private",
+                        "arguments": [
+                            {
+                                "type": "QString"
+                            }
+                        ],
+                        "name": "setCurrentStock",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "private",
+                        "arguments": [
+                            {
+                                "name": "dt",
+                                "type": "QDateTime"
+                            }
+                        ],
+                        "name": "timeInfoArrived",
+                        "returnType": "void"
+                    }
+                ],
+                "superClasses": [
+                    {
+                        "access": "public",
+                        "name": "QAbstractTableModel"
+                    }
+                ]
+            }
+        ],
+        "inputFile": "BidAskModel.h",
+        "outputRevision": 67
+    }
+]

@@ -1,0 +1,34 @@
+* Picker (Today Bull - VI - Yesterday Bull - Recent Search - Favorite,Marked)
+
+
+* Common(except Favorite) - Favorite
+* Today Bull, VI - pause, resume, clear
+* Today Bull - Drop Down (5 sec, 10 sec, 20 sec, 30 sec, 40 sec ~ 60 sec, 2 min, 5min, 10 min, 20 min, 30 min)
+
+
+* Display
+    * Today Bull
+        * High amount (by period)
+        * (Current - Open) > 0, 
+        * Name, Code, (Current - Open), (Y close - Current), Amount
+    * VI
+        * Bull VI by time
+        * Same with Today Bull
+    * Yesterday Amount
+        * Name, Code, (before Y close - Y close), (Y open - Y close), Amount
+    * Recent Search
+        * Store it into memory
+    * Favorite
+        * same display with Today Bull 
+        * Store it DB
+
+* Test
+    * Recent Search -> Click Favorite and check whether registered in favorite
+
+
+
+* Tick BULL(Amount based)
+    * Select option : Accumulated(Today), Period(Before last refresh time), Refresh Time
+    * Filter option:  today open -> current, yesterday close -> current
+
+* VI

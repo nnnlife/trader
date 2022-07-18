@@ -1,0 +1,39 @@
+1. B / S, Price Graph
+    * If B is greather than S then area will be colored with red
+    * reverse is blue
+    * B / S scale
+        * Maximum between B / S * 2 will be max
+        * Minimum between B / S is 0
+        * If current volume is over maximum then rescacle
+    * Price scale
+        * Yesterday close is Center Point
+        * Mark 10% step at axis
+        * If current value is over maximum/minimum then prepare next 10%
+
+2. Time volume bar graph
+    * Prepare previou 20 days data
+    * Output at current time volume for each day as bar graph 
+    * Maximum value * 2 will be max
+    * Minimum volume is 0 at axis
+    * Data Preparation : x days minute data to calculate volume at specific time
+
+* Min Tick Graph
+    * Show horizontal bar as 10 step to display volume for each price step
+    * Display as 3 min bar graph
+    * Display volume for each time fraction
+    * How to show by each deal company's position?
+    * Display yesterday's and today's tick
+    * How to scale price? check latest is larger or oldest is larger
+        1. check minimum and maximum
+        2. check latest is near to which one
+        3. more closer to maximum then minimum is minimum and maximum * 10%
+        4. more closer to minimum then maximum is maximum and minimum * 10%
+        5. if current value exceeds boundary then expand boundary by 10%
+
+* picker
+    * 3 columns
+        * 1: bull by (10 sec / 30 sec / 1 min / 3 min / 10 min)
+        * 2: vi
+        * 3: recent search
+
+* Study deal company's visualization
